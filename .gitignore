@@ -1,0 +1,23 @@
+# --- GENEL SİSTEM DOSYALARI ---
+.DS_Store
+Thumbs.db
+
+# --- PYTHON (Backend) ---
+medcase-backend/__pycache__/
+medcase-backend/venv/
+medcase-backend/.env
+medcase-backend/*.pyc
+
+# Büyük Veri Dosyaları (Git'e yükleme)
+medcase-backend/data/full_cases.json
+
+# Resimler (Git'i şişirmesin)
+medcase-backend/public/images/*
+!medcase-backend/public/images/.gitkeep
+
+# --- NODE.JS / REACT NATIVE (Frontend - İlerisi için) ---
+medcase-frontend/node_modules/
+medcase-frontend/.expo/
+medcase-frontend/dist/
+medcase-frontend/.env
+node_modules/
