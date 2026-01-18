@@ -1,20 +1,35 @@
 # routers/tutor_router.py
+from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-from typing import List, Optional, Literal, Dict, Any
+from typing import List, Optional, Literal
 
-# Import yollarını senin proje yapına göre güncelledim
-from agents.tutor_agent import tutor_agent
 from services.case_service import case_service
 
-router = APIRouter()
+# Sende nasıl tanımlıysa:
+# - Eğer tutor_agent bir instance ise: from tutor.tutor_agent import tutor_agent
+# - Eğer class ise: from tutor.tutor_agent import TutorAgent
+from tutor.tutor_agent import TutorAgent
 
-# ---- Modeller ----
+from tutor.schemas import (
+    TutorInput,
+    TutorOutput,
+    CaseContext,
+    StepContext,
+    UserContext,
+)
+
+router = APIRouter(prefix="/tutor", tags=["tutor"])
+
+
+# -------- Request models (FastAPI) --------
 class StepPayload(BaseModel):
-    question: Optional[str] = None
+    question: str = Field(min_length=1)
     options: List[str] = Field(default_factory=list)
-    selected_option: Optional[str] = None
+    correct: Optional[int] = None
+    selectedIndex: Optional[int] = None
+
 
 class TutorRequest(BaseModel):
     mode: Literal["hint", "explain", "teach"] = "hint"
@@ -22,45 +37,56 @@ class TutorRequest(BaseModel):
     message: str
     step: Optional[StepPayload] = None
 
-class TutorResponse(BaseModel):
-    answer: str
-    followups: List[str] = Field(default_factory=list)
-    safety: Dict[str, Any] = Field(default_factory=dict)
-    meta: Dict[str, Any] = Field(default_factory=dict)
 
-# ---- Endpoint ----
-@router.post("", response_model=TutorResponse)
-async def tutor(req: TutorRequest) -> TutorResponse:
-    # 1. Vakayı bul
+@router.post("", response_model=TutorOutput)
+async def tutor(req: TutorRequest) -> TutorOutput:
+    # 1) Case çek
     case = case_service.get_case_by_id(req.case_id)
     if not case:
         raise HTTPException(status_code=404, detail=f"Case not found: {req.case_id}")
 
-    # 2. Agent için veriyi hazırla
-    # Hata almamak için .get ile güvenli çekim yapıyoruz
-    case_context = {
-        "id": case.get("id"),
-        "narrative": case.get("narrative"),
-        "specialty": case.get("specialty"),
-        "rubric": case.get("rubric", {}), # Doğru cevap burada
-    }
+    # 2) StepContext (zorunluysa requestte step şart yap, değilse default üret)
+    # Senin StepContext şeman question/options min_length istiyor; o yüzden step yoksa
+    # case içinden seed_questions veya narrative'den default üretmek gerekiyor.
+    if req.step is None:
+        # Minimum çalışsın diye basit default:
+        seed_q = (case.get("seed_questions") or ["Bu vakada ilk yaklaşımın nedir?"])[0]
+        step_ctx = StepContext(
+            question=seed_q,
+            options=["Devam et", "İpucu ver"],  # en az 2 seçenek şartsa
+            correct=0,  # correct zorunluysa 0 veriyoruz (teach modda kullanılabilir)
+        )
+        user_ctx = UserContext(selectedIndex=None, ask=req.message)
+    else:
+        step_ctx = StepContext(
+            question=req.step.question,
+            options=req.step.options or ["Devam et", "İpucu ver"],
+            correct=req.step.correct if req.step.correct is not None else 0,
+        )
+        user_ctx = UserContext(
+            selectedIndex=req.step.selectedIndex,
+            ask=req.message,
+        )
 
-    step_context = {
-        "options": (req.step.options if req.step else []),
-    }
+    # 3) CaseContext
+    # DİKKAT: senin CaseContext şeman hangi alanları istiyorsa ona göre doldur.
+    case_ctx = CaseContext(
+        id=case.get("id", req.case_id),
+        title=case.get("title", ""),
+        summary=case.get("summary", ""),   # yoksa boş
+        step=step_ctx,
+    )
 
-    # 3. Agent'ı çalıştır
-    # Senin tutor_agent.py yapına uygun çağrı:
-    result = tutor_agent.run(
+    # 4) TutorInput
+    inp = TutorInput(
         mode=req.mode,
+        case_id=req.case_id,
         message=req.message,
-        case=case_context,
-        step=step_context
+        case=case_ctx,
+        user=user_ctx,
     )
 
-    return TutorResponse(
-        answer=result.get("answer", ""),
-        followups=result.get("followups", []),
-        safety=result.get("safety", {}),
-        meta=result.get("meta", {})
-    )
+    # 5) Agent çağır (tek parametre)
+    agent = TutorAgent()
+    out = agent.run(inp)
+    return out
