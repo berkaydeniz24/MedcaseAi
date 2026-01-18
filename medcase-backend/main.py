@@ -1,29 +1,52 @@
+# main.py
+import sys
+import os
+
+# --- SİGORTA KODU ---
+# Python'un 'case_selector', 'dialogue' vb. klasörleri bulmasını garantiye alır
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from dotenv import load_dotenv
-load_dotenv() # .env dosyasını en başta yükle
+load_dotenv() # .env dosyasını yükle
 
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles 
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 
-# Servisler ve Agentlar
-from services.case_service import case_service
+# --- YENİ MİMARİ: Case Service yerine Selector Agent ---
+# Artık verileri yöneten tek bir merkezimiz var.
+from case_selector.selector_agent import selector_agent
 
-# Arkadaşının yazdığı router (Dosya varsa hata vermez, yoksa burayı yorum satırı yap)
+# --- ROUTER IMPORTLARI ---
+tutor_router = None
+dialogue_router = None
+
 try:
-    from rooters import tutor_rooter as tutor_router
-    HAS_TUTOR_ROUTER = True
-except ImportError:
-    HAS_TUTOR_ROUTER = False
-    print("⚠️ UYARI: 'rooters.tutor_rooter' bulunamadı, tutor endpointleri devre dışı.")
+    from routers import tutor_router
+    from routers import dialogue_router
+    HAS_ROUTERS = True
+except ImportError as e:
+    HAS_ROUTERS = False
+    print(f"⚠️ UYARI: Routerlar yüklenemedi. Sebebi: {e}")
 
 app = FastAPI()
 
-# Eğer tutor router varsa ekle
-if HAS_TUTOR_ROUTER:
+# --- 1. STATİK DOSYALAR (RESİMLER İÇİN) ---
+base_dir = os.path.dirname(os.path.abspath(__file__))
+static_dir = os.path.join(base_dir, "data")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+# --- 2. ROUTERLARI BAĞLAMA ---
+if dialogue_router:
+    app.include_router(dialogue_router.router, prefix="/dialogue", tags=["Dialogue"])
+
+if tutor_router:
     app.include_router(tutor_router.router, prefix="/tutor", tags=["tutor"])
 
-# CORS Ayarları (Frontend erişimi için)
+# --- 3. CORS AYARLARI (Mobil Uygulama İçin) ---
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,48 +58,59 @@ app.add_middleware(
 class QueryRequest(BaseModel):
     question: str
 
-# --- 1. TÜM VAKALARI LİSTELEME ---
+# --- 4. VAKA LİSTELEME (GÜNCELLENDİ) ---
+# Artık veriyi 'selector_agent' üzerinden çekiyoruz.
 @app.get("/cases")
 def list_cases():
-    cases = case_service.cases
-    # Yeni JSON formatına göre listeleme yapıyoruz
+    cases = selector_agent.cases
     return [
         {
             "id": c.get("id"),
-            # Yeni JSON'da 'title' hazır geliyor, birleştirmeye gerek yok
             "title": c.get("title", "Başlıksız Vaka"),
-            # Frontend'de filtreleme yapmak için bu alanları ekliyoruz
             "specialty": c.get("specialty", "Genel"),
             "difficulty": c.get("difficulty", "Orta"),
-            # Narrative'den kısa bir özet
             "summary": c.get("narrative", "")[:120] + "...",
-            # Frontend'e resim olup olmadığı bilgisini gönderelim (ikon göstermek için)
+            # Resim kontrolünü güvenli hale getirdik
             "has_image": len(c.get("assets", {}).get("images", [])) > 0
         } 
         for c in cases
     ]
 
-# --- 2. TEK VAKA DETAYI ---
+# --- 5. TEK VAKA DETAYI (GÜNCELLENDİ) ---
 @app.get("/cases/{case_id}")
 def get_case(case_id: str):
-    case = case_service.get_case_by_id(case_id)
+    # Selector Agent, resim URL'lerini otomatik düzelterek verir
+    case = selector_agent.get_case_by_id(case_id)
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
     return case
 
-# --- 3. DİYALOG AJANI İLE KONUŞMA ---
+# --- 6. ESKİ SOHBET ENDPOINTİ (UYUMLU HALE GETİRİLDİ) ---
+# Frontend'in yeni versiyonu '/dialogue' router'ını kullanıyor ama
+# eski yapı bozulmasın diye burayı da yeni Ajan'a bağladık.
 @app.post("/cases/{case_id}/query")
 async def query_case(case_id: str, req: QueryRequest):
-    case = case_service.get_case_by_id(case_id)
-    if not case:
-        raise HTTPException(status_code=404, detail="Case not found")
+    # 1. Vakayı bul
+    case_data = selector_agent.get_case_by_id(case_id)
+    if not case_data:
+        raise HTTPException(status_code=404, detail="Vaka bulunamadı")
     
-    # Dialogue Agent'a gönderiyoruz. 
-    # Not: DialogueAgent kodunu da yeni JSON yapısındaki 'rubric' ve 'narrative'i
-    # anlayacak şekilde güncellediğinden emin olmalısın.
-    response = await dialogue_agent.handle_response(req.question, case)
-    return response
+    # 2. Dialogue Agent'ı çağır (Yeni yoldan)
+    try:
+        from dialogue.dialogue_agent import DialogueAgent
+        temp_agent = DialogueAgent()
+        
+        # Yeni fonksiyonumuz 'generate_response'
+        response = temp_agent.generate_response(
+            user_input=req.message if hasattr(req, 'message') else req.question,
+            case_data=case_data,
+            mode="explain" # Eski endpoint için varsayılan mod
+        )
+        return response
+    except Exception as e:
+        print(f"Hata: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    print("🚀 Sunucu başlatılıyor...")
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    print("🚀 Sunucu Python üzerinden başlatılıyor...")
+    uvicorn.run(app, host="127.0.0.1", port=8000)

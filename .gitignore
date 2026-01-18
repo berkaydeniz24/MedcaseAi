@@ -19,5 +19,5 @@ medcase-backend/public/images/*
 medcase-frontend/node_modules/
 medcase-frontend/.expo/
 medcase-frontend/dist/
-medcase-frontend/.env
+.env
 node_modules/

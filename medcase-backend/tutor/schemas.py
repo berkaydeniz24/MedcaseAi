@@ -1,4 +1,4 @@
-# src/tutor/schemas.py
+# tutor/schemas.py
 from pydantic import BaseModel, Field, field_validator
 from typing import Literal, Optional, List, Dict, Any
 
@@ -22,23 +22,26 @@ class CaseContext(BaseModel):
     id: str = Field(min_length=1)
     title: str = ""
     summary: str = ""
-    step: StepContext
+    # --- DEĞİŞİKLİK BURADA ---
+    # Narrative (Hikaye) alanını ekledik, Step'i opsiyonel yaptık.
+    narrative: str = "" 
+    step: Optional[StepContext] = None 
+    # -------------------------
 
 class UserContext(BaseModel):
     selectedIndex: Optional[int] = Field(default=None, ge=0)
-    ask: str = ""
+    ask: str = "" # Kullanıcının serbest metin sorusu
 
     @field_validator("selectedIndex")
     @classmethod
     def selected_in_range(cls, v, info):
-        # Range check is done in TutorAgent using step options length; keep minimal here
         return v
 
 class TutorInput(BaseModel):
     case: CaseContext
     user: Optional[UserContext] = None
     mode: Mode = "explain"
-    language: Lang = "tr"
+    language: Lang = "en"
     userLevel: str = "beginner"
 
 class TutorOutput(BaseModel):
