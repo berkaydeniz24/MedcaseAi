@@ -1,4 +1,4 @@
-# Pydantic (JSON) çıktı modelleri
+# dialogue/schemas.py
 
 from pydantic import BaseModel
 from typing import List, Literal
@@ -16,4 +16,3 @@ class DialogueResponse(BaseModel):
     followups: List[str]
     safety: SafetyInfo
     meta: MetaInfo
-
