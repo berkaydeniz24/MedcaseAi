@@ -65,9 +65,9 @@ class CaseSelectorAgent:
         # Pydantic ile veriyi paketle
         case_obj = CaseOutput(
             id=raw_data.get("id"),
-            title=raw_data.get("title", "Bilinmeyen Vaka"),
-            specialty=raw_data.get("specialty", "Genel"),
-            difficulty=raw_data.get("difficulty", "Orta"),
+            title=raw_data.get("title", "Unknown Case"),
+            specialty=raw_data.get("specialty", "General"),
+            difficulty=raw_data.get("difficulty", "Intermediate"),
             narrative=raw_data.get("narrative", ""),
             image=image_url,
             rubric=CaseRubric(**raw_rubric),
