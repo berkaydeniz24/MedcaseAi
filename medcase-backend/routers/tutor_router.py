@@ -20,7 +20,7 @@ from tutor.schemas import (
     UserContext,
 )
 
-router = APIRouter(prefix="/tutor", tags=["tutor"])
+router = APIRouter(tags=["tutor"])
 
 
 # -------- Request models (FastAPI) --------
