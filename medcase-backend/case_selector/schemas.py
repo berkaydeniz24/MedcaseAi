@@ -13,8 +13,8 @@ class CaseRubric(BaseModel):
 class CaseOutput(BaseModel):
     id: str
     title: str
-    specialty: str = "Genel"
-    difficulty: str = "Orta"
+    specialty: str = "General"
+    difficulty: str = "Intermediate"
     narrative: str
     image: Optional[str] = None
     rubric: CaseRubric = Field(default_factory=CaseRubric)

@@ -53,7 +53,7 @@ async def tutor(req: TutorRequest) -> TutorOutput:
         seed_q = (case.get("seed_questions") or ["Bu vakada ilk yaklaşımın nedir?"])[0]
         step_ctx = StepContext(
             question=seed_q,
-            options=["Devam et", "İpucu ver"],  # en az 2 seçenek şartsa
+            options=["Continue", "Hint"],  # en az 2 seçenek şartsa
             correct=0,  # correct zorunluysa 0 veriyoruz (teach modda kullanılabilir)
         )
         user_ctx = UserContext(selectedIndex=None, ask=req.message)
