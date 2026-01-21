@@ -3,7 +3,7 @@ import sys
 import os
 
 # --- SİGORTA KODU ---
-# Python'un 'case_selector', 'dialogue' vb. klasörleri bulmasını garantiye alır
+# Python'un klasörleri bulmasını garantiye alır
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from dotenv import load_dotenv
@@ -15,17 +15,24 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 
+# --- DATABASE SETUP (EKLENDİ) ---
+# Tabloları oluştur (varsa dokunmaz)
+from services import models
+from services.database import engine
+models.Base.metadata.create_all(bind=engine)
+
 # --- YENİ MİMARİ: Case Service yerine Selector Agent ---
-# Artık verileri yöneten tek bir merkezimiz var.
 from case_selector.selector_agent import selector_agent
 
 # --- ROUTER IMPORTLARI ---
 tutor_router = None
 dialogue_router = None
+user_router = None  # <--- EKLENDİ
 
 try:
     from routers import tutor_router
     from routers import dialogue_router
+    from routers import user_router # <--- EKLENDİ
     HAS_ROUTERS = True
 except ImportError as e:
     HAS_ROUTERS = False
@@ -46,6 +53,9 @@ if dialogue_router:
 if tutor_router:
     app.include_router(tutor_router.router, prefix="/tutor", tags=["tutor"])
 
+if user_router:  # <--- EKLENDİ (İstatistik Endpointleri)
+    app.include_router(user_router.router, prefix="/user", tags=["User"])
+
 # --- 3. CORS AYARLARI (Mobil Uygulama İçin) ---
 app.add_middleware(
     CORSMiddleware,
@@ -58,8 +68,7 @@ app.add_middleware(
 class QueryRequest(BaseModel):
     question: str
 
-# --- 4. VAKA LİSTELEME (GÜNCELLENDİ) ---
-# Artık veriyi 'selector_agent' üzerinden çekiyoruz.
+# --- 4. VAKA LİSTELEME ---
 @app.get("/cases")
 def list_cases():
     cases = selector_agent.cases
@@ -70,41 +79,34 @@ def list_cases():
             "specialty": c.get("specialty", "Genel"),
             "difficulty": c.get("difficulty", "Orta"),
             "summary": c.get("narrative", "")[:120] + "...",
-            # Resim kontrolünü güvenli hale getirdik
             "has_image": len(c.get("assets", {}).get("images", [])) > 0
         } 
         for c in cases
     ]
 
-# --- 5. TEK VAKA DETAYI (GÜNCELLENDİ) ---
+# --- 5. TEK VAKA DETAYI ---
 @app.get("/cases/{case_id}")
 def get_case(case_id: str):
-    # Selector Agent, resim URL'lerini otomatik düzelterek verir
     case = selector_agent.get_case_by_id(case_id)
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
     return case
 
-# --- 6. ESKİ SOHBET ENDPOINTİ (UYUMLU HALE GETİRİLDİ) ---
-# Frontend'in yeni versiyonu '/dialogue' router'ını kullanıyor ama
-# eski yapı bozulmasın diye burayı da yeni Ajan'a bağladık.
+# --- 6. ESKİ SOHBET ENDPOINTİ (Legacy Support) ---
 @app.post("/cases/{case_id}/query")
 async def query_case(case_id: str, req: QueryRequest):
-    # 1. Vakayı bul
     case_data = selector_agent.get_case_by_id(case_id)
     if not case_data:
         raise HTTPException(status_code=404, detail="Vaka bulunamadı")
     
-    # 2. Dialogue Agent'ı çağır (Yeni yoldan)
     try:
         from dialogue.dialogue_agent import DialogueAgent
         temp_agent = DialogueAgent()
         
-        # Yeni fonksiyonumuz 'generate_response'
         response = temp_agent.generate_response(
             user_input=req.message if hasattr(req, 'message') else req.question,
             case_data=case_data,
-            mode="explain" # Eski endpoint için varsayılan mod
+            mode="explain"
         )
         return response
     except Exception as e:
