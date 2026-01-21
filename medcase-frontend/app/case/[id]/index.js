@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import {
   View, Text, ScrollView, StyleSheet, Pressable,
   ActivityIndicator, SafeAreaView, StatusBar
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import { getCaseById, submitAnswer } from "../../../src/api/endpoints";
 import { Colors } from "../../../src/theme/colors";
 import { getLastSession } from "../../../src/api/session_cache";
 
-// Durum seçenekleri ve renkleri
+// Durum seçenekleri
 const STATUS_OPTIONS = [
   { id: 'Çözülecek', label: 'Çözülecek', color: '#64748B', bg: '#F1F5F9' },
   { id: 'Devam Ediyor', label: 'Devam Ediyor', color: '#854D0E', bg: '#FEF9C3' },
@@ -29,11 +29,11 @@ export default function PatientRecordPage() {
   // MCQ states
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [feedback, setFeedback] = useState(null); // { isCorrect, tutorAnswer }
+  const [feedback, setFeedback] = useState(null);
 
   const cached = getLastSession();
 
-  // Eğer sayfa hızlı antrenmandan geldiyse, cache'teki MCQ'yu kullanacağız
+  // Cache kontrolü
   const mcq = useMemo(() => {
     if (!sessionId) return null;
     if (!cached) return null;
@@ -42,6 +42,7 @@ export default function PatientRecordPage() {
     return cached.mcq || null;
   }, [sessionId, cached, id]);
 
+  // 1. Vaka Detayını Çek
   useEffect(() => {
     getCaseById(String(id))
       .then((res) => {
@@ -52,15 +53,22 @@ export default function PatientRecordPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  // 2. EKRANI TEMİZLEME (KRİTİK BÖLÜM)
+  // Session ID değiştiğinde seçimleri sıfırla.
+  useEffect(() => {
+    if (sessionId) {
+      setSelectedIndex(null);
+      setFeedback(null);
+      setSubmitting(false);
+    }
+  }, [sessionId]); 
+
   const handleStatusChange = (newStatus) => {
     setCurrentStatus(newStatus);
-    console.log(`Vaka ${id} durumu ${newStatus} olarak güncellendi.`);
   };
 
   const handleSubmitAnswer = async () => {
-    if (!sessionId) return;
-    if (selectedIndex === null || selectedIndex === undefined) return;
-    if (submitting) return;
+    if (!sessionId || selectedIndex === null || submitting) return;
 
     setSubmitting(true);
     try {
@@ -72,7 +80,7 @@ export default function PatientRecordPage() {
     } catch (e) {
       setFeedback({
         isCorrect: false,
-        tutorAnswer: "Bağlantı hatası oluştu. Lütfen tekrar deneyin."
+        tutorAnswer: "Bağlantı hatası oluştu."
       });
     } finally {
       setSubmitting(false);
@@ -87,7 +95,7 @@ export default function PatientRecordPage() {
       <StatusBar barStyle="dark-content" />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
-        {/* Vaka Kimlik Kartı ve Durum Değiştirici */}
+        {/* Vaka Kimlik Kartı */}
         <View style={styles.idCard}>
           <View style={styles.idHeader}>
             <View style={styles.patientAvatar}>
@@ -132,15 +140,14 @@ export default function PatientRecordPage() {
           <Text style={styles.narrativeText}>{caseData.narrative || "Vaka detayı yüklenemedi."}</Text>
         </View>
 
-        {/* ✅ MCQ / Hızlı Antrenman Bloğu (sadece session varsa) */}
+        {/* MCQ / Hızlı Antrenman */}
         {sessionId ? (
           <View style={styles.mcqCard}>
             <Text style={styles.mcqTitle}>Hızlı Antrenman</Text>
 
             {!mcq ? (
               <Text style={styles.mcqMuted}>
-                Bu sayfa hızlı antrenman oturumundan açılmadı ya da oturum bilgisi bulunamadı.
-                Geri dönüp “Hızlı Antrenman” butonundan tekrar başlat.
+                Oturum bilgisi yükleniyor veya bulunamadı...
               </Text>
             ) : (
               <>
@@ -200,7 +207,6 @@ export default function PatientRecordPage() {
 
       </ScrollView>
 
-      {/* Footer */}
       <View style={styles.footer}>
         <Pressable
           style={styles.actionButton}
