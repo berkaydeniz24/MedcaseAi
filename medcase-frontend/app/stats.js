@@ -1,13 +1,56 @@
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, Dimensions } from "react-native";
+import { useState, useCallback } from "react";
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, Dimensions, ActivityIndicator, RefreshControl } from "react-native";
+import { useFocusEffect } from "expo-router"; // 👈 Navigasyon odağını yakalamak için
 import { Colors } from "../src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { getUserStats } from "../src/api/endpoints";
 
 const { width } = Dimensions.get('window');
 
 export default function DetailedStatsPage() {
-  // Simüle edilmiş haftalık veriler (Pazartesi - Pazar)
+  const [stats, setStats] = useState({ total_correct: 0, total_wrong: 0 });
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Simüle edilmiş grafik verileri
   const weeklyActivity = [2, 5, 8, 4, 10, 3, 1];
   const maxActivity = Math.max(...weeklyActivity);
+
+  // Veri çekme fonksiyonu
+  const fetchStats = async () => {
+    try {
+      const res = await getUserStats();
+      setStats(res);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  // ✅ DÜZELTME: useEffect yerine useFocusEffect
+  // Sayfa her odaklandığında (tab değişimi dahil) veriyi yeniler.
+  useFocusEffect(
+    useCallback(() => {
+      // İlk açılışta loading gösterelim, sonrakilerde sessizce güncellesin
+      fetchStats();
+    }, [])
+  );
+
+  // Manuel yenileme (Ekranı aşağı çekince)
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchStats();
+  };
+
+  // Hesaplamalar
+  const totalAnswers = stats.total_correct + stats.total_wrong;
+  const accuracy = totalAnswers > 0 
+    ? Math.round((stats.total_correct / totalAnswers) * 100) 
+    : 0;
+
+  if (loading) return <View style={{flex:1, justifyContent:'center'}}><ActivityIndicator color={Colors.primary} /></View>;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -16,29 +59,36 @@ export default function DetailedStatsPage() {
         <Text style={styles.headerSub}>MedCase AI v1.2</Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollContent}
+        // 👇 Pull to Refresh Eklendi
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.primary]} />
+        }
+      >
         
-        {/* 1. Üst Özet Kartları */}
+        {/* 1. Üst Özet Kartları (GERÇEK VERİ) */}
         <View style={styles.statsGrid}>
           <View style={styles.infoCard}>
-            <Ionicons name="time-outline" size={24} color={Colors.accent} />
-            <Text style={styles.infoVal}>6.4 dk</Text>
-            <Text style={styles.infoLabel}>Ort. Çözüm</Text>
+            <Ionicons name="checkmark-circle-outline" size={24} color={Colors.success} />
+            <Text style={styles.infoVal}>{stats.total_correct}</Text>
+            <Text style={styles.infoLabel}>Doğru Tanı</Text>
           </View>
           <View style={styles.infoCard}>
-            <Ionicons name="medal-outline" size={24} color={Colors.success} />
-            <Text style={styles.infoVal}>%92</Text>
-            <Text style={styles.infoLabel}>Tanı İsabeti</Text>
+            <Ionicons name="pie-chart-outline" size={24} color={Colors.accent} />
+            <Text style={styles.infoVal}>%{accuracy}</Text>
+            <Text style={styles.infoLabel}>Başarı Oranı</Text>
           </View>
           <View style={styles.infoCard}>
-            <Ionicons name="flash-outline" size={24} color={Colors.warning} />
-            <Text style={styles.infoVal}>24</Text>
-            <Text style={styles.infoLabel}>Toplam Puan</Text>
+            <Ionicons name="layers-outline" size={24} color={Colors.warning} />
+            <Text style={styles.infoVal}>{totalAnswers}</Text>
+            <Text style={styles.infoLabel}>Toplam Deneme</Text>
           </View>
         </View>
 
-        {/* 2. Haftalık Aktivite Grafiği (Custom Bar Chart) */}
-        <Text style={styles.sectionTitle}>HAFTALIK VAKA AKTİVİTESİ</Text>
+        {/* 2. Haftalık Aktivite Grafiği (Placeholder) */}
+        <Text style={styles.sectionTitle}>HAFTALIK VAKA AKTİVİTESİ (Simülasyon)</Text>
         <View style={styles.chartCard}>
           <View style={styles.barChartRow}>
             {weeklyActivity.map((val, idx) => (
@@ -49,52 +99,7 @@ export default function DetailedStatsPage() {
             ))}
           </View>
         </View>
-
-        {/* 3. Zorluk Dağılımı ve Sayısal Veriler */}
-        <Text style={styles.sectionTitle}>ZORLUK SEVİYESİ ANALİZİ</Text>
-        <View style={styles.chartCard}>
-          <View style={styles.distributionContainer}>
-            <View style={[styles.distFill, { width: '32.5%', backgroundColor: Colors.success }]} />
-            <View style={[styles.distFill, { width: '47.5%', backgroundColor: Colors.warning }]} />
-            <View style={[styles.distFill, { width: '20%', backgroundColor: Colors.danger }]} />
-          </View>
-          <View style={styles.distLegend}>
-            <View style={styles.legendItem}>
-              <Text style={styles.legendNum}>65</Text>
-              <Text style={styles.legendTxt}>Kolay</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <Text style={styles.legendNum}>95</Text>
-              <Text style={styles.legendTxt}>Orta</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <Text style={styles.legendNum}>40</Text>
-              <Text style={styles.legendTxt}>Zor</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* 4. Branş Bazlı Uzmanlık Skoru */}
-        <Text style={styles.sectionTitle}>BRANŞ YETKİNLİĞİ</Text>
-        <View style={styles.specialtyCard}>
-          {[
-            { name: 'Kardiyoloji', score: 85, color: '#EF4444' },
-            { name: 'Nöroloji', score: 72, color: '#6366F1' },
-            { name: 'Dermatoloji', score: 40, color: '#F59E0B' },
-            { name: 'Gastroenteroloji', score: 55, color: '#10B981' }
-          ].map((item, index) => (
-            <View key={index} style={styles.specRow}>
-              <View style={styles.specInfo}>
-                <Text style={styles.specName}>{item.name}</Text>
-                <Text style={styles.specPerc}>%{item.score}</Text>
-              </View>
-              <View style={styles.progressBg}>
-                <View style={[styles.progressFill, { width: `${item.score}%`, backgroundColor: item.color }]} />
-              </View>
-            </View>
-          ))}
-        </View>
-
+        
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
@@ -121,19 +126,4 @@ const styles = StyleSheet.create({
   barWrapper: { alignItems: 'center', width: (width - 120) / 7 },
   bar: { width: 12, borderRadius: 6, marginBottom: 8 },
   barLabel: { fontSize: 10, fontWeight: '700', color: '#64748B' },
-
-  distributionContainer: { height: 12, flexDirection: 'row', borderRadius: 6, overflow: 'hidden' },
-  distFill: { height: '100%' },
-  distLegend: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 },
-  legendItem: { alignItems: 'center' },
-  legendNum: { fontSize: 16, fontWeight: '800', color: '#1E293B' },
-  legendTxt: { fontSize: 10, color: '#64748B', fontWeight: '600' },
-
-  specialtyCard: { backgroundColor: 'white', borderRadius: 24, padding: 20 },
-  specRow: { marginBottom: 18 },
-  specInfo: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  specName: { fontSize: 13, fontWeight: '700', color: '#1E293B' },
-  specPerc: { fontSize: 12, fontWeight: '800', color: '#64748B' },
-  progressBg: { height: 6, backgroundColor: '#F1F5F9', borderRadius: 3, overflow: 'hidden' },
-  progressFill: { height: '100%', borderRadius: 3 }
 });
