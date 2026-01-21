@@ -26,3 +26,5 @@ export const getUserStats = () => apiGet("/user/stats");
 
 // Hangi vakanın hangi durumda olduğunu (new, in_progress, solved) çeker
 export const getCaseProgress = () => apiGet("/user/progress");
+
+export const getChatHistory = () => apiGet("/user/history");

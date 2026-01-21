@@ -11,16 +11,61 @@ import {
   StyleSheet,
   Modal,
   ScrollView,
+  SafeAreaView, // ✅ Safe Area
+  Dimensions,   // ✅ Ekran genişliği için
+  Keyboard      // ✅ Klavye dinleyicisi için
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import Markdown from 'react-native-markdown-display'; // ✅ Markdown eklendi
 import { chatDialogue, getCaseById } from "../../../src/api/endpoints";
 import { Colors } from "../../../src/theme/colors";
 
-const MODE_OPTIONS = [
-  { id: "hint", label: "Hint", desc: "Yönlendirici ipuçları" },
-  { id: "explain", label: "Explain", desc: "Neden-sonuç açıkla" },
-  { id: "teach", label: "Teach", desc: "Mini ders gibi öğret" },
-];
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
+// ✅ RENK VE EMOJİ KONFİGÜRASYONU
+const MODE_CONFIG = {
+  hint: {
+    id: "hint",
+    label: "Hint",
+    desc: "Get a guiding clue",
+    emoji: "💡",
+    colors: {
+      main: "#F59E0B",
+      bg: "#FFFBEB",
+      border: "#FCD34D",
+      dark: "#B45309",
+      btnBg: "#FEF3C7"
+    }
+  },
+  explain: {
+    id: "explain",
+    label: "Explain",
+    desc: "Understand the logic",
+    emoji: "📖",
+    colors: {
+      main: "#3B82F6",
+      bg: "#EFF6FF",
+      border: "#93C5FD",
+      dark: "#1D4ED8",
+      btnBg: "#DBEAFE"
+    }
+  },
+  teach: {
+    id: "teach",
+    label: "Teach",
+    desc: "Deep dive lesson",
+    emoji: "🎓",
+    colors: {
+      main: "#8B5CF6",
+      bg: "#F3E8FF",
+      border: "#C4B5FD",
+      dark: "#6D28D9",
+      btnBg: "#EDE9FE"
+    }
+  }
+};
+
+const MODE_OPTIONS = [MODE_CONFIG.hint, MODE_CONFIG.explain, MODE_CONFIG.teach];
 
 export default function CaseChatPage() {
   const { id } = useLocalSearchParams();
@@ -31,16 +76,16 @@ export default function CaseChatPage() {
   const [isDiscussionClosed, setIsDiscussionClosed] = useState(false);
   const [caseData, setCaseData] = useState(null);
 
-  // ✅ NEW: chat mode + user settings
-  const [mode, setMode] = useState("hint"); // hint | explain | teach
-  const [userLevel, setUserLevel] = useState("beginner"); // beginner | intermediate | advanced
-  const [language, setLanguage] = useState("en"); // tr | en
+  // Ayarlar
+  const [mode, setMode] = useState("hint"); 
+  const [userLevel, setUserLevel] = useState("beginner"); 
+  const [language, setLanguage] = useState("en"); 
 
-  // Mesajları ve önerileri yöneten state
   const [messages, setMessages] = useState([
     {
       role: "ai",
-      text: "Dosyayı inceledim. Bu vaka hakkındaki analizini veya merak ettiğin tetkikleri paylaşabilirsin.",
+      text: "I have reviewed the file. You can share your analysis or ask about specific tests.",
+      mode: "neutral"
     },
   ]);
   const [followups, setFollowups] = useState([]);
@@ -48,6 +93,19 @@ export default function CaseChatPage() {
 
   useEffect(() => {
     getCaseById(String(id)).then(setCaseData).catch(console.error);
+
+    // ✅ KLAVYE SCROLL DÜZELTMESİ
+    // Klavye açıldığında listeyi en aşağı kaydırır
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+    };
   }, [id]);
 
   const send = async (textFromChip) => {
@@ -59,12 +117,13 @@ export default function CaseChatPage() {
     setInput("");
     setBusy(true);
 
+    const currentMode = mode; 
+
     try {
-      // ✅ UPDATED: mode gönderiyoruz
       const res = await chatDialogue(
         String(id),
         text,
-        mode,
+        currentMode,
         userLevel,
         language,
       );
@@ -72,14 +131,14 @@ export default function CaseChatPage() {
       const answerText =
         typeof res?.answer === "string"
           ? res.answer
-          : JSON.stringify(res?.answer ?? "Analiz tamamlandı.");
+          : JSON.stringify(res?.answer ?? "Analysis complete.");
 
-      setMessages((p) => [...p, { role: "ai", text: answerText }]);
+      setMessages((p) => [...p, { role: "ai", text: answerText, mode: currentMode }]);
       setFollowups(res.followups || []);
     } catch (e) {
       setMessages((p) => [
         ...p,
-        { role: "ai", text: "Bağlantı hatası oluştu." },
+        { role: "ai", text: "Connection error occurred.", mode: "neutral" },
       ]);
     } finally {
       setBusy(false);
@@ -93,162 +152,220 @@ export default function CaseChatPage() {
 
   const onChangeMode = (newMode) => {
     setMode(newMode);
-    setFollowups([]); // mode değişince önceki followup'lar karışmasın
+    setFollowups([]);
+  };
+
+  // ✅ Mesaj İçeriği Render Fonksiyonu (Markdown Desteği)
+  const renderMessageContent = (item) => {
+    if (item.role === 'ai') {
+      return (
+        <View style={{ width: '100%' }}>
+          {/* Markdown Bileşeni */}
+          <Markdown style={markdownStyles}>
+            {item.text}
+          </Markdown>
+        </View>
+      );
+    }
+    return <Text style={styles.userText}>{item.text}</Text>;
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={100}
-    >
-      {/* Aksiyon Barı */}
-      <View style={styles.topActionHeader}>
-        <Pressable
-          style={styles.viewReportBtn}
-          onPress={() => setReportVisible(true)}
-        >
-          <Text style={styles.viewReportText}>📄 Rapor</Text>
-        </Pressable>
-
-        {!isDiscussionClosed ? (
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        // ✅ GÜNCELLEME: Offset değeri 10 -> 100 yapıldı.
+        // Bu sayede klavye açıldığında input alanı görünür kalır.
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+      >
+        {/* Header */}
+        <View style={styles.topActionHeader}>
           <Pressable
-            style={styles.closeDiscussionBtn}
-            onPress={closeDiscussion}
+            style={styles.viewReportBtn}
+            onPress={() => setReportVisible(true)}
           >
-            <Text style={styles.closeDiscussionText}>Tartışmayı Bitir</Text>
+            <Text style={styles.viewReportText}>📄 Report</Text>
           </Pressable>
-        ) : (
-          <View style={styles.closedBadge}>
-            <Text style={styles.closedBadgeText}>Tartışma Tamamlandı</Text>
-          </View>
-        )}
-      </View>
 
-      {/* ✅ NEW: Mode Seçici */}
-      <View style={styles.modeBar}>
-        {MODE_OPTIONS.map((m) => {
-          const active = mode === m.id;
-          return (
+          {!isDiscussionClosed ? (
             <Pressable
-              key={m.id}
-              onPress={() => onChangeMode(m.id)}
-              style={[styles.modeChip, active && styles.modeChipActive]}
-              disabled={busy}
+              style={styles.closeDiscussionBtn}
+              onPress={closeDiscussion}
             >
-              <Text
+              <Text style={styles.closeDiscussionText}>End Discussion</Text>
+            </Pressable>
+          ) : (
+            <View style={styles.closedBadge}>
+              <Text style={styles.closedBadgeText}>Completed</Text>
+            </View>
+          )}
+        </View>
+
+        {/* Renkli Butonlar */}
+        <View style={styles.modeBar}>
+          {MODE_OPTIONS.map((m) => {
+            const active = mode === m.id;
+            return (
+              <Pressable
+                key={m.id}
+                onPress={() => onChangeMode(m.id)}
+                style={({ pressed }) => [
+                  styles.modeChip,
+                  { 
+                    backgroundColor: active ? m.colors.btnBg : Colors.white,
+                    borderColor: active ? m.colors.main : Colors.border,
+                    opacity: pressed ? 0.8 : 1,
+                    transform: [{ scale: pressed ? 0.98 : 1 }]
+                  }
+                ]}
+                disabled={busy}
+              >
+                <Text style={{ fontSize: 16 }}>{m.emoji}</Text>
+                <Text
+                  style={[
+                    styles.modeChipText,
+                    { color: active ? m.colors.dark : Colors.textSub }
+                  ]}
+                >
+                  {m.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+        
+        {/* Mod Açıklaması */}
+        <Text style={styles.modeHintText}>
+          Mode:{" "}
+          <Text style={{ fontWeight: "800", color: MODE_CONFIG[mode].colors.dark }}>
+            {MODE_CONFIG[mode].desc}
+          </Text>
+        </Text>
+
+        {/* Chat Listesi */}
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          keyExtractor={(_, i) => String(i)}
+          // ✅ Scroll İyileştirmeleri
+          contentContainerStyle={styles.chatPadding}
+          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+          onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
+          keyboardDismissMode="on-drag" // Listeyi çekince klavye kapanır
+          renderItem={({ item }) => {
+            const isUser = item.role === "user";
+            
+            let bubbleStyle = styles.aiBubble;
+
+            if (!isUser && item.mode && MODE_CONFIG[item.mode]) {
+               const conf = MODE_CONFIG[item.mode].colors;
+               bubbleStyle = {
+                 ...styles.aiBubble,
+                 backgroundColor: conf.bg,
+                 borderColor: conf.border,
+               };
+            }
+
+            return (
+              <View
                 style={[
-                  styles.modeChipText,
-                  active && styles.modeChipTextActive,
+                  styles.bubble,
+                  isUser ? styles.userBubble : bubbleStyle,
                 ]}
               >
-                {m.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
-      <Text style={styles.modeHintText}>
-        Mod:{" "}
-        <Text style={{ fontWeight: "800" }}>
-          {MODE_OPTIONS.find((x) => x.id === mode)?.desc}
-        </Text>
-      </Text>
+                {renderMessageContent(item)}
+              </View>
+            );
+          }}
+          ListFooterComponent={() =>
+            followups.length > 0 &&
+            !busy && (
+              <View style={styles.suggestionArea}>
+                <Text style={styles.suggestionTitle}>Suggested Questions:</Text>
+                {followups.map((f, i) => (
+                  <Pressable
+                    key={i}
+                    onPress={() => send(f)}
+                    style={styles.verticalChip}
+                  >
+                    <Text style={styles.chipText}>{f}</Text>
+                    <Text style={styles.chipArrow}>→</Text>
+                  </Pressable>
+                ))}
+              </View>
+            )
+          }
+        />
 
-      <FlatList
-        ref={flatListRef}
-        data={messages}
-        keyExtractor={(_, i) => String(i)}
-        onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
-        contentContainerStyle={styles.chatPadding}
-        renderItem={({ item }) => (
-          <View
-            style={[
-              styles.bubble,
-              item.role === "user" ? styles.userBubble : styles.aiBubble,
-            ]}
-          >
-            <Text
+        {/* Giriş Alanı */}
+        {!isDiscussionClosed ? (
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input}
+              placeholder="Type your analysis..."
+              value={input}
+              onChangeText={setInput}
+              multiline
+              editable={!busy}
+            />
+            <Pressable
+              onPress={() => send()}
               style={[
-                styles.msgText,
-                item.role === "user" ? styles.userText : styles.aiText,
+                styles.sendBtn, 
+                !input.trim() && { opacity: 0.5 },
+                { backgroundColor: MODE_CONFIG[mode].colors.main }
               ]}
             >
-              {item.text}
+              {busy ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.sendText}>Send</Text>
+              )}
+            </Pressable>
+          </View>
+        ) : (
+          <View style={styles.discussionClosedFooter}>
+            <Text style={styles.closedInfoText}>
+              This discussion has ended.
             </Text>
           </View>
         )}
-        ListFooterComponent={() =>
-          followups.length > 0 &&
-          !busy && (
-            <View style={styles.suggestionArea}>
-              <Text style={styles.suggestionTitle}>Önerilen Sorular:</Text>
-              {followups.map((f, i) => (
-                <Pressable
-                  key={i}
-                  onPress={() => send(f)}
-                  style={styles.verticalChip}
-                >
-                  <Text style={styles.chipText}>{f}</Text>
-                  <Text style={styles.chipArrow}>→</Text>
+
+        {/* Modal */}
+        <Modal visible={reportVisible} animationType="fade" transparent={true}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Clinical File</Text>
+                <Pressable onPress={() => setReportVisible(false)} hitSlop={20}>
+                  <Text style={styles.closeModalBtn}>Close</Text>
                 </Pressable>
-              ))}
+              </View>
+              <ScrollView>
+                <Text style={styles.reportText}>{caseData?.narrative}</Text>
+              </ScrollView>
             </View>
-          )
-        }
-      />
-
-      {/* Giriş Alanı */}
-      {!isDiscussionClosed ? (
-        <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.input}
-            placeholder="Analizini yaz..."
-            value={input}
-            onChangeText={setInput}
-            multiline
-            editable={!busy}
-          />
-          <Pressable
-            onPress={() => send()}
-            style={[styles.sendBtn, !input.trim() && { opacity: 0.5 }]}
-          >
-            {busy ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.sendText}>Gönder</Text>
-            )}
-          </Pressable>
-        </View>
-      ) : (
-        <View style={styles.discussionClosedFooter}>
-          <Text style={styles.closedInfoText}>
-            Bu klinik tartışma sonlandırılmıştır.
-          </Text>
-        </View>
-      )}
-
-      {/* Rapor Modalı */}
-      <Modal visible={reportVisible} animationType="fade" transparent={true}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Klinik Dosya</Text>
-              <Pressable onPress={() => setReportVisible(false)} hitSlop={20}>
-                <Text style={styles.closeModalBtn}>Kapat</Text>
-              </Pressable>
-            </View>
-            <ScrollView>
-              <Text style={styles.reportText}>{caseData?.narrative}</Text>
-            </ScrollView>
           </View>
-        </View>
-      </Modal>
-    </KeyboardAvoidingView>
+        </Modal>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
+// ✅ MARKDOWN STYLES
+const markdownStyles = {
+  body: { fontSize: 15, lineHeight: 24, color: Colors.textMain, width: '100%' },
+  paragraph: { flexWrap: 'wrap', marginBottom: 10, width: '100%' },
+  list_item: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 6, width: '100%' },
+  bullet_list: { marginBottom: 10, width: '100%' },
+  heading1: { color: Colors.primary, fontWeight: 'bold', fontSize: 17, marginTop: 10 },
+  heading2: { color: Colors.textMain, fontWeight: 'bold', fontSize: 16, marginTop: 8 },
+  strong: { fontWeight: 'bold', color: '#000' },
+};
+
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: Colors.white },
   container: { flex: 1, backgroundColor: Colors.background },
 
   topActionHeader: {
@@ -281,10 +398,9 @@ const styles = StyleSheet.create({
   },
   closedBadgeText: { color: Colors.textSub, fontWeight: "700" },
 
-  // ✅ NEW mode bar
   modeBar: {
     flexDirection: "row",
-    gap: 10,
+    gap: 8,
     paddingHorizontal: 12,
     paddingTop: 12,
     paddingBottom: 6,
@@ -292,43 +408,56 @@ const styles = StyleSheet.create({
   },
   modeChip: {
     flex: 1,
+    flexDirection: 'row',
+    gap: 6,
     paddingVertical: 10,
     borderRadius: 14,
     borderWidth: 1,
     borderColor: Colors.border,
     backgroundColor: Colors.white,
     alignItems: "center",
+    justifyContent: 'center',
   },
-  modeChipActive: {
-    borderColor: Colors.primary,
-    backgroundColor: "rgba(59, 130, 246, 0.08)",
+  modeChipText: { 
+    fontWeight: "800", 
+    fontSize: 13 
   },
-  modeChipText: { color: Colors.textSub, fontWeight: "800", fontSize: 12 },
-  modeChipTextActive: { color: Colors.primary },
 
   modeHintText: {
     paddingHorizontal: 14,
     paddingBottom: 8,
     color: Colors.textSub,
     fontSize: 12,
+    fontStyle: 'italic'
   },
 
-  chatPadding: { padding: 16 },
-  bubble: { padding: 14, borderRadius: 20, marginBottom: 12, maxWidth: "85%" },
+  chatPadding: { padding: 16, paddingBottom: 20 },
+  
+  // ✅ Balon Genişlik Ayarları (Markdown bozulmasın diye)
+  bubble: { 
+    padding: 14, 
+    borderRadius: 20, 
+    marginBottom: 12, 
+  },
   userBubble: {
     alignSelf: "flex-end",
     backgroundColor: Colors.primary,
     borderBottomRightRadius: 4,
+    maxWidth: "85%",
   },
   aiBubble: {
     alignSelf: "flex-start",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.white, 
     borderBottomLeftRadius: 4,
     borderWidth: 1,
     borderColor: Colors.border,
+    minWidth: SCREEN_WIDTH * 0.75, 
+    maxWidth: SCREEN_WIDTH * 0.90, 
   },
+  
+  // msgText ve aiText artık Markdown içinde handle ediliyor ama user için gerekli
   msgText: { fontSize: 15, lineHeight: 22 },
-  userText: { color: Colors.white },
+  userText: { color: Colors.white, fontSize: 15 },
   aiText: { color: Colors.textMain },
 
   suggestionArea: { marginTop: 10, marginBottom: 20 },
@@ -376,7 +505,6 @@ const styles = StyleSheet.create({
     maxHeight: 100,
   },
   sendBtn: {
-    backgroundColor: Colors.accent,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
