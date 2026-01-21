@@ -6,6 +6,7 @@ from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 
 # Database Imports
 from services.database import get_db
@@ -45,14 +46,13 @@ def start_simulation(db: Session = Depends(get_db)):
     """
     Yeni bir vaka simülasyonu başlatır.
     MCQ verisini JSON olarak VERİTABANINA kaydeder.
-    Böylece sunucu restart olsa bile cevap anahtarı kaybolmaz.
     """
     # 1) Case seç
     case_data = selector_agent.select_random_case()
     if not case_data or ("error" in case_data):
         raise HTTPException(status_code=404, detail=case_data.get("error", "Case not found"))
 
-    # 2) MCQ üret (Karıştırılmış şıklar burada gelir)
+    # 2) MCQ üret
     try:
         mcq_full = mcq_generator.generate_mcq(case_data)
     except Exception as e:
@@ -62,22 +62,19 @@ def start_simulation(db: Session = Depends(get_db)):
     # 3) SESSION OLUŞTUR VE DB'YE YAZ
     session_id = str(uuid.uuid4())
 
-    # A) Veritabanına Kaydet (En Güvenli Yöntem)
-    # mcq_full sözlüğünü JSON string'e çevirip saklıyoruz.
-    # models.py'de 'mcq_data' sütunu eklediğini varsayıyoruz.
     new_db_session = models.ChatSession(
         session_id=session_id, 
         case_id=case_data.get("id"),
-        mcq_data=json.dumps(mcq_full, ensure_ascii=False) # <--- KRİTİK NOKTA: Veriyi diske yazıyoruz
+        mcq_data=json.dumps(mcq_full, ensure_ascii=False)
     )
     db.add(new_db_session)
     
-    # Vaka durumunu güncelle (in_progress)
+    # Vaka durumunu güncelle
     dbs = DBService(db)
     dbs.update_case_status(case_data.get("id"), "in_progress")
     db.commit()
 
-    # B) RAM'e de atalım (Hız için, opsiyonel ama dursun)
+    # RAM'e de atalım (Opsiyonel)
     session_store._sessions[session_id] = type("SessionData", (), {
         "session_id": session_id,
         "case_id": case_data.get("id"),
@@ -85,7 +82,6 @@ def start_simulation(db: Session = Depends(get_db)):
         "created_at": 0
     })
 
-    # 4) Frontend'e PUBLIC MCQ dön
     mcq_public = {
         "question": mcq_full["question"],
         "options": mcq_full["options"],
@@ -103,6 +99,7 @@ def start_simulation(db: Session = Depends(get_db)):
 async def chat_with_agent(case_id: str, req: DialogueRequest, db: Session = Depends(get_db)):
     """
     Kullanıcı ile sohbet eder.
+    Ajan stateless'tır, ancak geçmiş (history) parametre olarak verilir.
     """
     # 1. Vakayı kontrol et
     case = selector_agent.get_case_by_id(case_id)
@@ -125,20 +122,22 @@ async def chat_with_agent(case_id: str, req: DialogueRequest, db: Session = Depe
     language = req.language if req.language in ["tr", "en"] else "tr"
     user_level = req.userLevel or "beginner"
 
-    user_input_with_meta = (
-        f"[LANG={language}][USER_LEVEL={user_level}][MODE={mode}]\n"
-        f"{req.message}"
-    )
-
     try:
-        # 4. Ajan cevabı üret
+        # 4. GEÇMİŞİ ÇEK (Bağlamı korumak için)
+        history_objs = dbs.get_chat_history(current_session_id)
+        chat_history = [{"role": h.role, "content": h.content} for h in history_objs]
+
+        # 5. Ajan cevabı üret (Geçmiş parametre olarak gidiyor)
         response = dialogue_agent.generate_response(
-            user_input=user_input_with_meta,
+            user_input=req.message, # Ham mesaj yeterli, prompt içinde birleşecek
             case_data=case,
-            mode=mode
+            mode=mode,
+            language=language,
+            user_level=user_level,
+            chat_history=chat_history # 👈 İşte sihir burada
         )
 
-        # 5. Cevabı Temizle
+        # 6. Cevabı Temizle
         ai_text = ""
         ai_followups = []
 
@@ -152,7 +151,7 @@ async def chat_with_agent(case_id: str, req: DialogueRequest, db: Session = Depe
         else:
             ai_text = str(response)
 
-        # 6. Loglama
+        # 7. Loglama
         dbs.add_message(current_session_id, "user", req.message)
         dbs.add_message(current_session_id, "ai", ai_text)
 
@@ -173,7 +172,7 @@ async def chat_with_agent(case_id: str, req: DialogueRequest, db: Session = Depe
 def submit_answer(session_id: str, req: AnswerRequest, db: Session = Depends(get_db)):
     """
     Cevabı kontrol eder.
-    RAM yerine VERİTABANINDAN okuma yapar. Böylece cevaplar ASLA kaybolmaz.
+    RAM yerine VERİTABANINDAN okuma yapar.
     """
     dbs = DBService(db)
 
@@ -181,11 +180,11 @@ def submit_answer(session_id: str, req: AnswerRequest, db: Session = Depends(get
     db_session = db.query(models.ChatSession).filter_by(session_id=session_id).first()
     
     if not db_session:
-        raise HTTPException(status_code=404, detail="Oturum bulunamadı veya süresi dolmuş.")
+        raise HTTPException(status_code=404, detail="Oturum bulunamadı.")
 
     case_id = db_session.case_id
     
-    # 2. MCQ Verisini DB'den Oku (JSON parse et)
+    # 2. MCQ Verisini DB'den Oku
     mcq_full = {}
     if db_session.mcq_data:
         try:
@@ -193,7 +192,7 @@ def submit_answer(session_id: str, req: AnswerRequest, db: Session = Depends(get
         except Exception as e:
             print(f"MCQ Data Parse Error: {e}")
     
-    # Eğer DB'de veri yoksa (eski kayıtlar vs), RAM'e bak (Yedek)
+    # Fallback RAM
     if not mcq_full:
         ram_session = session_store.get(session_id)
         if ram_session and ram_session.mcq:
@@ -202,17 +201,13 @@ def submit_answer(session_id: str, req: AnswerRequest, db: Session = Depends(get
     # 3. Case verisini çek
     case = selector_agent.get_case_by_id(case_id)
     
-    # 4. Doğru Cevabı ve Soruyu Belirle
-    # ARTIK FALLBACK YOK. Veritabanında ne yazıyorsa o geçerli.
-    # mcq_full boş gelirse hata verebiliriz veya loglarız ama "A" demeyeceğiz.
-    
-    correct_index = int(mcq_full.get("correctIndex", 0)) # Varsayılan 0 ama artık DB'den doğru gelecek
+    # 4. Doğru Cevabı Belirle
+    correct_index = int(mcq_full.get("correctIndex", 0)) 
     question_text = mcq_full.get("question", "Soru verisi yüklenemedi.")
     options = mcq_full.get("options", [])
     
-    # Eğer seçenekler DB'den gelmediyse (çok nadir durum), case içinden uydurma
     if not options:
-        options = ["A", "B", "C", "D"] # Gösterimlik
+        options = ["A", "B", "C", "D"] 
 
     selected_index = int(req.selectedIndex)
     is_correct = (selected_index == correct_index)
@@ -250,7 +245,7 @@ def submit_answer(session_id: str, req: AnswerRequest, db: Session = Depends(get
         tutor_out = tutor_agent.run(tutor_inp)
     except Exception as e:
         print(f"Tutor Error: {e}")
-        msg = "Tebrikler, doğru cevap!" if is_correct else "Maalesef yanlış cevap."
+        msg = "Tebrikler!" if is_correct else "Yanlış cevap."
         tutor_out = {"answer": f"{msg}"}
 
     return {
@@ -261,3 +256,17 @@ def submit_answer(session_id: str, req: AnswerRequest, db: Session = Depends(get
         "isCorrect": is_correct,
         "tutor": tutor_out 
     }
+
+
+# ---------- 4) SOHBET GEÇMİŞİNİ GETİR ----------
+@router.get("/history/{session_id}")
+def get_session_history(session_id: str, db: Session = Depends(get_db)):
+    """
+    Belirli bir oturuma ait tüm mesajları getirir.
+    """
+    messages = db.query(models.ChatMessage)\
+        .filter(models.ChatMessage.session_id == session_id)\
+        .order_by(desc(models.ChatMessage.timestamp))\
+        .all()
+    
+    return messages

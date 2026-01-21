@@ -7,12 +7,17 @@ export const getCaseById = (id) => apiGet(`/cases/${id}`);
 // Dialogue
 export const startDialogue = () => apiGet("/dialogue/start");
 
-// ✅ CHAT: Varsayılan dil 'en' yapıldı, yapı aynı.
-export const chatDialogue = (caseId, message, mode="hint", userLevel="beginner", language="en") =>
-  apiPost(`/dialogue/${caseId}/chat`, { message, mode, userLevel, language });
+// ✅ GÜNCELLENDİ: İsmi 'sendChatMessage' oldu ve 'session_id' eklendi
+export const sendChatMessage = (caseId, message, mode="hint", userLevel="beginner", language="en", session_id = null) =>
+  apiPost(`/dialogue/${caseId}/chat`, { 
+    message, 
+    mode, 
+    userLevel, 
+    language,
+    session_id // <-- Kritik ekleme: Backend'e hangi sohbette olduğumuzu söyler
+  });
 
-
-// ✅ ANSWER: Varsayılan dil 'en' yapıldı.
+// ✅ ANSWER
 export const submitAnswer = (
   sessionId,
   selectedIndex,
@@ -21,10 +26,10 @@ export const submitAnswer = (
   language = "en"
 ) => apiPost(`/dialogue/${sessionId}/answer`, { selectedIndex, mode, userLevel, language });
 
-// Kullanıcının doğru/yanlış sayılarını çeker
+// User Stats & Progress
 export const getUserStats = () => apiGet("/user/stats");
-
-// Hangi vakanın hangi durumda olduğunu (new, in_progress, solved) çeker
 export const getCaseProgress = () => apiGet("/user/progress");
-
 export const getChatHistory = () => apiGet("/user/history");
+
+// Belirli bir oturumun mesajlarını çeker
+export const getSessionMessages = (session_id) => apiGet(`/dialogue/history/${session_id}`);

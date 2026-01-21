@@ -5,7 +5,6 @@ from .gemini_client import get_gemini_client
 from .prompts import DIALOGUE_SYSTEM_PROMPT
 from .schemas import DialogueResponse
 
-
 class DialogueAgent:
     def __init__(self):
         # Client init (safe)
@@ -24,7 +23,8 @@ class DialogueAgent:
         case_data: dict,
         mode: str = "hint",
         language: str = "tr",
-        user_level: str = "beginner"
+        user_level: str = "beginner",
+        chat_history: list = None # 👈 YENİ: Geçmişi parametre olarak alıyoruz
     ):
         # Eğer client oluşmadıysa hata ver
         if not hasattr(self, "client") or self.client is None:
@@ -44,14 +44,28 @@ class DialogueAgent:
         except Exception:
             case_str = str(case_data)
 
-        # Prompt (router'dan gelen mode/language/user_level ile)
+        # 1. GEÇMİŞ SOHBETİ HAZIRLA
+        # Bu kısım sayesinde model önceki konuşmaları hatırlar ama sessionlar karışmaz.
+        history_text = ""
+        if chat_history:
+            history_text = "\n--- PREVIOUS CHAT HISTORY ---\n"
+            for msg in chat_history:
+                # msg bir dict gelmeli: {'role': 'user'/'ai', 'content': '...'}
+                role_label = "USER" if msg.get("role") == "user" else "AI MENTOR"
+                content = msg.get("content", "")
+                history_text += f"{role_label}: {content}\n"
+            history_text += "--- END OF HISTORY ---\n"
+
+        # 2. PROMPT'U BİRLEŞTİR
+        # System Prompt + Case Data + History + Current Input
         prompt = (
             f"{DIALOGUE_SYSTEM_PROMPT}\n\n"
             f"LANGUAGE: {language}\n"
             f"USER_LEVEL: {user_level}\n"
             f"MODE: {mode}\n\n"
             f"CASE DATA: {case_str}\n\n"
-            f"USER: {user_input}\n"
+            f"{history_text}\n"  # 👈 Geçmişi buraya gömdük
+            f"USER (Current Input): {user_input}\n"
         )
 
         try:
@@ -65,6 +79,8 @@ class DialogueAgent:
             )
             return response.parsed
         except Exception as e:
+            # Hata detayını görmek için print
+            print(f"Gemini Hata Detayı: {e}")
             raise RuntimeError(f"Gemini Cevap Üretme Hatası: {str(e)}")
 
     @property
