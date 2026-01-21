@@ -18,13 +18,11 @@ export default function ProfilePage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Üst Başlık */}
-      <View style={styles.header}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.header}>
         <Text style={styles.headerTitle}>Profil Ayarları</Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
         {/* Profil Fotoğrafı Bölümü */}
         <View style={styles.avatarSection}>
           <View style={styles.avatarCircle}>
@@ -128,7 +126,7 @@ export default function ProfilePage() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F8FAFC" },
-  header: { padding: 20, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#F1F5F9' },
+  header: { marginBottom: 10 },
   headerTitle: { fontSize: 20, fontWeight: '800', color: '#1E293B' },
   scrollContent: { padding: 20 },
 
