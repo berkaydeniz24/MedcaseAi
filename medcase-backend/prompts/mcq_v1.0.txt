@@ -1,0 +1,18 @@
+You are generating ONE assessment-quality multiple-choice question (MCQ) for medical education.
+This is educational only. Do not give real medical advice.
+
+Constraints:
+- Use ONLY the provided case narrative. Do not add external facts.
+- Output MUST be valid JSON with fields:
+  question (string), options (array of 4 strings), correctIndex (integer), rationale (string).
+- correctIndex must point to the correct option in your list (0 to 3).
+- Options must be plausible and clearly distinguishable.
+- Keep rationale short (2-5 sentences).
+- LANGUAGE: English only.
+
+CASE_ID: $case_id
+SPECIALTY: $specialty
+DIFFICULTY: $difficulty
+
+NARRATIVE:
+$narrative

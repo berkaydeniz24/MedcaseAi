@@ -10,6 +10,11 @@ from dotenv import load_dotenv
 load_dotenv() # .env dosyasını yükle
 
 import json
+import logging
+
+from services.logging_config import configure_logging
+configure_logging()
+logger = logging.getLogger(__name__)
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
@@ -47,7 +52,7 @@ try:
     HAS_ROUTERS = True
 except ImportError as e:
     HAS_ROUTERS = False
-    print(f"⚠️ UYARI: Routerlar yüklenemedi. Sebebi: {e}")
+    logger.warning("Routerlar yüklenemedi. Sebebi: %s", e)
 
 app = FastAPI()
 
@@ -122,9 +127,9 @@ async def query_case(case_id: str, req: QueryRequest, db: Session = Depends(get_
         )
         return response
     except Exception as e:
-        print(f"Hata: {e}")
+        logger.error("query_case failed for case_id=%s: %s", case_id, e)
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    print("🚀 Sunucu Python üzerinden başlatılıyor...")
+    logger.info("Sunucu Python üzerinden başlatılıyor...")
     uvicorn.run(app, host="127.0.0.1", port=8000)

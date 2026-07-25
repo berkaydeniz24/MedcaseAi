@@ -1,10 +1,13 @@
 # services/seed_cases.py
 import json
+import logging
 import os
 
 from sqlalchemy.orm import Session
 
 from . import models
+
+logger = logging.getLogger(__name__)
 
 
 def seed_cases_if_empty(db: Session) -> None:
@@ -22,7 +25,7 @@ def seed_cases_if_empty(db: Session) -> None:
         with open(file_path, "r", encoding="utf-8") as f:
             raw_cases = json.load(f)
     except Exception as e:
-        print(f"❌ Case Seed Hatası: {e}")
+        logger.error("Case Seed Hatası: %s", e)
         return
 
     for raw in raw_cases:
@@ -38,4 +41,4 @@ def seed_cases_if_empty(db: Session) -> None:
         ))
 
     db.commit()
-    print(f"📚 Case Seed: {len(raw_cases)} vaka SQL veritabanına yüklendi.")
+    logger.info("Case Seed: %d vaka SQL veritabanına yüklendi.", len(raw_cases))

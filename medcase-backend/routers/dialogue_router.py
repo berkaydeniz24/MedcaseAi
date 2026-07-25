@@ -1,5 +1,6 @@
 # routers/dialogue_router.py
 import json
+import logging
 import uuid
 from typing import Optional, List, Dict, Any
 
@@ -18,10 +19,9 @@ from dialogue.dialogue_agent import DialogueAgent
 from case_selector.selector_agent import selector_agent
 from tutor.tutor_agent import tutor_agent
 from tutor.schemas import TutorInput, CaseContext, StepContext, UserContext
+from mcq.mcq_agent import mcq_agent
 
-# Services
-from services.session_store import session_store
-from services.mcq_generator import mcq_generator
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 dialogue_agent = DialogueAgent()
@@ -54,33 +54,26 @@ def start_simulation(db: Session = Depends(get_db)):
 
     # 2) MCQ üret
     try:
-        mcq_full = mcq_generator.generate_mcq(case_data)
+        mcq_full = mcq_agent.generate_mcq(case_data)
     except Exception as e:
-        print(f"MCQ Error: {e}")
+        logger.error("start_simulation: MCQ generation failed for case_id=%s: %s", case_data.get("id"), e)
         raise HTTPException(status_code=500, detail=f"MCQ generation failed: {e}")
 
-    # 3) SESSION OLUŞTUR VE DB'YE YAZ
+    # 3) SESSION OLUŞTUR VE DB'YE YAZ (tek kaynak: SQLite — RAM fallback yok)
     session_id = str(uuid.uuid4())
 
     new_db_session = models.ChatSession(
-        session_id=session_id, 
+        session_id=session_id,
         case_id=case_data.get("id"),
         mcq_data=json.dumps(mcq_full, ensure_ascii=False)
     )
     db.add(new_db_session)
-    
+
     # Vaka durumunu güncelle
     dbs = DBService(db)
     dbs.update_case_status(case_data.get("id"), "in_progress")
     db.commit()
-
-    # RAM'e de atalım (Opsiyonel)
-    session_store._sessions[session_id] = type("SessionData", (), {
-        "session_id": session_id,
-        "case_id": case_data.get("id"),
-        "mcq": mcq_full,
-        "created_at": 0
-    })
+    logger.info("start_simulation: created session_id=%s for case_id=%s", session_id, case_data.get("id"))
 
     mcq_public = {
         "question": mcq_full["question"],
@@ -163,7 +156,7 @@ async def chat_with_agent(case_id: str, req: DialogueRequest, db: Session = Depe
         }
 
     except Exception as e:
-        print(f"Chat Error: {e}")
+        logger.error("chat_with_agent: failed for session_id=%s: %s", current_session_id, e)
         raise HTTPException(status_code=500, detail=f"Internal Error: {str(e)}")
 
 
@@ -184,19 +177,13 @@ def submit_answer(session_id: str, req: AnswerRequest, db: Session = Depends(get
 
     case_id = db_session.case_id
     
-    # 2. MCQ Verisini DB'den Oku
+    # 2. MCQ Verisini DB'den Oku (tek kaynak: SQLite ChatSession.mcq_data)
     mcq_full = {}
     if db_session.mcq_data:
         try:
             mcq_full = json.loads(db_session.mcq_data)
         except Exception as e:
-            print(f"MCQ Data Parse Error: {e}")
-    
-    # Fallback RAM
-    if not mcq_full:
-        ram_session = session_store.get(session_id)
-        if ram_session and ram_session.mcq:
-            mcq_full = ram_session.mcq
+            logger.error("submit_answer: MCQ data parse failed for session_id=%s: %s", session_id, e)
 
     # 3. Case verisini çek
     case = selector_agent.get_case_by_id(db, case_id)
@@ -244,7 +231,7 @@ def submit_answer(session_id: str, req: AnswerRequest, db: Session = Depends(get
 
         tutor_out = tutor_agent.run(tutor_inp)
     except Exception as e:
-        print(f"Tutor Error: {e}")
+        logger.error("submit_answer: TutorAgent failed for session_id=%s: %s", session_id, e)
         msg = "Tebrikler!" if is_correct else "Yanlış cevap."
         tutor_out = {"answer": f"{msg}"}
 

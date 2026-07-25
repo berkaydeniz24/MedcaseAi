@@ -65,12 +65,14 @@ flowchart LR
 
 | # | Ajan | Dosya | Tür | LLM? | Model | Durum (state) |
 |---|------|-------|-----|------|-------|----------------|
-| 1 | **Case Selector Agent** | `case_selector/selector_agent.py` | Deterministic seçim + validasyon | Hayır | — | Stateless (RAM'de statik vaka listesi) |
-| 2 | **MCQ Generator Agent** | `services/mcq_generator.py` | Üretici (generation) | Evet | `gemini-1.5-flash` | Stateless (her çağrıda sıfırdan üretim) |
-| 3 | **Dialogue Agent** | `dialogue/dialogue_agent.py` + `dialogue/prompts.py` | Sokratik öğretici | Evet | `gemini-1.5-flash` | Stateless ajan, ama **DB'den beslenen** konuşma geçmişi ile "hafızalı" davranır |
-| 4 | **Tutor / Feedback Agent** | `tutor/tutor_agent.py` + `tutor/prompts.py` | Değerlendirici / geri bildirim | Evet | `gemini-1.5-flash` | Stateless |
+| 1 | **Case Selector Agent** | `case_selector/selector_agent.py` | Deterministic seçim + validasyon (SQL) | Hayır | — | Stateless |
+| 2 | **MCQ Agent** | `mcq/mcq_agent.py` | Üretici (generation) | Evet | `gemini-3.1-flash-lite` | Stateless (her çağrıda sıfırdan üretim) |
+| 3 | **Dialogue Agent** | `dialogue/dialogue_agent.py` + `prompts/dialogue_v1.0.txt` | Sokratik öğretici | Evet | `gemini-3.1-flash-lite` | Stateless ajan, ama **DB'den beslenen** konuşma geçmişi ile "hafızalı" davranır |
+| 4 | **Tutor / Feedback Agent** | `tutor/tutor_agent.py` + `prompts/tutor_mcq_v1.0.txt`, `prompts/tutor_narrative_v1.0.txt` | Değerlendirici / geri bildirim | Evet | `gemini-3.1-flash-lite` | Stateless |
 
-Destekleyici (ajan olmayan) servisler: `services/database.py`, `services/db_service.py` (SQLAlchemy DB katmanı), `services/session_store.py` (RAM cache, DB'nin fallback'i), `services/case_service.py` (tutor_router'ın kullandığı alternatif/eski case erişim yolu — `selector_agent` ile kısmen yinelenen sorumluluk, bkz. Bölüm 7).
+Destekleyici (ajan olmayan) servisler: `services/database.py`, `services/db_service.py` (SQLAlchemy DB katmanı, tüm oturum/geçmiş verisinin tek kaynağı), `services/gemini_client.py` (dört ajanın da paylaştığı tek Gemini istemcisi), `services/prompt_loader.py` (versiyonlanmış prompt dosyalarını yükler), `services/logging_config.py` (INFO/WARNING/ERROR ayrı log dosyaları).
+
+> **2026-07-26 güncellemesi:** Model adı `gemini-1.5-flash`'ten `gemini-3.1-flash-lite`'a değişti (eskisi Gemini API'sinden tamamen kaldırılmıştı, bkz. Bölüm 6 madde 7). `services/mcq_generator.py` → `mcq/mcq_agent.py` olarak taşındı (diğer üç ajanla aynı klasör yapısı). `services/session_store.py` ve `services/case_service.py` tamamen kaldırıldı.
 
 ---
 
@@ -113,13 +115,13 @@ class CaseOutput(BaseModel):
 
 ---
 
-### 2.2 MCQ Generator Agent
+### 2.2 MCQ Agent
 
 **Görev:** Seçilen vakanın `narrative` metninden, yalnızca vaka içeriğine dayanan **tek bir 4 şıklı çoktan seçmeli soru** üretir. Modelin ürettiği şık sırasını **Python tarafında karıştırıp** doğru cevabın hep aynı şıkta çıkmasını engeller (LLM'in position-bias'ını nötralize eden bir post-processing adımı).
 
 **Girdi:** `case: Dict` → kullanılan alanlar: `id`, `narrative`, `specialty`, `difficulty`.
 
-**Prompt yapısı** (`services/mcq_generator.py`, tek parça system+user birleşik prompt):
+**Prompt yapısı** (`prompts/mcq_v1.0.txt`, `services/prompt_loader.py` ile yüklenip `string.Template` üzerinden doldurulur; tek parça system+user birleşik prompt):
 ```
 SYSTEM (sabit talimat bloğu):
   "You are generating ONE assessment-quality multiple-choice question..."
@@ -364,11 +366,11 @@ Bunlar mimariyi **anlamak** için önemli, ama madde 1'in kapsamı "mimariyi tas
 
 1. **`rubric` ve `seed_questions` hiç dolu değil.** `cases_subset.json`'daki 200 vakanın tamamında `rubric` alanları boş string/liste, `seed_questions` boş liste. Şema bunları destekliyor, promptlar bunlara atıfta bulunma potansiyeline sahip, ama şu an besleyecek veri yok.
 2. **Dialogue Agent dil çelişkisi.** Router'dan `language="tr"` gönderilebiliyor ve prompt'a `LANGUAGE: tr` yazılıyor, ama `DIALOGUE_SYSTEM_PROMPT`'un en başında "ALWAYS respond in English, regardless of..." kuralı var. Şu anki davranış: yanıt her zaman İngilizce, `language` parametresi fiilen etkisiz.
-3. **Şema zorlama tutarsızlığı.** Dialogue Agent, Gemini SDK'nın `response_schema` özelliğiyle **sert** yapısal JSON alıyor; MCQ Generator ve Tutor Agent ise serbest metin alıp manuel parse ediyor (MCQ) veya hiç parse etmiyor (Tutor — `followups` LLM'den gelmiyor, hardcoded). Üç ajan da aynı Gemini SDK'yı kullandığına göre, tutarlılık için hepsinin `response_schema` kullanması değerlendirilebilir.
-4. **`tutor/prompts.py` ölü kod.** İçindeki `tutor_system_prompt`/`tutor_user_prompt` fonksiyonları hiçbir yerden import edilmiyor; gerçek çalışan prompt mantığı `tutor_agent.py` içinde tekrar (ve biraz farklı) yazılmış.
+3. **Şema zorlama tutarsızlığı.** Dialogue Agent, Gemini SDK'nın `response_schema` özelliğiyle **sert** yapısal JSON alıyor; MCQ Agent ve Tutor Agent ise serbest metin alıp manuel parse ediyor (MCQ) veya hiç parse etmiyor (Tutor — `followups` LLM'den gelmiyor, hardcoded). Üç ajan da aynı Gemini SDK'yı kullandığına göre, tutarlılık için hepsinin `response_schema` kullanması değerlendirilebilir. **(Hâlâ açık — Sprint 1 kapsamına alınmadı.)**
+4. ~~**`tutor/prompts.py` ölü kod.**~~ **(Çözüldü — 2026-07-26)** İçindeki `tutor_system_prompt`/`tutor_user_prompt` fonksiyonları hiçbir yerden import edilmiyordu; gerçek çalışan prompt mantığı `tutor_agent.py` içinde tekrar (ve biraz farklı) yazılıydı. Dosya silindi; gerçek (çalışan) tutor promptları `prompts/tutor_mcq_v1.0.txt` ve `prompts/tutor_narrative_v1.0.txt` olarak dışsallaştırıldı (bkz. Bölüm 2.4, `services/prompt_loader.py`).
 5. ~~**`case_service.py` / `selector_agent.py` çakışması.**~~ **(Çözüldü — 2026-07-26)** Daha önce her ikisi de `cases_subset.json`'ı bağımsız olarak yükleyip neredeyse aynı işi yapıyordu (`case_service` yalnızca `tutor_router.py`'de, `selector_agent` her yerde). Vaka verisinin SQL'e taşınması sırasında `case_service.py` silindi; `tutor_router.py` artık diğer router'larla aynı SQL-backed `selector_agent`'ı kullanıyor. Tek veri kaynağı, tek yükleme yolu kaldı.
-6. **`SessionStore` çoğunlukla artık kod.** DB entegrasyonu sonrası RAM tabanlı `session_store`, sadece DB sorgusu boş dönerse fallback olarak kullanılıyor; iki kaynaklı-doğruluk (dual source of truth) riski taşıyor.
-7. **Tek LLM sağlayıcı bağımlılığı.** Dört ajan da tek bir sağlayıcıya (`google-genai`, `gemini-1.5-flash`) bağımlı; sağlayıcı kesintisi/kota/deprecation tüm sistemi aynı anda etkiler. `gemini-1.5-flash`'in güncel Gemini model kataloğunda hâlâ aktif olup olmadığı ayrıca doğrulanmalı.
+6. ~~**`SessionStore` çoğunlukla artık kod.**~~ **(Çözüldü — 2026-07-26)** DB entegrasyonu sonrası RAM tabanlı `session_store`, sadece DB sorgusu boş dönerse fallback olarak kullanılıyordu; iki kaynaklı-doğruluk (dual source of truth) riski taşıyordu. `services/session_store.py` tamamen silindi, `dialogue_router.py`'deki RAM yazma/okuma kodu kaldırıldı. Oturum/cevap/geçmiş verisi artık **tek kaynak**: SQLite (`ChatSession`, `ChatMessage`).
+7. ~~**Tek LLM sağlayıcı bağımlılığı + `gemini-1.5-flash` şüphesi.**~~ **(Kısmen çözüldü — 2026-07-26)** `gemini-1.5-flash`'in hâlâ aktif olup olmadığı sorusu doğrulandı: **aktif değil**, Gemini API'sinden tamamen kaldırılmış (`client.models.list()` ile canlı test edildi). Model, çalışan bir sürüme (`gemini-3.1-flash-lite`) güncellendi ve dört ajanın da artık `services/gemini_client.py` üzerinden **tek paylaşımlı istemci** kullanması sağlandı (önceden `dialogue/gemini_client.py` ve `tutor/gemini_client.py` olmak üzere iki ayrı, kısmen kullanılmayan istemci kodu vardı). Tek sağlayıcıya bağımlılık riski (Gemini kesintisi/kota) yapısal olarak hâlâ geçerli — bu, tasarım kararı, "açık boşluk" değil.
 8. **CORS `allow_origins=["*"]`.** Geliştirme için sorun değil, ama üretime taşınırsa daraltılması gerekir (bilgi amaçlı not, kapsam dışı).
 9. **Resim anahtarı uyuşmazlığı (SQL geçişi sırasında tespit edildi).** `_format_case()` içindeki resim URL mantığı `raw_img.get("file_path") or raw_img.get("url") or raw_img.get("src")` şeklinde arama yapıyor, ama `cases_subset.json`'daki gerçek resim kayıtları `{"file": "...", "caption": "...", "modality": "..."}` formatında — yani anahtar `file`. Sonuç: resmi olan ~162 vakanın hiçbirinde `image` alanı dolmuyor (her zaman `None`). Bu, SQL geçişinden önce de var olan bir hata; taşıma sırasında davranış birebir korundu, düzeltilmedi (kapsam dışı — ayrı bir görev olarak flag'lendi).
 10. **Veri seti kaynağı ön izlenimi.** Vaka ID'leri `PMC#######_#####` formatında — PubMed Central açık erişim vaka raporlarından türetildiğini düşündürüyor. Lisans/atıf durumunun tam incelemesi roadmap **madde 2**'nin konusu; burada yalnızca gözlem olarak not düşülüyor.

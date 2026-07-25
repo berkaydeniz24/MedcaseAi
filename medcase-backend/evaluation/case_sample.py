@@ -76,5 +76,10 @@ if __name__ == "__main__":
 
     pilot_path = save_sample("pilot_10", pilot_ids)
     full_path = save_sample("full_50", full_ids)
-    print(f"pilot_10 ({len(pilot_ids)} cases) -> {pilot_path}")
-    print(f"full_50 ({len(full_ids)} cases) -> {full_path}")
+
+    import logging
+    from services.logging_config import configure_logging
+    configure_logging()
+    logger = logging.getLogger(__name__)
+    logger.info("pilot_10 (%d cases) -> %s", len(pilot_ids), pilot_path)
+    logger.info("full_50 (%d cases) -> %s", len(full_ids), full_path)

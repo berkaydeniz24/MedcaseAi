@@ -11,6 +11,9 @@ medcase-backend/.env
 # Evaluation ajan koşularının ham çıktıları (regenerate edilebilir, versiyonlanmaz)
 medcase-backend/evaluation/results/
 
+# Log dosyaları
+medcase-backend/logs/
+
 # Büyük Veri Dosyaları (Git'e yükleme)
 medcase-backend/data/full_cases.json
 

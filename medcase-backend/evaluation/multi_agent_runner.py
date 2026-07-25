@@ -3,13 +3,13 @@
 System B — Multi-Agent (roadmap item 3).
 
 This is NOT a re-implementation. It calls the REAL production agents
-(MCQGenerator, DialogueAgent, TutorAgent) exactly as the live app calls
+(MCQAgent, DialogueAgent, TutorAgent) exactly as the live app calls
 them, unmodified, and only normalizes their outputs into the shared
 SystemRunResult shape so they can be compared against
 evaluation/single_agent.py's monolithic output.
 
 Mapping (mirrors how the production app actually uses these agents):
-  1. MCQGenerator.generate_mcq(case)          -> question, options, correct_index
+  1. MCQAgent.generate_mcq(case)              -> question, options, correct_index
   2. DialogueAgent.generate_response(mode="hint")   -> hint
   3. TutorAgent.run(mode="explain", over the MCQ from step 1) -> explanation
 
@@ -22,7 +22,7 @@ from contextlib import contextmanager
 from typing import Dict, Optional
 
 from dialogue.dialogue_agent import DialogueAgent
-from services.mcq_generator import mcq_generator
+from mcq.mcq_agent import mcq_agent
 from tutor.schemas import CaseContext, StepContext, TutorInput, UserContext
 from tutor.tutor_agent import TutorAgent
 
@@ -32,7 +32,7 @@ from .schemas import CallMetrics, GeneratedContent, SystemRunResult
 # across all cases so hint quality differences come from the case, not the prompt.
 GENERIC_HINT_PROMPT = "What should I consider first when evaluating this patient?"
 
-# services/mcq_generator.py falls back to this exact literal list on error and
+# mcq/mcq_agent.py falls back to this exact literal list on error and
 # swallows the exception internally, so a truthy question/4-options check alone
 # would mis-classify a failed generation as a success. Match the known fallback
 # signature instead.
@@ -105,13 +105,13 @@ class MultiAgentRunner:
 
         # 1) MCQ Agent
         mcq = {}
-        with _record(mcq_generator.client) as rec:
+        with _record(mcq_agent.client) as rec:
             try:
-                mcq = mcq_generator.generate_mcq(case)
+                mcq = mcq_agent.generate_mcq(case)
             except Exception as e:
                 rec.error = rec.error or str(e)
         mcq_ok = bool(mcq.get("question")) and mcq.get("options") != _MCQ_FALLBACK_OPTIONS and len(mcq.get("options", [])) == 4
-        calls.append(_to_metrics("mcq", mcq_generator.model, rec, mcq_ok))
+        calls.append(_to_metrics("mcq", mcq_agent.model, rec, mcq_ok))
         if mcq_ok:
             question = mcq.get("question")
             options = mcq.get("options")
