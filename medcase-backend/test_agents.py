@@ -8,10 +8,19 @@ import time
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from dotenv import load_dotenv
+from services import models
+from services.database import engine, SessionLocal
+from services.seed_cases import seed_cases_if_empty
 from case_selector.selector_agent import selector_agent
 from dialogue.dialogue_agent import DialogueAgent
 from tutor.tutor_agent import tutor_agent
 from tutor.schemas import TutorInput, CaseContext, UserContext
+
+# Bağımsız script: FastAPI'nin get_db() dependency'si burada yok,
+# o yüzden kendi DB session'ımızı açıyoruz.
+models.Base.metadata.create_all(bind=engine)
+db = SessionLocal()
+seed_cases_if_empty(db)
 
 # Renkli çıktılar için
 class Colors:
@@ -37,7 +46,7 @@ async def run_stress_test():
         # ---------------------------------------------------------
         # 1. ADIM: VAKA SEÇİMİ
         # ---------------------------------------------------------
-        raw_case = selector_agent.select_random_case()
+        raw_case = selector_agent.select_random_case(db)
         
         if "error" in raw_case:
             print(Colors.FAIL + "❌ Kritik Hata: Vaka seçilemedi!" + Colors.ENDC)

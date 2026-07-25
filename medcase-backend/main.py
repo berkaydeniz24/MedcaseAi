@@ -9,19 +9,30 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from dotenv import load_dotenv
 load_dotenv() # .env dosyasını yükle
 
-from fastapi import FastAPI, HTTPException
-from fastapi.staticfiles import StaticFiles 
+import json
+
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 import uvicorn
 
 # --- DATABASE SETUP (EKLENDİ) ---
 # Tabloları oluştur (varsa dokunmaz)
 from services import models
-from services.database import engine
+from services.database import engine, get_db, SessionLocal
 models.Base.metadata.create_all(bind=engine)
 
-# --- YENİ MİMARİ: Case Service yerine Selector Agent ---
+# --- Vaka verisini (ilk kurulumda) SQL'e yükle ---
+from services.seed_cases import seed_cases_if_empty
+_seed_db = SessionLocal()
+try:
+    seed_cases_if_empty(_seed_db)
+finally:
+    _seed_db.close()
+
+# --- YENİ MİMARİ: Case Service yerine Selector Agent (artık SQL üzerinden çalışıyor) ---
 from case_selector.selector_agent import selector_agent
 
 # --- ROUTER IMPORTLARI ---
@@ -68,34 +79,35 @@ app.add_middleware(
 class QueryRequest(BaseModel):
     question: str
 
-# --- 4. VAKA LİSTELEME ---
+# --- 4. VAKA LİSTELEME (SQL üzerinden) ---
 @app.get("/cases")
-def list_cases():
-    cases = selector_agent.cases
-    return [
-        {
-            "id": c.get("id"),
-            "title": c.get("title", "Başlıksız Vaka"),
-            "specialty": c.get("specialty", "Genel"),
-            "difficulty": c.get("difficulty", "Orta"),
-            "summary": c.get("narrative", "")[:120] + "...",
-            "has_image": len(c.get("assets", {}).get("images", [])) > 0
-        } 
-        for c in cases
-    ]
+def list_cases(db: Session = Depends(get_db)):
+    cases = db.query(models.Case).all()
+    result = []
+    for c in cases:
+        assets = json.loads(c.assets_json or "{}")
+        result.append({
+            "id": c.id,
+            "title": c.title or "Başlıksız Vaka",
+            "specialty": c.specialty or "Genel",
+            "difficulty": c.difficulty or "Orta",
+            "summary": (c.narrative or "")[:120] + "...",
+            "has_image": len(assets.get("images", [])) > 0
+        })
+    return result
 
 # --- 5. TEK VAKA DETAYI ---
 @app.get("/cases/{case_id}")
-def get_case(case_id: str):
-    case = selector_agent.get_case_by_id(case_id)
+def get_case(case_id: str, db: Session = Depends(get_db)):
+    case = selector_agent.get_case_by_id(db, case_id)
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
     return case
 
 # --- 6. ESKİ SOHBET ENDPOINTİ (Legacy Support) ---
 @app.post("/cases/{case_id}/query")
-async def query_case(case_id: str, req: QueryRequest):
-    case_data = selector_agent.get_case_by_id(case_id)
+async def query_case(case_id: str, req: QueryRequest, db: Session = Depends(get_db)):
+    case_data = selector_agent.get_case_by_id(db, case_id)
     if not case_data:
         raise HTTPException(status_code=404, detail="Vaka bulunamadı")
     

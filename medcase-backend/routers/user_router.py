@@ -93,7 +93,7 @@ def get_user_chat_history(db: Session = Depends(get_db)):
             continue
 
         # Vaka başlığını bul
-        case_info = selector_agent.get_case_by_id(sess.case_id)
+        case_info = selector_agent.get_case_by_id(db, sess.case_id)
         title = case_info.get("title", f"Vaka #{sess.case_id}") if case_info else f"Vaka #{sess.case_id}"
 
         history_list.append({

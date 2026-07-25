@@ -1,80 +1,72 @@
 # case_selector/selector_agent.py
 import json
-import os
-import random
 from typing import Optional, Dict
+
+from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
+
+from services import models
 from .schemas import CaseOutput, CaseRubric
 
+
 class CaseSelectorAgent:
-    def __init__(self):
-        self.cases = []
-        self.load_data()
+    """
+    Vaka verisini artık RAM'deki bir JSON kopyasından değil,
+    doğrudan SQL (SQLite 'cases' tablosu) üzerinden çeker.
+    """
 
-    def load_data(self):
-        # Dosya yolunu bul
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        file_path = os.path.join(base_dir, 'data', 'cases_subset.json')
-        
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                self.cases = json.load(f)
-            print(f"📚 Case Selector: {len(self.cases)} vaka hafızaya alındı.")
-        except Exception as e:
-            print(f"❌ Veri Okuma Hatası: {e}")
-            self.cases = []
-
-    def select_random_case(self) -> Optional[Dict]:
-        if not self.cases:
+    def select_random_case(self, db: Session) -> Optional[Dict]:
+        row = db.query(models.Case).order_by(func.random()).first()
+        if not row:
             return {"error": "Veri yok"}
-        
-        selected = random.choice(self.cases)
-        return self._format_case(selected)
+        return self._format_case(row)
 
-    def get_case_by_id(self, case_id: str) -> Optional[Dict]:
-        selected = next((c for c in self.cases if c["id"] == case_id), None)
-        if not selected:
+    def get_case_by_id(self, db: Session, case_id: str) -> Optional[Dict]:
+        row = db.query(models.Case).filter(models.Case.id == case_id).first()
+        if not row:
             return None
-        return self._format_case(selected)
+        return self._format_case(row)
 
-    def _format_case(self, raw_data: dict) -> Dict:
+    def list_all(self, db: Session):
+        return db.query(models.Case).all()
+
+    def _format_case(self, row: models.Case) -> Dict:
         """
-        Ham JSON verisini Pydantic Schema ile doğrulayıp temizler.
+        SQL satırını Pydantic Schema ile doğrulayıp temizler.
         """
-        # --- RESİM URL MANTIĞI (GÜNCELLENDİ) ---
+        assets = json.loads(row.assets_json or "{}")
+        raw_rubric = json.loads(row.rubric_json or "{}")
+        seed_questions = json.loads(row.seed_questions_json or "[]")
+
+        # --- RESİM URL MANTIĞI ---
         image_url = None
-        images = raw_data.get("assets", {}).get("images", [])
-        
-        if images and len(images) > 0:
+        images = assets.get("images", [])
+
+        if images:
             raw_img = images[0]
-            
-            # 1. Eğer resim verisi bir Sözlük (Dict) ise içinden dosya yolunu çıkar
+
             if isinstance(raw_img, dict):
-                # Olası anahtarları kontrol et
-                raw_img = raw_img.get("file_path") or raw_img.get("url") or raw_img.get("src")
-            
-            # 2. Eğer elimizde (veya işlemden sonra) bir String varsa URL yap
+                raw_img = raw_img.get("file_path") or raw_img.get("file") or raw_img.get("url") or raw_img.get("src")
+
             if isinstance(raw_img, str):
                 if raw_img.startswith("http"):
                     image_url = raw_img
                 else:
                     image_url = f"http://127.0.0.1:8000/static/images/{raw_img}"
 
-        # Rubric güvenli çekimi
-        raw_rubric = raw_data.get("rubric", {})
-        
-        # Pydantic ile veriyi paketle
         case_obj = CaseOutput(
-            id=raw_data.get("id"),
-            title=raw_data.get("title", "Unknown Case"),
-            specialty=raw_data.get("specialty", "General"),
-            difficulty=raw_data.get("difficulty", "Intermediate"),
-            narrative=raw_data.get("narrative", ""),
+            id=row.id,
+            title=row.title or "Unknown Case",
+            specialty=row.specialty or "General",
+            difficulty=row.difficulty or "Intermediate",
+            narrative=row.narrative or "",
             image=image_url,
             rubric=CaseRubric(**raw_rubric),
-            seed_questions=raw_data.get("seed_questions", [])
+            seed_questions=seed_questions,
         )
 
         return case_obj.model_dump()
+
 
 # Singleton Instance
 selector_agent = CaseSelectorAgent()

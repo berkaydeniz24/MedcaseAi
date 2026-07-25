@@ -16,7 +16,7 @@ class TutorAgent:
         else:
             self.client = genai.Client(api_key=api_key)
 
-        self.model_name = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+        self.model_name = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
 
     def run(self, inp: TutorInput) -> TutorOutput:
         if not self.client:

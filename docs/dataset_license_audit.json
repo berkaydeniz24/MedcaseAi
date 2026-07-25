@@ -1,0 +1,1402 @@
+[
+  {
+    "case_id": "PMC4528267_26306",
+    "pmcid": "PMC4528267",
+    "specialty": "General Internal Medicine / Other",
+    "license": "CC BY",
+    "citation": "Eplasty. 2015 Jul 31; 15:ic45"
+  },
+  {
+    "case_id": "PMC10783169_63266",
+    "pmcid": "PMC10783169",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Clin Nephrol Case Stud. 2024 Jan 4; 12:6-11"
+  },
+  {
+    "case_id": "PMC5943106_26487",
+    "pmcid": "PMC5943106",
+    "specialty": "Cardiology",
+    "license": "CC BY-NC-SA",
+    "citation": "Medicine (Baltimore). 2018 Jan 5; 97(1):e8706"
+  },
+  {
+    "case_id": "PMC9578814_11761",
+    "pmcid": "PMC9578814",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Case Rep Otolaryngol. 2022 Oct 11; 2022:5377771"
+  },
+  {
+    "case_id": "PMC5165135_49919",
+    "pmcid": "PMC5165135",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Case Rep Med. 2016 Dec 5; 2016:7527098"
+  },
+  {
+    "case_id": "PMC6875215_21560",
+    "pmcid": "PMC6875215",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Case Reports Hepatol. 2019 Nov 6; 2019:8410420"
+  },
+  {
+    "case_id": "PMC4608143_18333",
+    "pmcid": "PMC4608143",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Mob DNA. 2015 Oct 15; 6:20"
+  },
+  {
+    "case_id": "PMC8041536_19616",
+    "pmcid": "PMC8041536",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Case Rep Hematol. 2021 Apr 3; 2021:5590975"
+  },
+  {
+    "case_id": "PMC4629596_17805",
+    "pmcid": "PMC4629596",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Open Vet J. 2014 May 2; 4(1):56-58"
+  },
+  {
+    "case_id": "PMC8632428_20297",
+    "pmcid": "PMC8632428",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Case Rep Endocrinol. 2021 Nov 23; 2021:5930515"
+  },
+  {
+    "case_id": "PMC9030309_6759",
+    "pmcid": "PMC9030309",
+    "specialty": "Cardiology",
+    "license": "CC BY-NC-SA",
+    "citation": "Contemp Clin Dent. 2022 Mar 23 Jan-Mar; 13(1):95-98"
+  },
+  {
+    "case_id": "PMC11374598_68175",
+    "pmcid": "PMC11374598",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Front Vet Sci. 2024 Aug 22; 11:1450332"
+  },
+  {
+    "case_id": "PMC10852201_67360",
+    "pmcid": "PMC10852201",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Cureus.; 16(1):e51954"
+  },
+  {
+    "case_id": "PMC4772616_53427",
+    "pmcid": "PMC4772616",
+    "specialty": "Pulmonology",
+    "license": "CC BY-NC",
+    "citation": "Case Rep Oncol. 2016 Jan 27; 9(1):68-75"
+  },
+  {
+    "case_id": "PMC8106415_31840",
+    "pmcid": "PMC8106415",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY-NC-SA",
+    "citation": "Indian J Psychiatry. 2021 Feb 15 Jan-Feb; 63(1):106-107"
+  },
+  {
+    "case_id": "PMC7270228_50954",
+    "pmcid": "PMC7270228",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Eplasty. 2020 May 27; 20:ic10"
+  },
+  {
+    "case_id": "PMC8422441_41563",
+    "pmcid": "PMC8422441",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "Surg Neurol Int. 2021 Aug 9; 12:399"
+  },
+  {
+    "case_id": "PMC8168647_40464",
+    "pmcid": "PMC8168647",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "Surg Neurol Int. 2021 May 10; 12:217"
+  },
+  {
+    "case_id": "PMC11705494_69452",
+    "pmcid": "PMC11705494",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Clin Case Rep. 2025 Jan 6; 13(1):e70061"
+  },
+  {
+    "case_id": "PMC5998160_53022",
+    "pmcid": "PMC5998160",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Case Rep Infect Dis. 2018 May 30; 2018:5498953"
+  },
+  {
+    "case_id": "PMC11199318_63573",
+    "pmcid": "PMC11199318",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "J Inflamm Res. 2024 Jun 21; 17:4017-4025"
+  },
+  {
+    "case_id": "PMC9528544_2286",
+    "pmcid": "PMC9528544",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC-SA",
+    "citation": "Asian J Transfus Sci. 2022 May 26 Jan-Jun; 16(1):135-139"
+  },
+  {
+    "case_id": "PMC10447914_37865",
+    "pmcid": "PMC10447914",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "Acute Med Surg. 2023 Aug 23; 10(1):e887"
+  },
+  {
+    "case_id": "PMC6688230_37314",
+    "pmcid": "PMC6688230",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Hered Cancer Clin Pract. 2019 Aug 9; 17:23"
+  },
+  {
+    "case_id": "PMC3033841_12307",
+    "pmcid": "PMC3033841",
+    "specialty": "General Internal Medicine / Other",
+    "license": "CC BY",
+    "citation": "J Med Case Reports. 2011 Jan 18; 5:16"
+  },
+  {
+    "case_id": "PMC10314776_6145",
+    "pmcid": "PMC10314776",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "Infect Drug Resist. 2023 Jun 27; 16:4171-4176"
+  },
+  {
+    "case_id": "PMC4958477_16338",
+    "pmcid": "PMC4958477",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Case Rep Dent. 2016 Jul 11; 2016:6263248"
+  },
+  {
+    "case_id": "PMC3659367_31715",
+    "pmcid": "PMC3659367",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Front Neurosci. 2013 May 21; 7:77"
+  },
+  {
+    "case_id": "PMC10014019_47903",
+    "pmcid": "PMC10014019",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Rev Paul Pediatr.; 41:e2021390"
+  },
+  {
+    "case_id": "PMC11330923_63818",
+    "pmcid": "PMC11330923",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Gastro Hep Adv. 2024 Mar 22; 3(5):583-584"
+  },
+  {
+    "case_id": "PMC10880584_66020",
+    "pmcid": "PMC10880584",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC-SA",
+    "citation": "CRSLS. 2024 Feb 21; 11(1):e2023.00053"
+  },
+  {
+    "case_id": "PMC3985797_40604",
+    "pmcid": "PMC3985797",
+    "specialty": "Dermatology",
+    "license": "CC BY-NC",
+    "citation": "Case Rep Dermatol. 2014 Mar 13; 6(1):80-84"
+  },
+  {
+    "case_id": "PMC6207856_2255",
+    "pmcid": "PMC6207856",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Case Rep Otolaryngol. 2018 Oct 17; 2018:7639784"
+  },
+  {
+    "case_id": "PMC5723961_10671",
+    "pmcid": "PMC5723961",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Case Rep Psychiatry. 2017 Nov 27; 2017:6565096"
+  },
+  {
+    "case_id": "PMC8422440_29690",
+    "pmcid": "PMC8422440",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "Surg Neurol Int. 2021 Aug 24; 12:420"
+  },
+  {
+    "case_id": "PMC2639570_32945",
+    "pmcid": "PMC2639570",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Cases J. 2009 Jan 31; 2:112"
+  },
+  {
+    "case_id": "PMC11149649_62969",
+    "pmcid": "PMC11149649",
+    "specialty": "General Internal Medicine / Other",
+    "license": "CC BY-NC",
+    "citation": "Appl Clin Genet. 2024 May 31; 17:71-84"
+  },
+  {
+    "case_id": "PMC9280297_8489",
+    "pmcid": "PMC9280297",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Front Med (Lausanne). 2022 Jun 30; 9:942558"
+  },
+  {
+    "case_id": "PMC5089151_12814",
+    "pmcid": "PMC5089151",
+    "specialty": "Dermatology",
+    "license": "CC BY-NC",
+    "citation": "J Community Hosp Intern Med Perspect. 2016 Oct 26; 6(5):10.3402/jchimp.v6.32528"
+  },
+  {
+    "case_id": "PMC5661097_10276",
+    "pmcid": "PMC5661097",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Case Rep Orthop. 2017 Oct 15; 2017:1396950"
+  },
+  {
+    "case_id": "PMC3350051_52885",
+    "pmcid": "PMC3350051",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Case Rep Surg. 2011 Aug 4; 2011:873613"
+  },
+  {
+    "case_id": "PMC11268852_66084",
+    "pmcid": "PMC11268852",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY-NC",
+    "citation": "J Pain Res. 2024 Jul 19; 17:2417-2430"
+  },
+  {
+    "case_id": "PMC5733059_49676",
+    "pmcid": "PMC5733059",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Front Neurol. 2017 Dec 12; 8:673"
+  },
+  {
+    "case_id": "PMC4448053_26473",
+    "pmcid": "PMC4448053",
+    "specialty": "Neurology",
+    "license": "CC BY-NC",
+    "citation": "Case Rep Neurol. 2015 Apr 30; 7(1):101-104"
+  },
+  {
+    "case_id": "PMC8559636_48308",
+    "pmcid": "PMC8559636",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Caspian J Intern Med. 2021; 12(Suppl 2):S404-S406"
+  },
+  {
+    "case_id": "PMC5155106_6676",
+    "pmcid": "PMC5155106",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Case Rep Surg. 2016 Nov 30; 2016:5365647"
+  },
+  {
+    "case_id": "PMC6077880_21895",
+    "pmcid": "PMC6077880",
+    "specialty": "Cardiology",
+    "license": "CC BY-NC",
+    "citation": "Open J Cardiovasc Surg. 2018 Jul 2; 10:1179065218785126"
+  },
+  {
+    "case_id": "PMC9482249_34452",
+    "pmcid": "PMC9482249",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Pan Afr Med J. 2022 Jun 24; 42:153"
+  },
+  {
+    "case_id": "PMC5476633_3354",
+    "pmcid": "PMC5476633",
+    "specialty": "Neurology",
+    "license": "CC BY-NC",
+    "citation": "J Pain Res. 2017 Jun 12; 10:1425-1429"
+  },
+  {
+    "case_id": "PMC10408637_60050",
+    "pmcid": "PMC10408637",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "Surg Neurol Int. 2023 Jul 7; 14:239"
+  },
+  {
+    "case_id": "PMC4149386_49998",
+    "pmcid": "PMC4149386",
+    "specialty": "Ophthalmology",
+    "license": "CC BY-NC",
+    "citation": "Clin Ophthalmol. 2014 Aug 20; 8:1561-1563"
+  },
+  {
+    "case_id": "PMC9152181_58487",
+    "pmcid": "PMC9152181",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Front Pediatr. 2022 May 17; 10:869518"
+  },
+  {
+    "case_id": "PMC5433411_53859",
+    "pmcid": "PMC5433411",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Case Rep Orthop. 2017 May 2; 2017:5846368"
+  },
+  {
+    "case_id": "PMC11169661_67062",
+    "pmcid": "PMC11169661",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Front Pediatr. 2024 May 30; 12:1320106"
+  },
+  {
+    "case_id": "PMC4265458_27496",
+    "pmcid": "PMC4265458",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Mol Cytogenet. 2014 Dec 9; 7:87"
+  },
+  {
+    "case_id": "PMC3605081_27098",
+    "pmcid": "PMC3605081",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "J Ophthalmic Inflamm Infect. 2013 Jan 15; 3:13"
+  },
+  {
+    "case_id": "PMC9797826_41479",
+    "pmcid": "PMC9797826",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Front Oncol. 2022 Dec 15; 12:1071383"
+  },
+  {
+    "case_id": "PMC11097720_68704",
+    "pmcid": "PMC11097720",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "SAGE Open Med Case Rep. 2024 May 15; 12:2050313X241252744"
+  },
+  {
+    "case_id": "PMC5694455_23079",
+    "pmcid": "PMC5694455",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Front Hum Neurosci. 2017 Nov 14; 11:528"
+  },
+  {
+    "case_id": "PMC6409302_17420",
+    "pmcid": "PMC6409302",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Front Endocrinol (Lausanne). 2019 Mar 4; 10:129"
+  },
+  {
+    "case_id": "PMC11293471_66594",
+    "pmcid": "PMC11293471",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Pan Afr Med J. 2024 Apr 16; 47:189"
+  },
+  {
+    "case_id": "PMC6796630_37223",
+    "pmcid": "PMC6796630",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Int J Surg Case Rep. 2019 Sep 25; 64:24-27"
+  },
+  {
+    "case_id": "PMC3161239_30903",
+    "pmcid": "PMC3161239",
+    "specialty": "Ophthalmology",
+    "license": "CC BY-NC",
+    "citation": "Clinics (Sao Paulo). 2011 Aug; 66(8):1509-1510"
+  },
+  {
+    "case_id": "PMC4960925_28858",
+    "pmcid": "PMC4960925",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "Surg Neurol Int. 2016 Jul 7; 7(Suppl 16):S469-S472"
+  },
+  {
+    "case_id": "PMC11164313_65830",
+    "pmcid": "PMC11164313",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Iran J Pathol. 2024 Dec 29 Winter; 19(1):132-136"
+  },
+  {
+    "case_id": "PMC4590349_41009",
+    "pmcid": "PMC4590349",
+    "specialty": "Dermatology",
+    "license": "CC BY-NC",
+    "citation": "Int Med Case Rep J. 2015 Sep 22; 8:205-208"
+  },
+  {
+    "case_id": "PMC6644266_1491",
+    "pmcid": "PMC6644266",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Case Rep Med. 2019 Jul 8; 2019:6129019"
+  },
+  {
+    "case_id": "PMC9138738_53807",
+    "pmcid": "PMC9138738",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "J Belg Soc Radiol.; 106(1):53"
+  },
+  {
+    "case_id": "PMC4344964_42334",
+    "pmcid": "PMC4344964",
+    "specialty": "General Internal Medicine / Other",
+    "license": "CC BY",
+    "citation": "World J Plast Surg. 2012 Jan; 1(1):36-40"
+  },
+  {
+    "case_id": "PMC9763888_45720",
+    "pmcid": "PMC9763888",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Front Oncol. 2022 Dec 6; 12:942449"
+  },
+  {
+    "case_id": "PMC5292170_1230",
+    "pmcid": "PMC5292170",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Case Rep Obstet Gynecol. 2017 Jan 22; 2017:7239018"
+  },
+  {
+    "case_id": "PMC5899872_50532",
+    "pmcid": "PMC5899872",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Case Rep Crit Care. 2018 Apr 1; 2018:2895124"
+  },
+  {
+    "case_id": "PMC4677189_56222",
+    "pmcid": "PMC4677189",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Case Rep Oncol Med. 2015 Nov 30; 2015:638294"
+  },
+  {
+    "case_id": "PMC3350053_24280",
+    "pmcid": "PMC3350053",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Case Rep Ophthalmol Med. 2011 Dec 22; 2011:645089"
+  },
+  {
+    "case_id": "PMC9106936_50671",
+    "pmcid": "PMC9106936",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "J Cardiovasc Thorac Res. 2022 Jan 28; 14(1):74-76"
+  },
+  {
+    "case_id": "PMC6243363_55871",
+    "pmcid": "PMC6243363",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "BJR Case Rep. 2016 Jul 28; 2(3):20150327"
+  },
+  {
+    "case_id": "PMC2810581_34430",
+    "pmcid": "PMC2810581",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "Yonsei Med J. 2005 Oct 31; 46(5):715-718"
+  },
+  {
+    "case_id": "PMC6372993_36443",
+    "pmcid": "PMC6372993",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY-NC",
+    "citation": "SAGE Open Med Case Rep. 2018 Dec 20; 6:2050313X18819617"
+  },
+  {
+    "case_id": "PMC5937576_5549",
+    "pmcid": "PMC5937576",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Case Rep Nephrol. 2018 Apr 22; 2018:3174897"
+  },
+  {
+    "case_id": "PMC10643519_63716",
+    "pmcid": "PMC10643519",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Front Neurol. 2023 Oct 19; 14:1275696"
+  },
+  {
+    "case_id": "PMC9082188_7220",
+    "pmcid": "PMC9082188",
+    "specialty": "Ophthalmology",
+    "license": "CC BY-NC",
+    "citation": "Case Rep Ophthalmol. 2022 Mar 17; 13(1):191-195"
+  },
+  {
+    "case_id": "PMC7653004_57798",
+    "pmcid": "PMC7653004",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Int J Surg Case Rep. 2020 Nov 2; 77:178-181"
+  },
+  {
+    "case_id": "PMC4020894_43396",
+    "pmcid": "PMC4020894",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "Ther Clin Risk Manag. 2014 May 8; 10:331-334"
+  },
+  {
+    "case_id": "PMC5925159_14777",
+    "pmcid": "PMC5925159",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Case Rep Surg. 2018 Apr 15; 2018:8782328"
+  },
+  {
+    "case_id": "PMC3896744_23965",
+    "pmcid": "PMC3896744",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "World J Surg Oncol. 2014 Jan 14; 12:13"
+  },
+  {
+    "case_id": "PMC6332946_127",
+    "pmcid": "PMC6332946",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Case Rep Pediatr. 2018 Dec 31; 2018:1306824"
+  },
+  {
+    "case_id": "PMC9062972_18393",
+    "pmcid": "PMC9062972",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "Surg Neurol Int. 2022 Apr 29; 13:174"
+  },
+  {
+    "case_id": "PMC4869306_4449",
+    "pmcid": "PMC4869306",
+    "specialty": "Ophthalmology",
+    "license": "CC BY-NC",
+    "citation": "Case Rep Dermatol. 2016 Apr 22; 8(1):102-106"
+  },
+  {
+    "case_id": "PMC10517634_67512",
+    "pmcid": "PMC10517634",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Gastroenterol Rep (Oxf). 2023 Sep 22; 11:goad058"
+  },
+  {
+    "case_id": "PMC5843845_21051",
+    "pmcid": "PMC5843845",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "F1000Res. 2018 Feb 26; 7:228"
+  },
+  {
+    "case_id": "PMC10149821_40050",
+    "pmcid": "PMC10149821",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Front Immunol. 2023 Apr 17; 14:1172307"
+  },
+  {
+    "case_id": "PMC7749930_39087",
+    "pmcid": "PMC7749930",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "Surg Neurol Int. 2020 Dec 11; 11:431"
+  },
+  {
+    "case_id": "PMC7479301_22108",
+    "pmcid": "PMC7479301",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Thromb J. 2020 Sep 9; 18:22"
+  },
+  {
+    "case_id": "PMC3806128_25139",
+    "pmcid": "PMC3806128",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Case Rep Otolaryngol. 2013 Sep 30; 2013:837169"
+  },
+  {
+    "case_id": "PMC7384492_58292",
+    "pmcid": "PMC7384492",
+    "specialty": "Pulmonology",
+    "license": "CC BY-NC",
+    "citation": "Medeni Med J. 2020 Feb 28; 35(1):75-78"
+  },
+  {
+    "case_id": "PMC11329954_62613",
+    "pmcid": "PMC11329954",
+    "specialty": "Dermatology",
+    "license": "CC BY-NC",
+    "citation": "SAGE Open Med Case Rep. 2024 Aug 16; 12:2050313X241271892"
+  },
+  {
+    "case_id": "PMC5460444_10755",
+    "pmcid": "PMC5460444",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Case Rep Endocrinol. 2017 May 23; 2017:3905905"
+  },
+  {
+    "case_id": "PMC3959523_16446",
+    "pmcid": "PMC3959523",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC-SA",
+    "citation": "Ann Gastroenterol. 2013; 26(1):74-76"
+  },
+  {
+    "case_id": "PMC8651394_51595",
+    "pmcid": "PMC8651394",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Case Rep Radiol. 2021 Nov 30; 2021:1919550"
+  },
+  {
+    "case_id": "PMC9130846_42186",
+    "pmcid": "PMC9130846",
+    "specialty": "Ophthalmology",
+    "license": "CC BY-NC",
+    "citation": "SAGE Open Med Case Rep. 2022 May 19; 10:2050313X221097757"
+  },
+  {
+    "case_id": "PMC8818869_5579",
+    "pmcid": "PMC8818869",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Front Med (Lausanne). 2022 Jan 24; 8:802753"
+  },
+  {
+    "case_id": "PMC6346415_34086",
+    "pmcid": "PMC6346415",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Brain Behav. 2018 Dec 3; 9(1):e01167"
+  },
+  {
+    "case_id": "PMC10547438_60996",
+    "pmcid": "PMC10547438",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "Ren Fail.; 45(2):2261553"
+  },
+  {
+    "case_id": "PMC6400852_58149",
+    "pmcid": "PMC6400852",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Front Neurol. 2019 Feb 27; 10:163"
+  },
+  {
+    "case_id": "PMC3271618_17898",
+    "pmcid": "PMC3271618",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "J Neurosci Rural Pract. 2012 Jan-Apr; 3(1):56-59"
+  },
+  {
+    "case_id": "PMC10495138_62748",
+    "pmcid": "PMC10495138",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "Med Arch. 2023; 77(3):237-240"
+  },
+  {
+    "case_id": "PMC10150000_40393",
+    "pmcid": "PMC10150000",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Front Immunol. 2023 Apr 17; 14:1149987"
+  },
+  {
+    "case_id": "PMC9842776_11887",
+    "pmcid": "PMC9842776",
+    "specialty": "Pulmonology",
+    "license": "CC BY-NC",
+    "citation": "Clin Case Rep. 2023 Jan 16; 11(1):e6777"
+  },
+  {
+    "case_id": "PMC4363670_906",
+    "pmcid": "PMC4363670",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Case Rep Infect Dis. 2015 Mar 2; 2015:260640"
+  },
+  {
+    "case_id": "PMC2822251_24202",
+    "pmcid": "PMC2822251",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "J Korean Med Sci. 2004 Feb 28; 19(1):137-141"
+  },
+  {
+    "case_id": "PMC6735351_40210",
+    "pmcid": "PMC6735351",
+    "specialty": "Pulmonology",
+    "license": "CC BY-NC",
+    "citation": "J Community Hosp Intern Med Perspect. 2019 Sep 5; 9(4):3229-324"
+  },
+  {
+    "case_id": "PMC9426857_53586",
+    "pmcid": "PMC9426857",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Front Vet Sci. 2022 Aug 16; 9:966853"
+  },
+  {
+    "case_id": "PMC9169137_20731",
+    "pmcid": "PMC9169137",
+    "specialty": "Ophthalmology",
+    "license": "CC BY-NC-SA",
+    "citation": "Beyoglu Eye J. 2022 May 27; 7(2):150-153"
+  },
+  {
+    "case_id": "PMC8247735_37382",
+    "pmcid": "PMC8247735",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY-NC-SA",
+    "citation": "Surg Neurol Int. 2021 May 31; 12:244"
+  },
+  {
+    "case_id": "PMC4718123_44463",
+    "pmcid": "PMC4718123",
+    "specialty": "Pulmonology",
+    "license": "CC BY-NC",
+    "citation": "Thorac Cancer. 2016 Jan 19; 7(1):140-144"
+  },
+  {
+    "case_id": "PMC3304289_32804",
+    "pmcid": "PMC3304289",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC-SA",
+    "citation": "J Gynecol Endosc Surg. 2011 Jan-Jun; 2(1):58-60"
+  },
+  {
+    "case_id": "PMC10311231_45125",
+    "pmcid": "PMC10311231",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Pan Afr Med J. 2023 Mar 20; 44:141"
+  },
+  {
+    "case_id": "PMC3199072_10307",
+    "pmcid": "PMC3199072",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Case Rep Med. 2011 Oct 17; 2011:160802"
+  },
+  {
+    "case_id": "PMC10547567_62497",
+    "pmcid": "PMC10547567",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Case Rep Oncol Med. 2023 Sep 26; 2023:9946271"
+  },
+  {
+    "case_id": "PMC5405888_19468",
+    "pmcid": "PMC5405888",
+    "specialty": "Neurology",
+    "license": "CC BY-NC",
+    "citation": "JFMS Open Rep. 2017 Apr 10; 3(1):2055116917704089"
+  },
+  {
+    "case_id": "PMC7154263_30058",
+    "pmcid": "PMC7154263",
+    "specialty": "Cardiology",
+    "license": "CC BY-NC",
+    "citation": "Case Rep Oncol. 2020 Mar 25; 13(1):314-320"
+  },
+  {
+    "case_id": "PMC8313357_11461",
+    "pmcid": "PMC8313357",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Case Rep Oncol Med. 2021 Jul 16; 2021:9982171"
+  },
+  {
+    "case_id": "PMC11091619_67673",
+    "pmcid": "PMC11091619",
+    "specialty": "General Internal Medicine / Other",
+    "license": "CC BY-NC",
+    "citation": "J Neuromuscul Dis.; 11(3):647-653"
+  },
+  {
+    "case_id": "PMC2809329_42551",
+    "pmcid": "PMC2809329",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Int J Otolaryngol. 2009 Nov 19; 2009:508780"
+  },
+  {
+    "case_id": "PMC9395697_15247",
+    "pmcid": "PMC9395697",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Front Cardiovasc Med. 2022 Aug 9; 9:964324"
+  },
+  {
+    "case_id": "PMC11754817_71967",
+    "pmcid": "PMC11754817",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Respir Med Case Rep. 2024 Dec 26; 53:102158"
+  },
+  {
+    "case_id": "PMC4523650_16537",
+    "pmcid": "PMC4523650",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Case Rep Dent. 2015 Jul 21; 2015:727286"
+  },
+  {
+    "case_id": "PMC10944942_67739",
+    "pmcid": "PMC10944942",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Front Surg. 2024 Mar 4; 11:1304039"
+  },
+  {
+    "case_id": "PMC9062894_41503",
+    "pmcid": "PMC9062894",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "Surg Neurol Int. 2022 Apr 8; 13:126"
+  },
+  {
+    "case_id": "PMC5406121_25558",
+    "pmcid": "PMC5406121",
+    "specialty": "Neurology",
+    "license": "CC BY-NC",
+    "citation": "SAGE Open Med Case Rep. 2017 Apr 10; 5:2050313X17703021"
+  },
+  {
+    "case_id": "PMC11774900_69540",
+    "pmcid": "PMC11774900",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Front Pediatr. 2025 Jan 15; 12:1490816"
+  },
+  {
+    "case_id": "PMC8358150_7029",
+    "pmcid": "PMC8358150",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Leuk Res Rep. 2021 Jul 31; 16:100261"
+  },
+  {
+    "case_id": "PMC5719667_29821",
+    "pmcid": "PMC5719667",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "BMC Ear Nose Throat Disord. 2017 Dec 6; 17:12"
+  },
+  {
+    "case_id": "PMC10547563_61111",
+    "pmcid": "PMC10547563",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Front Immunol. 2023 Sep 18; 14:1194262"
+  },
+  {
+    "case_id": "PMC11774424_71202",
+    "pmcid": "PMC11774424",
+    "specialty": "Cardiology",
+    "license": "CC BY-NC-SA",
+    "citation": "Turk J Emerg Med. 2025 Jan 2; 25(1):59-62"
+  },
+  {
+    "case_id": "PMC11090674_66284",
+    "pmcid": "PMC11090674",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Case Rep Neurol Med. 2024 May 6; 2024:1299282"
+  },
+  {
+    "case_id": "PMC5726678_19759",
+    "pmcid": "PMC5726678",
+    "specialty": "Dermatology",
+    "license": "CC BY-NC",
+    "citation": "An Bras Dermatol. 2017 Sep-Oct; 92(5 Suppl 1):56-58"
+  },
+  {
+    "case_id": "PMC548138_17758",
+    "pmcid": "PMC548138",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "World J Surg Oncol. 2005 Jan 14; 3:4"
+  },
+  {
+    "case_id": "PMC10080071_18010",
+    "pmcid": "PMC10080071",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Front Endocrinol (Lausanne). 2023 Mar 24; 14:1145066"
+  },
+  {
+    "case_id": "PMC11809605_70834",
+    "pmcid": "PMC11809605",
+    "specialty": "Neurology",
+    "license": "CC BY-NC",
+    "citation": "J Med Cases. 2025 Feb 2; 16(2):82-86"
+  },
+  {
+    "case_id": "PMC8138428_52821",
+    "pmcid": "PMC8138428",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Front Surg. 2021 May 7; 8:663740"
+  },
+  {
+    "case_id": "PMC9846127_14108",
+    "pmcid": "PMC9846127",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Front Endocrinol (Lausanne). 2023 Jan 4; 13:1097147"
+  },
+  {
+    "case_id": "PMC2673472_58859",
+    "pmcid": "PMC2673472",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "HPB Surg. 2009 Apr 23; 2009:240780"
+  },
+  {
+    "case_id": "PMC11255652_65065",
+    "pmcid": "PMC11255652",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "EJVES Vasc Forum. 2023 Nov 10; 61:3-7"
+  },
+  {
+    "case_id": "PMC7666689_47053",
+    "pmcid": "PMC7666689",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Pan Afr Med J. 2020 Aug 28; 36:368"
+  },
+  {
+    "case_id": "PMC3634205_48032",
+    "pmcid": "PMC3634205",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC-SA",
+    "citation": "Ann Med Health Sci Res. 2013 Jan-Mar; 3(1):108-109"
+  },
+  {
+    "case_id": "PMC6126084_49246",
+    "pmcid": "PMC6126084",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Case Rep Rheumatol. 2018 Aug 23; 2018:9602373"
+  },
+  {
+    "case_id": "PMC7136765_59824",
+    "pmcid": "PMC7136765",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Case Rep Med. 2020 Mar 26; 2020:3438469"
+  },
+  {
+    "case_id": "PMC3779461_15632",
+    "pmcid": "PMC3779461",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Pan Afr Med J. 2013 May 31; 15:39"
+  },
+  {
+    "case_id": "PMC4531758_4779",
+    "pmcid": "PMC4531758",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "Korean J Intern Med. 2000 Jul; 15(2):156-159"
+  },
+  {
+    "case_id": "PMC5790922_3833",
+    "pmcid": "PMC5790922",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Front Surg. 2018 Jan 26; 5:4"
+  },
+  {
+    "case_id": "PMC3513818_15260",
+    "pmcid": "PMC3513818",
+    "specialty": "General Internal Medicine / Other",
+    "license": "CC BY-NC-SA",
+    "citation": "Natl J Maxillofac Surg. 2012 Jan-Jun; 3(1):84-86"
+  },
+  {
+    "case_id": "PMC4518176_37896",
+    "pmcid": "PMC4518176",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Case Rep Crit Care. 2015 Jul 15; 2015:596906"
+  },
+  {
+    "case_id": "PMC11101244_65367",
+    "pmcid": "PMC11101244",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Case Rep Crit Care. 2024 May 10; 2024:6652867"
+  },
+  {
+    "case_id": "PMC5885392_50590",
+    "pmcid": "PMC5885392",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Case Rep Rheumatol. 2018 Mar 22; 2018:8192021"
+  },
+  {
+    "case_id": "PMC8110395_22599",
+    "pmcid": "PMC8110395",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Case Rep Dent. 2021 May 3; 2021:9963478"
+  },
+  {
+    "case_id": "PMC6216048_27789",
+    "pmcid": "PMC6216048",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Int J Surg Case Rep. 2018 Oct 15; 53:132-136"
+  },
+  {
+    "case_id": "PMC3748794_40346",
+    "pmcid": "PMC3748794",
+    "specialty": "Ophthalmology",
+    "license": "CC BY-NC",
+    "citation": "Clin Ophthalmol. 2013 Jul 29; 7:1535-1537"
+  },
+  {
+    "case_id": "PMC6143813_55323",
+    "pmcid": "PMC6143813",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Front Psychiatry. 2018 Sep 10; 9:427"
+  },
+  {
+    "case_id": "PMC5478186_18416",
+    "pmcid": "PMC5478186",
+    "specialty": "Ophthalmology",
+    "license": "CC BY-NC",
+    "citation": "Case Rep Ophthalmol. 2017 Mar 7; 8(1):137-143"
+  },
+  {
+    "case_id": "PMC11052560_64735",
+    "pmcid": "PMC11052560",
+    "specialty": "Ophthalmology",
+    "license": "CC BY-NC",
+    "citation": "Case Rep Ophthalmol. 2024 Apr 26; 15(1):399-405"
+  },
+  {
+    "case_id": "PMC6243323_40697",
+    "pmcid": "PMC6243323",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "BJR Case Rep. 2016 Nov 2; 2(4):20150348"
+  },
+  {
+    "case_id": "PMC9969176_31198",
+    "pmcid": "PMC9969176",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Cureus.; 15(1):e34260"
+  },
+  {
+    "case_id": "PMC5392397_48675",
+    "pmcid": "PMC5392397",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Case Rep Pediatr. 2017 Apr 2; 2017:6943954"
+  },
+  {
+    "case_id": "PMC10333530_46671",
+    "pmcid": "PMC10333530",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Front Genet. 2023 Jun 27; 14:1156847"
+  },
+  {
+    "case_id": "PMC4387695_44402",
+    "pmcid": "PMC4387695",
+    "specialty": "Dermatology",
+    "license": "CC BY-NC-SA",
+    "citation": "Int J Trichology. 2015 Jan-Mar; 7(1):26-28"
+  },
+  {
+    "case_id": "PMC4274913_50187",
+    "pmcid": "PMC4274913",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Case Reports Immunol. 2014 Nov 19; 2014:394754"
+  },
+  {
+    "case_id": "PMC9063037_40692",
+    "pmcid": "PMC9063037",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Clin Nephrol Case Stud. 2022 Apr 29; 10:32-36"
+  },
+  {
+    "case_id": "PMC4405061_49734",
+    "pmcid": "PMC4405061",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Pan Afr Med J. 2014 Nov 27; 19:330"
+  },
+  {
+    "case_id": "PMC11307147_63672",
+    "pmcid": "PMC11307147",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Front Immunol. 2024 Jul 25; 15:1376258"
+  },
+  {
+    "case_id": "PMC4374200_24199",
+    "pmcid": "PMC4374200",
+    "specialty": "Dermatology",
+    "license": "CC BY-NC-SA",
+    "citation": "Adv Biomed Res. 2015 Feb 27; 4:63"
+  },
+  {
+    "case_id": "PMC10560117_62871",
+    "pmcid": "PMC10560117",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Case Rep Vasc Med. 2023 Sep 30; 2023:8858656"
+  },
+  {
+    "case_id": "PMC3420650_14956",
+    "pmcid": "PMC3420650",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Case Rep Pathol. 2011 Nov 17; 2011:257458"
+  },
+  {
+    "case_id": "PMC5827055_17742",
+    "pmcid": "PMC5827055",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Emerg (Tehran). 2018 Jan 20; 6(1):e9"
+  },
+  {
+    "case_id": "PMC6180898_52407",
+    "pmcid": "PMC6180898",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "BJR Case Rep. 2016 May 15; 2(2):20150322"
+  },
+  {
+    "case_id": "PMC9433798_6036",
+    "pmcid": "PMC9433798",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Front Med (Lausanne). 2022 Aug 18; 9:945268"
+  },
+  {
+    "case_id": "PMC10542575_62738",
+    "pmcid": "PMC10542575",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Front Cell Infect Microbiol. 2023 Sep 15; 13:1243055"
+  },
+  {
+    "case_id": "PMC5996640_35148",
+    "pmcid": "PMC5996640",
+    "specialty": "Dermatology",
+    "license": "CC BY-NC-SA",
+    "citation": "Natl J Maxillofac Surg. 2018 Jan-Jun; 9(1):110-112"
+  },
+  {
+    "case_id": "PMC3299167_42508",
+    "pmcid": "PMC3299167",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY-NC-SA",
+    "citation": "J Emerg Trauma Shock. 2012 Jan-Mar; 5(1):95-96"
+  },
+  {
+    "case_id": "PMC9647680_15033",
+    "pmcid": "PMC9647680",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY-NC",
+    "citation": "Jt Dis Relat Surg. 2022 Oct 6; 33(3):658-665"
+  },
+  {
+    "case_id": "PMC9068340_8193",
+    "pmcid": "PMC9068340",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Case Rep Transplant. 2022 Apr 27; 2022:5428381"
+  },
+  {
+    "case_id": "PMC2730253_16584",
+    "pmcid": "PMC2730253",
+    "specialty": "Pulmonology",
+    "license": "CC BY",
+    "citation": "Emerg Infect Dis. 2002 Apr; 8(4):437-439"
+  },
+  {
+    "case_id": "PMC7193195_10948",
+    "pmcid": "PMC7193195",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC-SA",
+    "citation": "J Clin Imaging Sci. 2020 May 2; 10:24"
+  },
+  {
+    "case_id": "PMC3761994_44128",
+    "pmcid": "PMC3761994",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC-SA",
+    "citation": "J Clin Neonatol. 2012 Jan-Mar; 1(1):49-51"
+  },
+  {
+    "case_id": "PMC10193042_35688",
+    "pmcid": "PMC10193042",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "World J Pediatr Surg. 2023 May 16; 6(2):e000552"
+  },
+  {
+    "case_id": "PMC10401040_35089",
+    "pmcid": "PMC10401040",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Front Cardiovasc Med. 2023 Jul 21; 10:1213165"
+  },
+  {
+    "case_id": "PMC11195442_62584",
+    "pmcid": "PMC11195442",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Front Oncol. 2024 Jun 10; 14:1406616"
+  },
+  {
+    "case_id": "PMC11176450_64156",
+    "pmcid": "PMC11176450",
+    "specialty": "Dermatology",
+    "license": "CC BY",
+    "citation": "Front Med (Lausanne). 2024 May 31; 11:1420473"
+  },
+  {
+    "case_id": "PMC11093684_67346",
+    "pmcid": "PMC11093684",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Case Rep Endocrinol. 2024 May 7; 2024:5599984"
+  },
+  {
+    "case_id": "PMC10830907_64893",
+    "pmcid": "PMC10830907",
+    "specialty": "Cardiology",
+    "license": "CC BY",
+    "citation": "Case Rep Nephrol. 2024 Jan 24; 2024:2478832"
+  },
+  {
+    "case_id": "PMC10419215_35979",
+    "pmcid": "PMC10419215",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Front Pediatr. 2023 Jul 28; 11:1214837"
+  },
+  {
+    "case_id": "PMC5413492_43645",
+    "pmcid": "PMC5413492",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Front Pediatr. 2017 May 3; 5:75"
+  },
+  {
+    "case_id": "PMC5844257_15703",
+    "pmcid": "PMC5844257",
+    "specialty": "Gastroenterology",
+    "license": "CC BY-NC",
+    "citation": "Infect Drug Resist. 2018 Mar 5; 11:317-321"
+  },
+  {
+    "case_id": "PMC10749716_60435",
+    "pmcid": "PMC10749716",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "Case Rep Hematol. 2023 Dec 18; 2023:6669174"
+  },
+  {
+    "case_id": "PMC6556811_38866",
+    "pmcid": "PMC6556811",
+    "specialty": "Gastroenterology",
+    "license": "CC BY",
+    "citation": "Int J Surg Case Rep. 2019 May 9; 60:16-20"
+  },
+  {
+    "case_id": "PMC8485840_8952",
+    "pmcid": "PMC8485840",
+    "specialty": "Orthopedics & Traumatology",
+    "license": "CC BY",
+    "citation": "J Bone Jt Infect. 2021 Sep 23; 6(8):355-361"
+  },
+  {
+    "case_id": "PMC4899662_25375",
+    "pmcid": "PMC4899662",
+    "specialty": "Neurology",
+    "license": "CC BY-NC",
+    "citation": "Case Rep Neurol. 2016 Feb 12; 8(1):47-52"
+  },
+  {
+    "case_id": "PMC8429789_20825",
+    "pmcid": "PMC8429789",
+    "specialty": "Ophthalmology",
+    "license": "CC BY",
+    "citation": "Front Psychol. 2021 Aug 27; 12:718934"
+  },
+  {
+    "case_id": "PMC5798105_25175",
+    "pmcid": "PMC5798105",
+    "specialty": "Neurology",
+    "license": "CC BY-NC-SA",
+    "citation": "Indian J Nucl Med. 2018 Jan-Mar; 33(1):65-67"
+  },
+  {
+    "case_id": "PMC11795214_71171",
+    "pmcid": "PMC11795214",
+    "specialty": "Neurology",
+    "license": "CC BY",
+    "citation": "Cureus.; 17(1):e76987"
+  }
+]

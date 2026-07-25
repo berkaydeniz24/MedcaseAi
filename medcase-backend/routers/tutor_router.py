@@ -1,11 +1,13 @@
 # routers/tutor_router.py
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
+from sqlalchemy.orm import Session
 
-from services.case_service import case_service
+from services.database import get_db
+from case_selector.selector_agent import selector_agent
 
 # Sende nasıl tanımlıysa:
 # - Eğer tutor_agent bir instance ise: from tutor.tutor_agent import tutor_agent
@@ -39,9 +41,9 @@ class TutorRequest(BaseModel):
 
 
 @router.post("", response_model=TutorOutput)
-async def tutor(req: TutorRequest) -> TutorOutput:
-    # 1) Case çek
-    case = case_service.get_case_by_id(req.case_id)
+async def tutor(req: TutorRequest, db: Session = Depends(get_db)) -> TutorOutput:
+    # 1) Case çek (SQL üzerinden)
+    case = selector_agent.get_case_by_id(db, req.case_id)
     if not case:
         raise HTTPException(status_code=404, detail=f"Case not found: {req.case_id}")
 

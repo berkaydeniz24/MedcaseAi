@@ -48,7 +48,7 @@ def start_simulation(db: Session = Depends(get_db)):
     MCQ verisini JSON olarak VERİTABANINA kaydeder.
     """
     # 1) Case seç
-    case_data = selector_agent.select_random_case()
+    case_data = selector_agent.select_random_case(db)
     if not case_data or ("error" in case_data):
         raise HTTPException(status_code=404, detail=case_data.get("error", "Case not found"))
 
@@ -102,7 +102,7 @@ async def chat_with_agent(case_id: str, req: DialogueRequest, db: Session = Depe
     Ajan stateless'tır, ancak geçmiş (history) parametre olarak verilir.
     """
     # 1. Vakayı kontrol et
-    case = selector_agent.get_case_by_id(case_id)
+    case = selector_agent.get_case_by_id(db, case_id)
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
 
@@ -199,7 +199,7 @@ def submit_answer(session_id: str, req: AnswerRequest, db: Session = Depends(get
             mcq_full = ram_session.mcq
 
     # 3. Case verisini çek
-    case = selector_agent.get_case_by_id(case_id)
+    case = selector_agent.get_case_by_id(db, case_id)
     
     # 4. Doğru Cevabı Belirle
     correct_index = int(mcq_full.get("correctIndex", 0)) 

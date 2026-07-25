@@ -3,10 +3,13 @@
 Thumbs.db
 
 # --- PYTHON (Backend) ---
-medcase-backend/__pycache__/
+**/__pycache__/
 medcase-backend/venv/
 medcase-backend/.env
-medcase-backend/*.pyc
+*.pyc
+
+# Evaluation ajan koşularının ham çıktıları (regenerate edilebilir, versiyonlanmaz)
+medcase-backend/evaluation/results/
 
 # Büyük Veri Dosyaları (Git'e yükleme)
 medcase-backend/data/full_cases.json

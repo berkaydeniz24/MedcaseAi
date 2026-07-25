@@ -15,7 +15,7 @@ class DialogueAgent:
             self.client = None
 
         # Model id
-        self.model_id = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+        self.model_id = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
 
     def generate_response(
         self,

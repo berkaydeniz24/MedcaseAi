@@ -31,3 +31,15 @@ class ChatMessage(Base):
     role = Column(String)
     content = Column(Text)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+class Case(Base):
+    __tablename__ = "cases"
+    id = Column(String, primary_key=True, index=True)
+    title = Column(String, default="Unknown Case")
+    specialty = Column(String, default="General")
+    difficulty = Column(String, default="Intermediate")
+    narrative = Column(Text, default="")
+    # Ham iç içe yapılar (assets/rubric/seed_questions) JSON string olarak saklanır.
+    assets_json = Column(Text, default="{}")
+    rubric_json = Column(Text, default="{}")
+    seed_questions_json = Column(Text, default="[]")

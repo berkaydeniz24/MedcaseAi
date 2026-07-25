@@ -17,7 +17,7 @@ class MCQGenerator:
         if not api_key:
             raise RuntimeError("GEMINI_API_KEY is not set")
         self.client = genai.Client(api_key=api_key)
-        self.model = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+        self.model = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
 
     def generate_mcq(self, case: Dict[str, Any]) -> Dict[str, Any]:
         """
