@@ -54,7 +54,11 @@ except ImportError as e:
     HAS_ROUTERS = False
     logger.warning("Routerlar yüklenemedi. Sebebi: %s", e)
 
-app = FastAPI()
+APP_NAME = os.getenv("APP_NAME", "MedCase AI API")
+APP_VERSION = os.getenv("APP_VERSION", "0.2.0")
+APP_ENV = os.getenv("APP_ENV", "development")
+
+app = FastAPI(title=APP_NAME, version=APP_VERSION)
 
 # --- 1. STATİK DOSYALAR (RESİMLER İÇİN) ---
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -73,12 +77,30 @@ if user_router:  # <--- EKLENDİ (İstatistik Endpointleri)
     app.include_router(user_router.router, prefix="/user", tags=["User"])
 
 # --- 3. CORS AYARLARI (Mobil Uygulama İçin) ---
+# .env üzerinden daraltılabilir (virgülle ayrılmış origin listesi); yoksa
+# mevcut davranış (herkese açık) korunur — Expo web/simulator farklı
+# origin'lerden istek atabildiği için varsayılanı sıkılaştırmak riskli.
+_cors_origins_env = os.getenv("CORS_ORIGINS", "*")
+CORS_ORIGINS = ["*"] if _cors_origins_env.strip() == "*" else [
+    o.strip() for o in _cors_origins_env.split(",") if o.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --- HEALTH CHECK ---
+@app.get("/health", tags=["System"])
+def health_check():
+    return {
+        "status": "ok",
+        "service": APP_NAME,
+        "version": APP_VERSION,
+        "environment": APP_ENV,
+    }
 
 # Request Modeli
 class QueryRequest(BaseModel):

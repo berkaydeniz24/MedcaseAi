@@ -57,14 +57,12 @@ cd MedcaseAI
 cd medcase-backend
 pip install -r ../requirements.txt
 
-# .env dosyası oluştur
-cat > .env <<EOF
-GEMINI_API_KEY=your_key_here
-GEMINI_MODEL=gemini-3.1-flash-lite
-EOF
+cp .env.example .env
+# .env içine gerçek GEMINI_API_KEY değerini yaz
 
 python3 main.py
 # -> http://127.0.0.1:8000  (ilk açılışta cases_subset.json otomatik SQLite'a yüklenir)
+# -> http://127.0.0.1:8000/health  ile ayakta olup olmadığını kontrol et
 ```
 
 ### Frontend
@@ -83,10 +81,13 @@ npx expo start        # veya --ios / --android / --web
 ## Backend
 
 - **Framework:** FastAPI + Uvicorn
-- **Veritabanı:** SQLite (SQLAlchemy) — `cases`, `chat_sessions`, `chat_messages`, `user_stats`, `case_progress` tabloları. Tüm oturum/cevap/geçmiş verisi SQL'de tutulur (RAM tabanlı fallback yoktur).
+- **Veritabanı:** SQLite (SQLAlchemy) — `cases`, `chat_sessions`, `chat_messages`, `user_stats`, `case_progress` tabloları. Tüm oturum/cevap/geçmiş verisi SQL'de tutulur (RAM tabanlı fallback yoktur). Bağlantı adresi `.env`'deki `DATABASE_URL` ile değiştirilebilir (ör. ileride Postgres'e geçiş için).
 - **LLM:** Google Gemini (`google-genai` SDK), model adı `.env`'deki `GEMINI_MODEL` ile kontrol edilir — güncel çalışan modeller için [docs/architecture.md](docs/architecture.md)'deki notlara bakın (birçok eski model adı, ör. `gemini-1.5-flash`, artık API'den kaldırılmış durumda).
 - **Loglama:** `medcase-backend/logs/{info,warning,error}.log` + konsol.
 - **Promptlar:** `medcase-backend/prompts/*_v1.0.txt`, `services/prompt_loader.py` ile yüklenir; her ajan çağrısında kullanılan prompt versiyonu loglanır.
+- **Çıktı doğrulama:** MCQ Agent çıktısı `mcq/schemas.py`'deki `MCQOutput` (Pydantic) ile doğrulanır — tam 4 benzersiz/boş-olmayan şık, geçerli `correctIndex`, boş olmayan soru/rationale zorunlu; doğrulama başarısız olursa güvenli bir fallback'e düşer.
+- **Health check:** `GET /health` — servis adı/versiyon/ortam bilgisi döner, deployment/frontend bu endpoint ile ayakta olup olmadığını kontrol edebilir.
+- **Testler:** `medcase-backend/tests/` (`pytest`) — MCQ şema doğrulama ve otomatik değerlendirme kontrolleri için. Çalıştırmak için: `cd medcase-backend && python3 -m pytest tests/ -v`
 
 ## Frontend
 

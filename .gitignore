@@ -7,6 +7,7 @@ Thumbs.db
 medcase-backend/venv/
 medcase-backend/.env
 *.pyc
+.pytest_cache/
 
 # Evaluation ajan koşularının ham çıktıları (regenerate edilebilir, versiyonlanmaz)
 medcase-backend/evaluation/results/

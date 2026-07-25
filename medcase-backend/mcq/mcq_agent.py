@@ -8,14 +8,17 @@ architecture is actually described (docs/architecture.md calls this the
 """
 from __future__ import annotations
 
-import json
 import logging
 import os
 import random
 from typing import Any, Dict
 
+from pydantic import ValidationError
+
 from services.gemini_client import GeminiClient
 from services.prompt_loader import load_prompt
+
+from .schemas import MCQOutput
 
 logger = logging.getLogger(__name__)
 
@@ -56,40 +59,36 @@ class MCQAgent:
             text = (resp.text or "").strip()
             text = text.replace("```json", "").replace("```", "").strip()
 
-            data = json.loads(text)
+            # Strict contract: exactly 4 unique non-empty options, correctIndex
+            # in range, non-trivial question/rationale — anything less raises
+            # ValidationError and falls through to the fallback below, rather
+            # than silently accepting malformed output (e.g. a clamped
+            # out-of-range index).
+            mcq = MCQOutput.model_validate_json(text)
 
-            if "question" not in data or "options" not in data or "correctIndex" not in data:
-                raise ValueError("MCQ JSON missing required fields")
-
-            orig_options = [str(x).strip() for x in data["options"]]
-            orig_idx = int(data["correctIndex"])
-            question = str(data["question"]).strip()
-            rationale = str(data.get("rationale", "")).strip()
-
-            if 0 <= orig_idx < len(orig_options):
-                correct_answer_text = orig_options[orig_idx]
-            else:
-                correct_answer_text = orig_options[0]
-
-            final_options = orig_options.copy()
+            correct_answer_text = mcq.options[mcq.correctIndex]
+            final_options = mcq.options.copy()
             random.shuffle(final_options)
             new_correct_index = final_options.index(correct_answer_text)
 
             return {
-                "question": question,
+                "question": mcq.question,
                 "options": final_options,
                 "correctIndex": new_correct_index,
-                "rationale": rationale,
+                "rationale": mcq.rationale,
             }
 
+        except ValidationError as e:
+            logger.error("mcq_agent: MCQ output failed schema validation for case_id=%s: %s", case_id, e)
         except Exception as e:
             logger.error("mcq_agent: MCQ generation failed for case_id=%s: %s", case_id, e)
-            return {
-                "question": "Vaka analizi sorusu yüklenirken bir hata oluştu.",
-                "options": ["Seçenek A", "Seçenek B", "Seçenek C", "Seçenek D"],
-                "correctIndex": 0,
-                "rationale": "Sistem hatası.",
-            }
+
+        return {
+            "question": "Vaka analizi sorusu yüklenirken bir hata oluştu.",
+            "options": ["Seçenek A", "Seçenek B", "Seçenek C", "Seçenek D"],
+            "correctIndex": 0,
+            "rationale": "Sistem hatası.",
+        }
 
 
 mcq_agent = MCQAgent()
