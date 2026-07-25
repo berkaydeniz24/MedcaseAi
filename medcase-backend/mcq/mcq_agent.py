@@ -24,7 +24,12 @@ PROMPT_VERSION = "v1.0"
 
 class MCQAgent:
     def __init__(self):
-        self.client = GeminiClient().client
+        try:
+            self.client = GeminiClient().client
+        except Exception as e:
+            logger.warning("MCQAgent: client init failed: %s", e)
+            self.client = None
+
         self.model = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
         self._template = load_prompt("mcq", PROMPT_VERSION)
 
@@ -43,6 +48,8 @@ class MCQAgent:
         )
 
         try:
+            if self.client is None:
+                raise RuntimeError("GEMINI_API_KEY missing — client not initialized")
             logger.info("mcq_agent: generating MCQ for case_id=%s prompt_version=%s", case_id, PROMPT_VERSION)
             resp = self.client.models.generate_content(model=self.model, contents=prompt)
 
