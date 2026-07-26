@@ -70,6 +70,12 @@ class DBService:
     def get_chat_history(self, session_id: str):
         return self.db.query(models.ChatMessage).filter_by(session_id=session_id).order_by(models.ChatMessage.timestamp).all()
 
+    def increment_hint_count(self, session_id: str):
+        session = self.db.query(models.ChatSession).filter_by(session_id=session_id).first()
+        if session:
+            session.hints_used = (session.hints_used or 0) + 1
+            self.db.commit()
+
     # --- CEVAP KAYITLARI (CaseAnswer) ---
     def get_existing_answer(self, session_id: str):
         return self.db.query(models.CaseAnswer).filter_by(session_id=session_id).first()

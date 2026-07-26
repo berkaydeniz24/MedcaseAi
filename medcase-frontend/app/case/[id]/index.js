@@ -1,19 +1,13 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import {
-  View, Text, ScrollView, StyleSheet, Pressable,
+  View, Text, Image, ScrollView, StyleSheet, Pressable,
   ActivityIndicator, SafeAreaView, StatusBar
 } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
-import { getCaseById, submitAnswer } from "../../../src/api/endpoints";
+import { getCaseById, getCaseProgress, submitAnswer } from "../../../src/api/endpoints";
 import { Colors } from "../../../src/theme/colors";
 import { getLastSession } from "../../../src/api/session_cache";
-
-// Durum seçenekleri
-const STATUS_OPTIONS = [
-  { id: 'To Solve', label: 'To Solve', color: '#64748B', bg: '#F1F5F9' },
-  { id: 'In Progress', label: 'In Progress', color: '#854D0E', bg: '#FEF9C3' },
-  { id: 'Solved', label: 'Solved', color: '#166534', bg: '#DCFCE7' }
-];
+import { getStatusDetails, getDifficultyDetails } from "../../../src/utils/caseStatus";
 
 export default function PatientRecordPage() {
   const params = useLocalSearchParams();
@@ -24,12 +18,15 @@ export default function PatientRecordPage() {
 
   const [caseData, setCaseData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [currentStatus, setCurrentStatus] = useState('To Solve');
+  // Gerçek, kalıcı durum (DB'den) — artık kullanıcının değiştirebildiği
+  // sahte/yerel bir seçici değil, yalnızca gösterim amaçlı salt-okunur rozet.
+  const [caseStatus, setCaseStatus] = useState("new");
 
   // MCQ states
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [imageFailed, setImageFailed] = useState(false);
 
   const cached = getLastSession();
 
@@ -42,12 +39,15 @@ export default function PatientRecordPage() {
     return cached.mcq || null;
   }, [sessionId, cached, id]);
 
-  // 1. Vaka Detayını Çek
+  // 1. Vaka Detayını ve gerçek ilerleme durumunu çek
   useEffect(() => {
-    getCaseById(String(id))
-      .then((res) => {
-        setCaseData(res);
-        setCurrentStatus(res.status || 'To Solve');
+    setLoading(true);
+    setImageFailed(false);
+    Promise.all([getCaseById(String(id)), getCaseProgress()])
+      .then(([caseRes, progressRes]) => {
+        setCaseData(caseRes);
+        const found = (progressRes || []).find((p) => p.case_id === String(id));
+        setCaseStatus(found ? found.status : "new");
       })
       .catch((e) => console.error(e))
       .finally(() => setLoading(false));
@@ -61,11 +61,7 @@ export default function PatientRecordPage() {
       setFeedback(null);
       setSubmitting(false);
     }
-  }, [sessionId]); 
-
-  const handleStatusChange = (newStatus) => {
-    setCurrentStatus(newStatus);
-  };
+  }, [sessionId]);
 
   const handleSubmitAnswer = async () => {
     if (!sessionId || selectedIndex === null || submitting) return;
@@ -90,6 +86,10 @@ export default function PatientRecordPage() {
   if (loading) return <ActivityIndicator size="large" color={Colors.accent} style={{ flex: 1 }} />;
   if (!caseData) return <View style={styles.container}><Text>Case not found.</Text></View>;
 
+  const statusDetails = getStatusDetails(caseStatus);
+  const difficultyDetails = getDifficultyDetails(caseData.difficulty);
+  const chiefComplaint = caseData.rubric?.chief_complaint?.trim();
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -108,29 +108,35 @@ export default function PatientRecordPage() {
           </View>
 
           <View style={styles.statusSection}>
-            <Text style={styles.statusTitle}>CASE STATUS:</Text>
-            <View style={styles.statusPicker}>
-              {STATUS_OPTIONS.map((option) => (
-                <Pressable
-                  key={option.id}
-                  onPress={() => handleStatusChange(option.id)}
-                  style={[
-                    styles.statusOption,
-                    { backgroundColor: currentStatus === option.id ? option.bg : 'transparent' },
-                    { borderColor: currentStatus === option.id ? option.color : '#E2E8F0' }
-                  ]}
-                >
-                  <Text style={[
-                    styles.statusOptionText,
-                    { color: currentStatus === option.id ? option.color : '#94A3B8' }
-                  ]}>
-                    {option.label}
-                  </Text>
-                </Pressable>
-              ))}
+            <Text style={styles.statusTitle}>CASE STATUS</Text>
+            <View style={styles.badgeRow}>
+              <View style={[styles.readOnlyBadge, { backgroundColor: statusDetails.bg }]}>
+                <Text style={[styles.readOnlyBadgeText, { color: statusDetails.text }]}>{statusDetails.label}</Text>
+              </View>
+              <View style={[styles.readOnlyBadge, { backgroundColor: difficultyDetails.bg }]}>
+                <Text style={[styles.readOnlyBadgeText, { color: difficultyDetails.text }]}>
+                  {caseData.difficulty || "Intermediate"}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
+
+        {chiefComplaint ? (
+          <View style={styles.chiefComplaintCard}>
+            <Text style={styles.chiefComplaintLabel}>CHIEF COMPLAINT</Text>
+            <Text style={styles.chiefComplaintText}>{chiefComplaint}</Text>
+          </View>
+        ) : null}
+
+        {caseData.image && !imageFailed ? (
+          <Image
+            source={{ uri: caseData.image }}
+            style={styles.caseImage}
+            resizeMode="contain"
+            onError={() => setImageFailed(true)}
+          />
+        ) : null}
 
         {/* Klinik Rapor */}
         <Text style={styles.sectionTitle}>Clinical Presentation</Text>
@@ -214,7 +220,15 @@ export default function PatientRecordPage() {
       <View style={styles.footer}>
         <Pressable
           style={styles.actionButton}
-          onPress={() => router.push(`/case/${id}/chat`)}
+          onPress={() =>
+            // sessionId varsa aktarılmalı — yoksa Quick Practice kartının
+            // kullandığı oturum burada terk edilip chat.js sıfırdan yeni
+            // bir oturum açardı (gerçek, önceden var olan bir hataydı).
+            router.push({
+              pathname: `/case/${id}/chat`,
+              params: sessionId ? { session_id: sessionId } : {},
+            })
+          }
         >
           <Text style={styles.actionButtonText}>Start Clinical Discussion</Text>
         </Pressable>
@@ -236,9 +250,15 @@ const styles = StyleSheet.create({
 
   statusSection: { borderTopWidth: 1, borderTopColor: '#F1F5F9', paddingTop: 15 },
   statusTitle: { fontSize: 10, fontWeight: '800', color: Colors.textSub, marginBottom: 10, letterSpacing: 1 },
-  statusPicker: { flexDirection: 'row', gap: 8 },
-  statusOption: { flex: 1, paddingVertical: 8, borderRadius: 10, borderWidth: 1, alignItems: 'center' },
-  statusOptionText: { fontSize: 11, fontWeight: '700' },
+  badgeRow: { flexDirection: 'row', gap: 8 },
+  readOnlyBadge: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10 },
+  readOnlyBadgeText: { fontSize: 12, fontWeight: '800' },
+
+  chiefComplaintCard: { backgroundColor: Colors.accentSoft, borderRadius: 18, padding: 16, marginBottom: 15, borderWidth: 1, borderColor: Colors.accentSoftBorder },
+  chiefComplaintLabel: { fontSize: 10, fontWeight: '800', color: Colors.accentDark, letterSpacing: 1, marginBottom: 6 },
+  chiefComplaintText: { fontSize: 15, fontWeight: '700', color: Colors.textMain, lineHeight: 22 },
+
+  caseImage: { width: '100%', height: 220, borderRadius: 18, marginBottom: 15, backgroundColor: '#EDF2F7' },
 
   sectionTitle: { fontSize: 15, fontWeight: '800', color: Colors.textSub, marginBottom: 12, marginLeft: 5 },
   mainInfoCard: { backgroundColor: Colors.white, borderRadius: 24, padding: 20, marginBottom: 15, borderWidth: 1, borderColor: '#EDF2F7' },

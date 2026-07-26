@@ -1,7 +1,8 @@
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-from typing import List
 from pydantic import BaseModel
 
 from services.database import get_db
@@ -15,8 +16,14 @@ class ChatHistoryItem(BaseModel):
     session_id: str
     case_id: str
     case_title: str
+    specialty: str
     last_message: str
     date: str
+    status: str
+    is_correct: Optional[bool] = None
+    hints_used: int = 0
+    response_time_ms: Optional[int] = None
+    completed_at: Optional[str] = None
 
 class UserStatsResponse(BaseModel):
     total_correct: int
@@ -25,6 +32,7 @@ class UserStatsResponse(BaseModel):
 class CaseProgressItem(BaseModel):
     case_id: str
     status: str
+    session_id: Optional[str] = None
 
 # --- 1. İSTATİSTİKLER ---
 @router.get("/stats", response_model=UserStatsResponse)
@@ -41,11 +49,23 @@ def get_user_stats(db: Session = Depends(get_db)):
 @router.get("/progress", response_model=List[CaseProgressItem])
 def get_case_progress(db: Session = Depends(get_db)):
     progress_list = db.query(models.CaseProgress).all()
+
+    # Her case_id için EN SON oturumun session_id'sini bulmak amacıyla,
+    # oturumları en yeniden en eskiye çekip ilk görüleni (= en yenisini)
+    # sözlükte tutuyoruz — get_user_chat_history'deki dedup mantığıyla aynı
+    # idiom, N+1 sorgu yerine tek sorgu.
+    all_sessions = db.query(models.ChatSession).order_by(desc(models.ChatSession.created_at)).all()
+    latest_session_by_case = {}
+    for sess in all_sessions:
+        if sess.case_id not in latest_session_by_case:
+            latest_session_by_case[sess.case_id] = sess.session_id
+
     result = []
     for p in progress_list:
         result.append({
             "case_id": p.case_id,
-            "status": p.status
+            "status": p.status,
+            "session_id": latest_session_by_case.get(p.case_id),
         })
     return result
 
@@ -69,9 +89,19 @@ def get_user_chat_history(db: Session = Depends(get_db)):
     
     # Sözlükten listeye çevir (Tarih sırasını koruyarak)
     filtered_sessions = sorted(unique_sessions_map.values(), key=lambda x: x.created_at, reverse=True)
-    
+
+    # İlgili session_id'lerin CaseAnswer kayıtlarını tek sorguda çekip
+    # session_id -> CaseAnswer sözlüğüne çeviriyoruz (N+1 sorgu yerine).
+    relevant_session_ids = [sess.session_id for sess in filtered_sessions]
+    answers_by_session = {
+        a.session_id: a
+        for a in db.query(models.CaseAnswer)
+            .filter(models.CaseAnswer.session_id.in_(relevant_session_ids))
+            .all()
+    } if relevant_session_ids else {}
+
     history_list = []
-    
+
     for sess in filtered_sessions:
         # --- İLK MESAJI BULMA ---
         # Kullanıcının ("user") attığı İLK mesajı ("asc") bul.
@@ -92,17 +122,26 @@ def get_user_chat_history(db: Session = Depends(get_db)):
         if not first_msg:
             continue
 
-        # Vaka başlığını bul
+        # Vaka başlığını/branşını bul
         case_info = selector_agent.get_case_by_id(db, sess.case_id)
         title = case_info.get("title", f"Vaka #{sess.case_id}") if case_info else f"Vaka #{sess.case_id}"
+        specialty = case_info.get("specialty", "General") if case_info else "General"
+
+        answer = answers_by_session.get(sess.session_id)
 
         history_list.append({
             "session_id": sess.session_id,
             "case_id": sess.case_id,
             "case_title": title,
+            "specialty": specialty,
             # Mesaj önizlemesi
             "last_message": first_msg.content[:80] + "..." if len(first_msg.content) > 80 else first_msg.content,
-            "date": sess.created_at.strftime("%d.%m.%Y %H:%M") if sess.created_at else ""
+            "date": sess.created_at.strftime("%d.%m.%Y %H:%M") if sess.created_at else "",
+            "status": sess.status or "in_progress",
+            "is_correct": answer.is_correct if answer else None,
+            "hints_used": sess.hints_used or 0,
+            "response_time_ms": answer.response_time_ms if answer else None,
+            "completed_at": sess.completed_at.strftime("%d.%m.%Y %H:%M") if sess.completed_at else None,
         })
-        
+
     return history_list

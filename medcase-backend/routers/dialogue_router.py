@@ -176,6 +176,8 @@ async def chat_with_agent(case_id: str, req: DialogueRequest, db: Session = Depe
         # 7. Loglama
         dbs.add_message(current_session_id, "user", req.message)
         dbs.add_message(current_session_id, "ai", ai_text)
+        if mode == "hint":
+            dbs.increment_hint_count(current_session_id)
 
         return {
             "answer": ai_text,

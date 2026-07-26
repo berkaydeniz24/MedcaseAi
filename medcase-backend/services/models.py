@@ -29,6 +29,7 @@ class ChatSession(Base):
     # CaseProgress.status, which tracks per-CASE mastery, not per-SESSION state.
     status = Column(String, default="in_progress")
     completed_at = Column(DateTime(timezone=True), nullable=True)
+    hints_used = Column(Integer, default=0)
 
 class ChatMessage(Base):
     __tablename__ = "chat_messages"

@@ -1,17 +1,9 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Colors } from "../../theme/colors";
-
-const getDifficultyStyles = (level) => {
-switch (level) {
-case 'Easy': return { bg: '#DCFCE7', text: '#166534' };
-case 'Medium': return { bg: '#FEF9C3', text: '#854D0E' };
-case 'Hard': return { bg: '#FEE2E2', text: '#991B1B' };
-default: return { bg: '#F1F5F9', text: '#475569' };
-}
-};
+import { getDifficultyDetails } from "../../utils/caseStatus";
 
 export const CaseCard = ({ item, onPress }) => {
-const diffStyle = getDifficultyStyles(item.difficulty);
+const diffStyle = getDifficultyDetails(item.difficulty);
 
 return (
 <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed && { opacity: 0.9 }]}>
@@ -30,7 +22,7 @@ return (
 </Text>
 <View style={[styles.difficultyBadge, { backgroundColor: diffStyle.bg }]}>
 <Text style={[styles.difficultyText, { color: diffStyle.text }]}>
-{item.difficulty || "Medium"}
+{item.difficulty || "Intermediate"}
 </Text>
 </View>
 </Pressable>

@@ -1,6 +1,7 @@
 # services/migrate_session_lifecycle.py
 """
-Adds `status` and `completed_at` to the existing `chat_sessions` table.
+Adds `status`, `completed_at`, and `hints_used` to the existing
+`chat_sessions` table.
 The new `case_answers` table doesn't need this — models.Base.metadata.
 create_all() (already called at startup in main.py) creates missing TABLES
 fine; it just never adds missing COLUMNS to a table that already exists,
@@ -20,6 +21,7 @@ logger = logging.getLogger(__name__)
 NEW_COLUMNS = {
     "status": "VARCHAR DEFAULT 'in_progress'",
     "completed_at": "DATETIME",
+    "hints_used": "INTEGER DEFAULT 0",
 }
 
 

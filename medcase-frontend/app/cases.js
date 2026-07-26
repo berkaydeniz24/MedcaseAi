@@ -5,17 +5,9 @@ import { useRouter } from "expo-router";
 import { listCases, getCaseProgress } from "../src/api/endpoints";
 import { CaseCard } from "../src/components/common/CaseCard";
 import { Colors } from "../src/theme/colors";
+import { getStatusDetails } from "../src/utils/caseStatus";
 
 const CATEGORIES = ["All", "Cardiology", "Neurology", "General Internal Medicine / Other", "Dermatology", "Orthopedics & Traumatology", "Pulmonology", "Ophthalmology", "Gastroenterology"];
-
-const getStatusDetails = (status) => {
-  // Backend'den gelen status kodları: 'solved', 'in_progress', 'new'
-  switch (status) {
-    case "solved": return { bg: "#DCFCE7", text: "#166534", label: "Completed" };
-    case "in_progress": return { bg: "#FEF9C3", text: "#854D0E", label: "In Progress" };
-    default: return { bg: "#F1F5F9", text: "#475569", label: "To Solve" };
-  }
-};
 
 export default function CasesScreen() {
   const router = useRouter();
@@ -46,7 +38,8 @@ export default function CasesScreen() {
         return {
           ...c,
           // Varsa DB'deki durumu, yoksa 'new' (Çözülecek)
-          status: foundProgress ? foundProgress.status : "new"
+          status: foundProgress ? foundProgress.status : "new",
+          session_id: foundProgress ? foundProgress.session_id : null,
         };
       });
 
@@ -94,9 +87,22 @@ export default function CasesScreen() {
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => {
           const status = getStatusDetails(item.status);
+          const handlePress = () => {
+            // Devam eden bir vaka için doğrudan sohbete dön (history.js'deki
+            // ile aynı, çalıştığı doğrulanmış mekanizma) — boş bir detay
+            // ekranına düşüp ilerlemenin kaybolmuş gibi görünmesini önler.
+            if (item.status === "in_progress" && item.session_id) {
+              router.push({
+                pathname: `/case/${item.id}/chat`,
+                params: { session_id: item.session_id },
+              });
+            } else {
+              router.push(`/case/${item.id}`);
+            }
+          };
           return (
             <View style={styles.cardContainer}>
-              <CaseCard item={item} onPress={() => router.push(`/case/${item.id}`)} />
+              <CaseCard item={item} onPress={handlePress} />
               <View style={[styles.statusTag, { backgroundColor: status.bg }]}>
                 <Text style={[styles.statusTagText, { color: status.text }]}>{status.label}</Text>
               </View>
