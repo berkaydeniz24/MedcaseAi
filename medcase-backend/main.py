@@ -36,6 +36,9 @@ ensure_session_lifecycle_columns()
 from services.migrate_user_scoping import ensure_user_scoping_columns
 ensure_user_scoping_columns()
 
+from services.migrate_case_vitals import ensure_case_vitals_column
+ensure_case_vitals_column()
+
 # --- Vaka verisini (ilk kurulumda) SQL'e yükle ---
 from services.seed_cases import seed_cases_if_empty
 from services.backfill_source_metadata import backfill_if_needed

@@ -4,6 +4,7 @@ import {
   ActivityIndicator, SafeAreaView, StatusBar
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { getCaseById, getCaseProgress, startDialogue, submitAnswer } from "../../../src/api/endpoints";
 import { Colors } from "../../../src/theme/colors";
 import { getLastSession, setLastSession } from "../../../src/api/session_cache";
@@ -16,6 +17,18 @@ import { getStatusDetails, getDifficultyDetails } from "../../../src/utils/caseS
 // why). Diagnosis/Management stay locked until the MCQ is submitted,
 // matching the existing Socratic design elsewhere in the app.
 const STAGES = ["Presentation", "Your Assessment", "Diagnosis & Reasoning", "Management"];
+
+// Video-roadmap "vitals kartı" — only ~37% of cases have any vital sign
+// explicitly stated in the narrative at all (checked before building the
+// enrichment pass, see enrichment/vitals_agent.py), so this is keyed off
+// whatever's actually present per case, never all 5 forced.
+const VITAL_META = {
+  temperature: { label: "Temperature", icon: "thermometer-outline" },
+  heart_rate: { label: "Heart Rate", icon: "heart-outline" },
+  blood_pressure: { label: "Blood Pressure", icon: "pulse-outline" },
+  respiratory_rate: { label: "Respiratory Rate", icon: "body-outline" },
+  spo2: { label: "SpO₂", icon: "water-outline" },
+};
 
 export default function PatientRecordPage() {
   const params = useLocalSearchParams();
@@ -124,6 +137,9 @@ export default function PatientRecordPage() {
   const statusDetails = getStatusDetails(caseStatus);
   const difficultyDetails = getDifficultyDetails(caseData.difficulty);
   const chiefComplaint = caseData.rubric?.chief_complaint?.trim();
+  const vitalsEntries = Object.entries(VITAL_META)
+    .map(([key, meta]) => ({ key, ...meta, reading: caseData.vitals?.[key] }))
+    .filter((v) => v.reading);
   const ddxTop = (caseData.rubric?.ddx_top || []).filter(Boolean);
   const managementList = (caseData.rubric?.management_initial || []).filter(Boolean);
   const pitfallsList = (caseData.rubric?.pitfalls || []).filter(Boolean);
@@ -191,6 +207,29 @@ export default function PatientRecordPage() {
                 <Text style={styles.chiefComplaintText}>{chiefComplaint}</Text>
               </View>
             ) : null}
+
+            {vitalsEntries.length > 0 && (
+              <View style={styles.vitalsRow}>
+                {vitalsEntries.map((v) => (
+                  <View
+                    key={v.key}
+                    style={[styles.vitalChip, v.reading.is_abnormal && styles.vitalChipAbnormal]}
+                  >
+                    <Ionicons
+                      name={v.icon}
+                      size={16}
+                      color={v.reading.is_abnormal ? Colors.danger : Colors.textSub}
+                    />
+                    <View style={{ marginLeft: 8 }}>
+                      <Text style={styles.vitalLabel}>{v.label}</Text>
+                      <Text style={[styles.vitalValue, v.reading.is_abnormal && styles.vitalValueAbnormal]}>
+                        {v.reading.value}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            )}
 
             {caseData.image && !imageFailed ? (
               <Image
@@ -396,6 +435,16 @@ const styles = StyleSheet.create({
   chiefComplaintCard: { backgroundColor: Colors.accentSoft, borderRadius: 18, padding: 16, marginBottom: 15, borderWidth: 1, borderColor: Colors.accentSoftBorder },
   chiefComplaintLabel: { fontSize: 10, fontWeight: '800', color: Colors.accentDark, letterSpacing: 1, marginBottom: 6 },
   chiefComplaintText: { fontSize: 15, fontWeight: '700', color: Colors.textMain, lineHeight: 22 },
+
+  vitalsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 15 },
+  vitalChip: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.white,
+    borderRadius: 14, paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderColor: '#EDF2F7',
+  },
+  vitalChipAbnormal: { backgroundColor: '#FEF2F2', borderColor: '#FCA5A5' },
+  vitalLabel: { fontSize: 9, fontWeight: '800', color: Colors.textSub, textTransform: 'uppercase', letterSpacing: 0.3 },
+  vitalValue: { fontSize: 13, fontWeight: '800', color: Colors.textMain, marginTop: 1 },
+  vitalValueAbnormal: { color: Colors.danger },
 
   caseImage: { width: '100%', height: 220, borderRadius: 18, marginBottom: 15, backgroundColor: '#EDF2F7' },
 

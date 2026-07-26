@@ -142,3 +142,32 @@ def test_source_populated_when_license_present():
 
     assert case["source"]["license_name"] == "CC BY"
     assert case["source"]["citation_text"] == "Some Author. Some Title."
+
+
+def test_vitals_default_empty_when_not_enriched():
+    db = make_session()
+    db.add(models.Case(id="C1", title="Test", specialty="Cardiology", narrative="N"))
+    db.commit()
+
+    agent = CaseSelectorAgent()
+    case = agent.get_case_by_id(db, "C1")
+
+    assert case["vitals"] == {
+        "temperature": None, "heart_rate": None, "blood_pressure": None,
+        "respiratory_rate": None, "spo2": None,
+    }
+
+
+def test_vitals_populated_when_enriched():
+    db = make_session()
+    db.add(models.Case(
+        id="C1", title="Test", specialty="Cardiology", narrative="N",
+        vitals_json='{"spo2": {"value": "89%", "is_abnormal": true}}',
+    ))
+    db.commit()
+
+    agent = CaseSelectorAgent()
+    case = agent.get_case_by_id(db, "C1")
+
+    assert case["vitals"]["spo2"] == {"value": "89%", "is_abnormal": True}
+    assert case["vitals"]["temperature"] is None

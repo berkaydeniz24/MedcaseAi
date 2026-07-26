@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 
 from services import models
-from .schemas import CaseOutput, CaseRubric, CaseSource
+from .schemas import CaseOutput, CaseRubric, CaseSource, CaseVitals
 
 
 class CaseSelectorAgent:
@@ -64,6 +64,7 @@ class CaseSelectorAgent:
         assets = json.loads(row.assets_json or "{}")
         raw_rubric = json.loads(row.rubric_json or "{}")
         seed_questions = json.loads(row.seed_questions_json or "[]")
+        raw_vitals = json.loads(row.vitals_json or "{}")
 
         # --- RESİM URL MANTIĞI ---
         image_url = None
@@ -104,6 +105,7 @@ class CaseSelectorAgent:
             rubric=CaseRubric(**raw_rubric),
             seed_questions=seed_questions,
             source=source,
+            vitals=CaseVitals(**raw_vitals),
         )
 
         return case_obj.model_dump()

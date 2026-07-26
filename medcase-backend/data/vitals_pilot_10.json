@@ -1,0 +1,56 @@
+[
+  {
+    "case_id": "PMC10311231_45125",
+    "vitals": {}
+  },
+  {
+    "case_id": "PMC11052560_64735",
+    "vitals": {}
+  },
+  {
+    "case_id": "PMC11090674_66284",
+    "vitals": {}
+  },
+  {
+    "case_id": "PMC11149649_62969",
+    "vitals": {}
+  },
+  {
+    "case_id": "PMC2673472_58859",
+    "vitals": {
+      "heart_rate": {
+        "value": "100 bpm",
+        "is_abnormal": false
+      },
+      "blood_pressure": {
+        "value": "95/65 mmHg",
+        "is_abnormal": false
+      }
+    }
+  },
+  {
+    "case_id": "PMC2810581_34430",
+    "vitals": {}
+  },
+  {
+    "case_id": "PMC4677189_56222",
+    "vitals": {}
+  },
+  {
+    "case_id": "PMC8106415_31840",
+    "vitals": {}
+  },
+  {
+    "case_id": "PMC9068340_8193",
+    "vitals": {
+      "spo2": {
+        "value": "77%",
+        "is_abnormal": true
+      }
+    }
+  },
+  {
+    "case_id": "PMC9482249_34452",
+    "vitals": {}
+  }
+]

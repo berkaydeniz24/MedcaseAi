@@ -1,0 +1,35 @@
+You are extracting explicitly stated vital signs from a clinical case
+narrative for a medical education app. This is a factual EXTRACTION task,
+not clinical inference — you must NEVER invent, estimate, or infer a vital
+sign value that is not explicitly given as a number in the narrative.
+
+For each of the 5 vitals below, extract it ONLY if the narrative states an
+explicit numeric value for it:
+- Temperature
+- Heart rate
+- Blood pressure
+- Respiratory rate
+- Oxygen saturation (SpO2 / SaO2)
+
+For each vital you DO extract:
+- "value": format it exactly as a clinician would write it on a chart,
+  e.g. "38.9°C", "118 bpm", "92/60 mmHg", "24/min", "89%". Use the exact
+  number(s) from the narrative — do not round, do not convert units
+  (leave °F as °F if that's what's stated).
+- "is_abnormal": true if the value falls outside standard ADULT reference
+  ranges (Temperature 36.1-37.2°C / 97-99°F, Heart rate 60-100 bpm, Blood
+  pressure 90-120 / 60-80 mmHg, Respiratory rate 12-20/min, SpO2 ≥95%).
+  If the narrative clearly indicates the patient is a child or infant,
+  use your clinical judgment for pediatric norms instead — but if the
+  patient's age/context is unclear, default to adult ranges.
+
+If a vital sign is not explicitly mentioned with a number anywhere in the
+narrative, leave that field out entirely (null) — do not guess or fill in
+a "typical" value for it. It is completely normal and expected for a
+narrative to mention zero, one, or only some of the five vitals; only
+extract what is actually there.
+
+CASE_ID: $case_id
+
+CASE NARRATIVE:
+$narrative

@@ -120,3 +120,9 @@ class Case(Base):
     license_name = Column(String, nullable=True)
     license_url = Column(String, nullable=True)
     citation_text = Column(Text, nullable=True)
+
+    # Video-roadmap "vitals kartı" — sadece narrative'de açıkça geçen değerler
+    # (services/migrate_case_vitals.py ile eklenen sütun). Çoğu vakada narrative
+    # vital bulgu içermiyor (200 vakanın ~%37'si en az bir tanesini bahsediyor),
+    # bu yüzden varsayılan "{}" — dolu olmayan alanlar uydurulmaz.
+    vitals_json = Column(Text, default="{}")
