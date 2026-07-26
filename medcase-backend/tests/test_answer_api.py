@@ -165,3 +165,18 @@ def test_chat_with_matching_case_succeeds(client):
     })
     assert resp.status_code == 200
     assert resp.json()["answer"] == "mocked hint"
+
+
+def test_tutor_agent_failure_falls_back_instead_of_500(client):
+    """If TutorAgent.run() raises (e.g. the Gemini call itself fails),
+    submit_answer must still grade the answer and return a graceful
+    fallback message — not a 500, and not lose the already-computed
+    isCorrect/correctIndex result."""
+    with patch("routers.dialogue_router.tutor_agent") as mock_tutor:
+        mock_tutor.run.side_effect = RuntimeError("Gemini call failed")
+        resp = client.post("/dialogue/session-1/answer", json={"selectedIndex": 1, "mode": "explain"})
+
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["isCorrect"] is True
+    assert "answer" in data["tutor"]

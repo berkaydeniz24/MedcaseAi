@@ -87,7 +87,7 @@ npx expo start        # veya --ios / --android / --web
 - **Promptlar:** `medcase-backend/prompts/*_v1.0.txt`, `services/prompt_loader.py` ile yüklenir; her ajan çağrısında kullanılan prompt versiyonu loglanır.
 - **Çıktı doğrulama:** MCQ Agent çıktısı `mcq/schemas.py`'deki `MCQOutput` (Pydantic) ile doğrulanır — tam 4 benzersiz/boş-olmayan şık, geçerli `correctIndex`, boş olmayan soru/rationale zorunlu; doğrulama başarısız olursa güvenli bir fallback'e düşer.
 - **Health check:** `GET /health` — servis adı/versiyon/ortam bilgisi döner, deployment/frontend bu endpoint ile ayakta olup olmadığını kontrol edebilir.
-- **Testler:** `medcase-backend/tests/` (`pytest`) — MCQ şema doğrulama ve otomatik değerlendirme kontrolleri için. Çalıştırmak için: `cd medcase-backend && python3 -m pytest tests/ -v`
+- **Testler:** `medcase-backend/tests/` (`pytest`, 44 test) — MCQ şema doğrulama, otomatik değerlendirme kontrolleri, answer/session API, case selector servisi, `/dialogue/start`, ve `/user/stats`/`/progress`/`/history`. Çalıştırmak için: `cd medcase-backend && python3 -m pytest tests/ -v`
 
 ## Frontend
 
