@@ -120,12 +120,8 @@ cat pmc_ids.txt | xargs -P 6 -I {} bash -c \
 
 ---
 
-## 6. Önerilen Sonraki Adımlar (Onay Bekliyor — Şu An Uygulanmadı)
+## 6. Önerilen Sonraki Adımlar
 
-Bunlar öneri niteliğindedir, siz onaylamadan kodda değişiklik yapılmadı:
-
-- **(A) Atıf/kaynak gösterimi ekle:** Case detay ekranına (`chat.js`'teki "Clinical File" modalı) küçük bir "Source: PMC, License: {CC BY|CC BY-NC|CC BY-NC-SA}, {citation}" satırı eklemek, hem hukuki asgari yükümlülüğü karşılar hem de tezde "veri kullanım etiği" bölümünü güçlendirir.
-- **(B) Lisans/atıf verisini SQL'e taşı:** Az önce eklediğimiz `Case` tablosuna (`services/models.py`) `license` ve `citation` sütunları eklenip, yukarıda üretilen 200 kayıtlık eşleme ile doldurulabilir — mimari zaten hazır (bkz. [architecture.md](architecture.md) §2.1).
-- **(C) Tez metninde netleştirme cümlesi:** "Veri kümesi MultiCaRe'den (CC0 derleme lisansı) türetilmiştir; ancak kaynak makalelerin %35,5'i yalnızca ticari olmayan kullanıma izin veren CC BY-NC/NC-SA lisanslıdır; proje bitirme tezi kapsamında yalnızca akademik/ticari olmayan amaçla kullanılmaktadır" şeklinde bir paragraf, danışmanın "lisans durumunu netleştir" talebini doğrudan karşılar.
-
-Hangisini (A/B/C, hepsini, ya da hiçbirini şimdilik) yapmamı istediğinizi belirtin.
+- ~~**(A) Atıf/kaynak gösterimi ekle**~~ **(Tamamlandı — 2026-07-26)** Case detay ekranındaki ("Clinical File" modalı, `chat.js`) rapor görünümüne, kaynak makale başlığı/yazarları/yılı/PMCID/DOI ve lisans adını içeren bir "SOURCE" bölümü eklendi. Canlı olarak tarayıcıda doğrulandı.
+- ~~**(B) Lisans/atıf verisini SQL'e taşı**~~ **(Tamamlandı — 2026-07-26)** `Case` tablosuna (`services/models.py`) `source_title`, `source_url`, `source_doi`, `source_authors`, `source_year`, `license_name`, `license_url`, `citation_text` sütunları eklendi. Backfill kaynağı: [`dataset_source_metadata.json`](dataset_source_metadata.json) — bu dosya, mevcut [`dataset_license_audit.json`](dataset_license_audit.json)'daki lisans verisiyle, NCBI'nin `esummary` API'sinden (toplu, ~2 istekte 200 makale) çekilen başlık/yazar/yıl/DOI bilgisinin birleşimi. Migration + backfill script: `medcase-backend/services/backfill_source_metadata.py` (idempotent, `python3 -m services.backfill_source_metadata` ile tekrar çalıştırılabilir). 200/200 vaka için `license_name` ve `citation_text` dolu; API (`GET /cases/{id}`) artık bir `source` alanı döndürüyor; deney çıktılarında (`evaluation/run_experiment.py`) her satırın `license_name`/`citation_text`'i de kayıtlı.
+- **(C) Tez metninde netleştirme cümlesi:** Hâlâ öneri — "Veri kümesi MultiCaRe'den (CC0 derleme lisansı) türetilmiştir; ancak kaynak makalelerin %35,5'i yalnızca ticari olmayan kullanıma izin veren CC BY-NC/NC-SA lisanslıdır; proje bitirme tezi kapsamında yalnızca akademik/ticari olmayan amaçla kullanılmaktadır" şeklinde bir paragraf, danışmanın "lisans durumunu netleştir" talebini doğrudan karşılar. Tez metnine eklenmesi kullanıcının kendi kararı.

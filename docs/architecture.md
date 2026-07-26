@@ -85,7 +85,7 @@ Destekleyici (ajan olmayan) servisler: `services/database.py`, `services/db_serv
 > **Veri kaynağı geçişi (2026-07-26):** Başlangıçta bu ajan `data/cases_subset.json`'ı doğrudan RAM'e yükleyip oradan serviyordu. Artık veri, uygulama ilk ayağa kalktığında `services/seed_cases.py` tarafından **tek seferlik, idempotent** bir işlemle `cases` tablosuna aktarılıyor (tablo doluysa seed atlanır) ve ajan her istekte **SQLAlchemy üzerinden SQL sorgusu** çalıştırıyor (`ORDER BY RANDOM()` ile rastgele seçim, `WHERE id = ...` ile tekil getirme). JSON dosyası artık yalnızca **ilk yükleme (seed) kaynağı**, çalışma zamanı veri kaynağı değil. Dış sözleşme (`CaseOutput` şeması) değişmedi — bu saf bir veri katmanı değişimi, tüketen taraflarda (Dialogue/Tutor Agent, frontend) hiçbir değişiklik gerekmedi.
 
 **Girdi:**
-- `select_random_case(db: Session)` → aktif SQLAlchemy session'ı
+- `select_random_case(db: Session, specialty: Optional[str] = None)` → session + isteğe bağlı branş filtresi (ör. `"Cardiology"`) — **2026-07-26'dan itibaren**: `GET /dialogue/start?specialty=...` bu parametreyi geçiriyor; önceden bu parametre hem frontend'de hem backend'de yok sayılıyordu (Home ekranındaki "Change Specialty" seçici görsel olarak çalışıyor ama fiilen filtre uygulamıyordu — kullanıcı tarafından test edilip bulundu). Artık `WHERE specialty = ...` ile SQL seviyesinde filtreleniyor; eşleşen vaka yoksa `404` + açıklayıcı hata.
 - `get_case_by_id(db: Session, case_id: str)` → session + `case_id`
 
 **Çıktı — `CaseOutput` şeması** (`case_selector/schemas.py`):
@@ -107,11 +107,24 @@ class CaseOutput(BaseModel):
     image: Optional[str] = None
     rubric: CaseRubric = CaseRubric()
     seed_questions: List[str] = []
+    source: Optional[CaseSource] = None  # 2026-07-26'dan itibaren — bkz. aşağı
+
+class CaseSource(BaseModel):
+    title: Optional[str] = None
+    url: Optional[str] = None
+    doi: Optional[str] = None
+    authors: Optional[str] = None
+    year: Optional[int] = None
+    license_name: Optional[str] = None
+    license_url: Optional[str] = None
+    citation_text: Optional[str] = None
 ```
 
 **Prompt yapısı:** Yok — bu ajan LLM çağırmaz, tamamen deterministik Python mantığıdır (`random.choice`, sözlük araması, Pydantic validasyonu).
 
 **Not:** Gerçek veri setinde `rubric` alanları **her zaman boş**, `seed_questions` **hiç dolu değil** (bkz. Bölüm 7.1). Şema bu alanları destekliyor ama veri üretim hattı henüz doldurmuyor.
+
+**Kaynak/lisans metadata (2026-07-26'dan itibaren):** `Case` tablosuna [dataset.md](dataset.md) §6'da anlatılan `source_*`/`license_*`/`citation_text` sütunları eklenip 200 vakanın tamamı NCBI'den çekilen gerçek metadata ile dolduruldu (bkz. `services/backfill_source_metadata.py`). `rubric`/`seed_questions`'ın aksine, bu alan artık **doldurulmuş durumda** — frontend'de "Clinical File" raporunun altında bir "SOURCE" bölümü olarak gösteriliyor.
 
 ---
 

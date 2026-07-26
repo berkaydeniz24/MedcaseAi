@@ -10,6 +10,16 @@ class CaseRubric(BaseModel):
     management_initial: List[str] = []
     pitfalls: List[str] = []
 
+class CaseSource(BaseModel):
+    title: Optional[str] = None
+    url: Optional[str] = None
+    doi: Optional[str] = None
+    authors: Optional[str] = None
+    year: Optional[int] = None
+    license_name: Optional[str] = None
+    license_url: Optional[str] = None
+    citation_text: Optional[str] = None
+
 class CaseOutput(BaseModel):
     id: str
     title: str
@@ -19,3 +29,4 @@ class CaseOutput(BaseModel):
     image: Optional[str] = None
     rubric: CaseRubric = Field(default_factory=CaseRubric)
     seed_questions: List[str] = []
+    source: Optional[CaseSource] = None

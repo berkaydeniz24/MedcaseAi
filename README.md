@@ -40,7 +40,7 @@ Tüm ajanların görev tanımı, prompt yapısı, girdi/çıktı şemaları ve a
 
 200 vakalık alt küme (`medcase-backend/data/cases_subset.json`), [MultiCaRe Dataset](https://github.com/mauro-nievoff/MultiCaRe_Dataset)'ten (PubMed Central açık erişim vaka raporları) türetilmiştir. Sekiz branş: Gastroenterology, Dermatology, Neurology, Orthopedics & Traumatology, Cardiology, Ophthalmology, Pulmonology, General Internal Medicine.
 
-**Lisans durumu** (200 vakanın tamamı NCBI Open Access servisine tek tek sorgulanarak doğrulandı): %64,5 CC BY, %21,5 CC BY-NC, %14 CC BY-NC-SA — yani vakaların %35,5'i yalnızca ticari olmayan kullanıma izin veriyor. Detaylı döküm, metodoloji ve ham veri: **[docs/dataset.md](docs/dataset.md)** + [docs/dataset_license_audit.json](docs/dataset_license_audit.json).
+**Lisans durumu** (200 vakanın tamamı NCBI Open Access servisine tek tek sorgulanarak doğrulandı): %64,5 CC BY, %21,5 CC BY-NC, %14 CC BY-NC-SA — yani vakaların %35,5'i yalnızca ticari olmayan kullanıma izin veriyor. Kaynak/lisans/atıf metadata'sı (başlık, yazarlar, yıl, DOI, lisans, hazır atıf metni) artık `Case` tablosunda ve uygulamada her vakanın "Clinical File" raporunda gösteriliyor. Detaylı döküm, metodoloji ve ham veri: **[docs/dataset.md](docs/dataset.md)** + [docs/dataset_license_audit.json](docs/dataset_license_audit.json) + [docs/dataset_source_metadata.json](docs/dataset_source_metadata.json).
 
 ## Kurulum
 
@@ -99,7 +99,7 @@ Expo Router tabanlı React Native uygulaması (`medcase-frontend/`): ana sayfa, 
 |---|---|
 | `GET /cases` | Tüm vakaların özet listesi (SQL) |
 | `GET /cases/{case_id}` | Tek vaka detayı |
-| `GET /dialogue/start` | Rastgele vaka seç + MCQ üret + oturum başlat |
+| `GET /dialogue/start?specialty=Cardiology` | Rastgele (istenirse branşa göre filtreli) vaka seç + MCQ üret + oturum başlat |
 | `POST /dialogue/{case_id}/chat` | Sokratik diyalog turu (mode: hint/explain/teach) |
 | `POST /dialogue/{session_id}/answer` | MCQ cevabını değerlendir + Tutor Agent geri bildirimi |
 | `GET /dialogue/history/{session_id}` | Oturum mesaj geçmişi |

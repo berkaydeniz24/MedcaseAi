@@ -42,13 +42,16 @@ class AnswerRequest(BaseModel):
 
 # ---------- 1) START: case + session + mcq (DB Persistence) ----------
 @router.get("/start")
-def start_simulation(db: Session = Depends(get_db)):
+def start_simulation(specialty: Optional[str] = None, db: Session = Depends(get_db)):
     """
     Yeni bir vaka simülasyonu başlatır.
     MCQ verisini JSON olarak VERİTABANINA kaydeder.
+    `specialty` verilirse (ör. "Cardiology"), yalnızca o branştan rastgele
+    bir vaka seçilir; verilmezse (veya "All") tüm branşlardan seçilir.
     """
     # 1) Case seç
-    case_data = selector_agent.select_random_case(db)
+    specialty_filter = specialty if specialty and specialty != "All" else None
+    case_data = selector_agent.select_random_case(db, specialty=specialty_filter)
     if not case_data or ("error" in case_data):
         raise HTTPException(status_code=404, detail=case_data.get("error", "Case not found"))
 

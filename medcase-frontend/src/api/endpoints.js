@@ -5,7 +5,8 @@ export const listCases = () => apiGet("/cases");
 export const getCaseById = (id) => apiGet(`/cases/${id}`);
 
 // Dialogue
-export const startDialogue = () => apiGet("/dialogue/start");
+export const startDialogue = (specialty = null) =>
+  apiGet(specialty ? `/dialogue/start?specialty=${encodeURIComponent(specialty)}` : "/dialogue/start");
 
 // ✅ GÜNCELLENDİ: İsmi 'sendChatMessage' oldu ve 'session_id' eklendi
 export const sendChatMessage = (caseId, message, mode="hint", userLevel="beginner", language="en", session_id = null) =>

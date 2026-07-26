@@ -67,6 +67,10 @@ def run_all(case_ids: List[str]) -> List[Dict]:
                 checks = compute_automated_checks(result)
                 record = result.to_summary_dict()
                 record["automated_checks"] = checks.model_dump()
+                # Keep source/license metadata attached to every experiment
+                # record — without this, a results CSV can't be traced back
+                # to which cases (and whose licenses) it actually covered.
+                record["source"] = case.get("source")
                 records.append(record)
                 logger.info(
                     "  %-12s failed=%s calls=%s latency=%.0fms flags=%s",
@@ -86,14 +90,19 @@ def write_json(records: List[Dict], path: str) -> None:
 def write_detail_csv(records: List[Dict], path: str) -> None:
     if not records:
         return
-    fieldnames = list(records[0].keys())
+    # Flatten "source" into two plain columns for spreadsheet review instead
+    # of a JSON blob; the full nested object is still in the raw JSON output.
+    fieldnames = [k for k in records[0].keys() if k != "source"] + ["license_name", "citation_text"]
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for r in records:
-            row = dict(r)
+            row = {k: v for k, v in r.items() if k != "source"}
             row["options"] = " | ".join(row.get("options") or [])
             row["automated_checks"] = json.dumps(row.get("automated_checks") or {}, ensure_ascii=False)
+            source = r.get("source") or {}
+            row["license_name"] = source.get("license_name")
+            row["citation_text"] = source.get("citation_text")
             writer.writerow(row)
 
 

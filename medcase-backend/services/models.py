@@ -43,3 +43,15 @@ class Case(Base):
     assets_json = Column(Text, default="{}")
     rubric_json = Column(Text, default="{}")
     seed_questions_json = Column(Text, default="[]")
+
+    # Kaynak/lisans metadata (docs/dataset.md — MultiCaRe/PMC kaynaklı vakalar
+    # için atıf zorunluluğu var). services/backfill_source_metadata.py ile
+    # docs/dataset_source_metadata.json'dan doldurulur.
+    source_title = Column(String, nullable=True)
+    source_url = Column(String, nullable=True)
+    source_doi = Column(String, nullable=True)
+    source_authors = Column(Text, nullable=True)
+    source_year = Column(Integer, nullable=True)
+    license_name = Column(String, nullable=True)
+    license_url = Column(String, nullable=True)
+    citation_text = Column(Text, nullable=True)

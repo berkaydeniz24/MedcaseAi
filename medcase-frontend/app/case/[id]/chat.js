@@ -348,6 +348,15 @@ export default function CaseChatPage() {
               </View>
               <ScrollView>
                 <Text style={styles.reportText}>{caseData?.narrative}</Text>
+                {caseData?.source?.citation_text && (
+                  <View style={styles.sourceBox}>
+                    <Text style={styles.sourceLabel}>SOURCE</Text>
+                    <Text style={styles.sourceText}>{caseData.source.citation_text}</Text>
+                    {caseData.source.license_name && (
+                      <Text style={styles.sourceLicense}>License: {caseData.source.license_name}</Text>
+                    )}
+                  </View>
+                )}
               </ScrollView>
             </View>
           </View>
@@ -406,4 +415,8 @@ const styles = StyleSheet.create({
   modalTitle: { fontSize: 18, fontWeight: "bold" },
   closeModalBtn: { color: Colors.danger, fontWeight: "bold" },
   reportText: { fontSize: 15, lineHeight: 24, color: "#334155" },
+  sourceBox: { marginTop: 20, paddingTop: 16, borderTopWidth: 1, borderTopColor: Colors.border },
+  sourceLabel: { fontSize: 10, fontWeight: "800", color: Colors.textSub, letterSpacing: 1, marginBottom: 6 },
+  sourceText: { fontSize: 12, lineHeight: 18, color: Colors.textSub },
+  sourceLicense: { fontSize: 12, fontWeight: "700", color: Colors.accent, marginTop: 6 },
 });

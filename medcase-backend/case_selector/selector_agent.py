@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 
 from services import models
-from .schemas import CaseOutput, CaseRubric
+from .schemas import CaseOutput, CaseRubric, CaseSource
 
 
 class CaseSelectorAgent:
@@ -15,9 +15,14 @@ class CaseSelectorAgent:
     doğrudan SQL (SQLite 'cases' tablosu) üzerinden çeker.
     """
 
-    def select_random_case(self, db: Session) -> Optional[Dict]:
-        row = db.query(models.Case).order_by(func.random()).first()
+    def select_random_case(self, db: Session, specialty: Optional[str] = None) -> Optional[Dict]:
+        query = db.query(models.Case)
+        if specialty:
+            query = query.filter(models.Case.specialty == specialty)
+        row = query.order_by(func.random()).first()
         if not row:
+            if specialty:
+                return {"error": f"'{specialty}' branşında vaka bulunamadı"}
             return {"error": "Veri yok"}
         return self._format_case(row)
 
@@ -54,6 +59,19 @@ class CaseSelectorAgent:
                 else:
                     image_url = f"http://127.0.0.1:8000/static/images/{raw_img}"
 
+        source = None
+        if row.license_name or row.citation_text:
+            source = CaseSource(
+                title=row.source_title,
+                url=row.source_url,
+                doi=row.source_doi,
+                authors=row.source_authors,
+                year=row.source_year,
+                license_name=row.license_name,
+                license_url=row.license_url,
+                citation_text=row.citation_text,
+            )
+
         case_obj = CaseOutput(
             id=row.id,
             title=row.title or "Unknown Case",
@@ -63,6 +81,7 @@ class CaseSelectorAgent:
             image=image_url,
             rubric=CaseRubric(**raw_rubric),
             seed_questions=seed_questions,
+            source=source,
         )
 
         return case_obj.model_dump()
