@@ -33,6 +33,9 @@ models.Base.metadata.create_all(bind=engine)
 from services.migrate_session_lifecycle import ensure_session_lifecycle_columns
 ensure_session_lifecycle_columns()
 
+from services.migrate_user_scoping import ensure_user_scoping_columns
+ensure_user_scoping_columns()
+
 # --- Vaka verisini (ilk kurulumda) SQL'e yükle ---
 from services.seed_cases import seed_cases_if_empty
 from services.backfill_source_metadata import backfill_if_needed

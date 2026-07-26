@@ -1,20 +1,38 @@
 # services/models.py
-from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, ForeignKey, UniqueConstraint
 from sqlalchemy.sql import func
 from .database import Base
 
 class UserStats(Base):
+    """
+    One row per user (`user_id`, default "demo-user" — no real auth yet,
+    same constant used by CaseAnswer.user_id and services/db_service.py's
+    DEMO_USER_ID). Previously a single global row shared by everyone; the
+    unique constraint on user_id is what actually enforces "one row per
+    user" now, not just app-level convention.
+    """
     __tablename__ = "user_stats"
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, default="demo-user", unique=True, index=True)
     total_correct = Column(Integer, default=0)
     total_wrong = Column(Integer, default=0)
 
 class CaseProgress(Base):
+    """
+    Previously one row per case_id globally (unique constraint on case_id
+    alone) — every user's progress on a case overwrote everyone else's.
+    Now one row per (user_id, case_id) pair.
+    """
     __tablename__ = "case_progress"
     id = Column(Integer, primary_key=True, index=True)
-    case_id = Column(String, unique=True, index=True)
+    user_id = Column(String, default="demo-user", index=True)
+    case_id = Column(String, index=True)
     status = Column(String, default="new")
     last_updated = Column(DateTime(timezone=True), onupdate=func.now())
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "case_id", name="uq_case_progress_user_case"),
+    )
 
 class ChatSession(Base):
     __tablename__ = "chat_sessions"

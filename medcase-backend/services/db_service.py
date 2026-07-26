@@ -11,12 +11,15 @@ class DBService:
         self.db = db
 
     # --- İSTATİSTİK İŞLEMLERİ ---
-    def update_stats(self, is_correct: bool):
-        stats = self.db.query(models.UserStats).first()
+    # user_id parametreli — no real auth yet, her çağıran DEMO_USER_ID
+    # kullanıyor, ama artık en azından DB şeması gerçek çoklu kullanıcıyı
+    # destekliyor (tek global satır değil, kullanıcı başına satır).
+    def update_stats(self, is_correct: bool, user_id: str = DEMO_USER_ID):
+        stats = self.db.query(models.UserStats).filter_by(user_id=user_id).first()
         if not stats:
-            stats = models.UserStats(total_correct=0, total_wrong=0)
+            stats = models.UserStats(user_id=user_id, total_correct=0, total_wrong=0)
             self.db.add(stats)
-        
+
         if is_correct:
             stats.total_correct += 1
         else:
@@ -24,41 +27,41 @@ class DBService:
         self.db.commit()
         return stats
 
-    def get_stats(self):
-        stats = self.db.query(models.UserStats).first()
+    def get_stats(self, user_id: str = DEMO_USER_ID):
+        stats = self.db.query(models.UserStats).filter_by(user_id=user_id).first()
         if not stats:
             return {"total_correct": 0, "total_wrong": 0}
         return stats
 
     # --- VAKA DURUMU İŞLEMLERİ ---
-    def update_case_status(self, case_id: str, status: str):
+    def update_case_status(self, case_id: str, status: str, user_id: str = DEMO_USER_ID):
         # status: 'new', 'in_progress', 'solved'
-        progress = self.db.query(models.CaseProgress).filter_by(case_id=case_id).first()
+        progress = self.db.query(models.CaseProgress).filter_by(case_id=case_id, user_id=user_id).first()
         if not progress:
-            progress = models.CaseProgress(case_id=case_id, status=status)
+            progress = models.CaseProgress(case_id=case_id, user_id=user_id, status=status)
             self.db.add(progress)
         else:
             # Eğer zaten çözüldüyse, tekrar 'in_progress' yapma (isteğe bağlı)
-            if progress.status != "solved": 
+            if progress.status != "solved":
                 progress.status = status
             # Eğer 'solved' geldiyse zorla güncelle
             if status == "solved":
                 progress.status = "solved"
-                
+
         self.db.commit()
 
-    def get_all_case_statuses(self):
-        return self.db.query(models.CaseProgress).all()
+    def get_all_case_statuses(self, user_id: str = DEMO_USER_ID):
+        return self.db.query(models.CaseProgress).filter_by(user_id=user_id).all()
 
     # --- CHAT OTURUMU İŞLEMLERİ ---
-    def create_session(self, case_id: str):
+    def create_session(self, case_id: str, user_id: str = DEMO_USER_ID):
         session_id = str(uuid.uuid4())
         new_session = models.ChatSession(session_id=session_id, case_id=case_id)
         self.db.add(new_session)
-        
+
         # Oturum açılınca vaka durumu "in_progress" olsun
-        self.update_case_status(case_id, "in_progress")
-        
+        self.update_case_status(case_id, "in_progress", user_id=user_id)
+
         self.db.commit()
         return session_id
 

@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 from services.database import get_db
 from services import models
+from services.db_service import DEMO_USER_ID
 from case_selector.selector_agent import selector_agent
 
 router = APIRouter()
@@ -44,7 +45,7 @@ class CaseProgressItem(BaseModel):
 # --- 1. İSTATİSTİKLER ---
 @router.get("/stats", response_model=UserStatsResponse)
 def get_user_stats(db: Session = Depends(get_db)):
-    stats = db.query(models.UserStats).first()
+    stats = db.query(models.UserStats).filter_by(user_id=DEMO_USER_ID).first()
 
     # Son 7 gün, bugün dahil, en eskiden en yeniye — gerçek ChatSession.created_at
     # üzerinden. Önceden frontend'de sabit/uydurma bir dizi vardı ("Simulated"
@@ -85,7 +86,7 @@ def get_user_stats(db: Session = Depends(get_db)):
 # --- 2. VAKA İLERLEME ---
 @router.get("/progress", response_model=List[CaseProgressItem])
 def get_case_progress(db: Session = Depends(get_db)):
-    progress_list = db.query(models.CaseProgress).all()
+    progress_list = db.query(models.CaseProgress).filter_by(user_id=DEMO_USER_ID).all()
 
     # Her case_id için EN SON oturumun session_id'sini bulmak amacıyla,
     # oturumları en yeniden en eskiye çekip ilk görüleni (= en yenisini)
