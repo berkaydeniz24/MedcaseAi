@@ -123,6 +123,41 @@ def test_start_fallback_mcq_refuses_to_create_session(monkeypatch):
     assert resp.json()["detail"]["error_code"] == "MCQ_GENERATION_FAILED"
 
 
+def test_start_with_case_id_selects_that_specific_case(monkeypatch):
+    """Video-roadmap item 4 ("Günün Vakası") uses this: the frontend
+    resolves today's deterministic case_id via GET /cases/daily, then
+    starts a real session for it via /dialogue/start?case_id=..."""
+    app = build_app(seed_cases=(("C1", "Cardiology"), ("C2", "Dermatology")))
+    monkeypatch.setattr(dialogue_router.mcq_agent, "generate_mcq", lambda case: dict(VALID_MCQ))
+
+    with TestClient(app) as client:
+        resp = client.get("/dialogue/start", params={"case_id": "C2"})
+
+    assert resp.status_code == 200
+    assert resp.json()["case"]["id"] == "C2"
+
+
+def test_start_with_unknown_case_id_returns_404(monkeypatch):
+    app = build_app()
+    monkeypatch.setattr(dialogue_router.mcq_agent, "generate_mcq", lambda case: dict(VALID_MCQ))
+
+    with TestClient(app) as client:
+        resp = client.get("/dialogue/start", params={"case_id": "does-not-exist"})
+
+    assert resp.status_code == 404
+
+
+def test_start_case_id_takes_priority_over_specialty(monkeypatch):
+    app = build_app(seed_cases=(("C1", "Cardiology"), ("C2", "Dermatology")))
+    monkeypatch.setattr(dialogue_router.mcq_agent, "generate_mcq", lambda case: dict(VALID_MCQ))
+
+    with TestClient(app) as client:
+        resp = client.get("/dialogue/start", params={"case_id": "C1", "specialty": "Dermatology"})
+
+    assert resp.status_code == 200
+    assert resp.json()["case"]["id"] == "C1"
+
+
 def test_start_mcq_generation_exception_returns_503(monkeypatch):
     app = build_app()
 

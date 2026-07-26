@@ -132,6 +132,15 @@ def list_cases(db: Session = Depends(get_db)):
         })
     return result
 
+# --- 4.5. GÜNÜN VAKASI --- (video-roadmap item 4 — /cases/{case_id}'den ÖNCE
+# tanımlanmalı, yoksa FastAPI "daily"yi bir case_id olarak eşleştirir)
+@app.get("/cases/daily")
+def get_daily_case(db: Session = Depends(get_db)):
+    case = selector_agent.get_daily_case(db)
+    if not case:
+        raise HTTPException(status_code=404, detail="No cases available")
+    return case
+
 # --- 5. TEK VAKA DETAYI ---
 @app.get("/cases/{case_id}")
 def get_case(case_id: str, db: Session = Depends(get_db)):

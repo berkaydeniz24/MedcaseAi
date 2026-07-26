@@ -3,10 +3,18 @@ import { apiGet, apiPost, apiPut } from "./client";
 // Cases
 export const listCases = () => apiGet("/cases");
 export const getCaseById = (id) => apiGet(`/cases/${id}`);
+export const getDailyCase = () => apiGet("/cases/daily");
 
 // Dialogue
-export const startDialogue = (specialty = null) =>
-  apiGet(specialty ? `/dialogue/start?specialty=${encodeURIComponent(specialty)}` : "/dialogue/start");
+export const startDialogue = (specialty = null, caseId = null) => {
+  const params = new URLSearchParams();
+  // caseId (ör. Günün Vakası) belirtilmişse specialty yok sayılır — backend
+  // ile aynı öncelik kuralı.
+  if (caseId) params.set("case_id", caseId);
+  else if (specialty) params.set("specialty", specialty);
+  const qs = params.toString();
+  return apiGet(qs ? `/dialogue/start?${qs}` : "/dialogue/start");
+};
 
 // ✅ GÜNCELLENDİ: İsmi 'sendChatMessage' oldu ve 'session_id' eklendi
 export const sendChatMessage = (caseId, message, mode="hint", userLevel="beginner", language="en", session_id = null) =>

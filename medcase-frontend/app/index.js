@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, SafeAreaView, Pressable, Modal, ScrollView } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Pressable, Modal, ScrollView, ActivityIndicator } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
 import { Colors } from "../src/theme/colors";
-import { startDialogue, getUserStats, getChatHistory } from "../src/api/endpoints";
+import { startDialogue, getUserStats, getChatHistory, getDailyCase } from "../src/api/endpoints";
 import { setLastSession } from "../src/api/session_cache";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useCallback } from "react";
@@ -25,6 +25,8 @@ export default function HomeScreen() {
   const [selectedCat, setSelectedCat] = useState(CATEGORIES[0]);
   const [stats, setStats] = useState({ total_correct: 0, total_wrong: 0 });
   const [continueCase, setContinueCase] = useState(null);
+  const [dailyCase, setDailyCase] = useState(null);
+  const [startingDaily, setStartingDaily] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -35,6 +37,9 @@ export default function HomeScreen() {
           setContinueCase(inProgress || null);
         })
         .catch(() => {});
+      // Deterministic per calendar date (backend) — same case for every
+      // user today, distinct from Quick Training's random pick.
+      getDailyCase().then(setDailyCase).catch(() => {});
     }, [])
   );
 
@@ -44,6 +49,20 @@ export default function HomeScreen() {
       pathname: `/case/${continueCase.case_id}/chat`,
       params: { session_id: continueCase.session_id },
     });
+  };
+
+  const handleStartDaily = async () => {
+    if (!dailyCase || startingDaily) return;
+    setStartingDaily(true);
+    try {
+      const res = await startDialogue(null, dailyCase.id);
+      setLastSession(res);
+      router.push(`/case/${res.case.id}?session_id=${res.session_id}`);
+    } catch (e) {
+      console.log("Daily case start error:", e);
+    } finally {
+      setStartingDaily(false);
+    }
   };
 
   const totalAnswers = stats.total_correct + stats.total_wrong;
@@ -106,6 +125,24 @@ export default function HomeScreen() {
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={Colors.textSub} />
+          </Pressable>
+        )}
+
+        {/* Günün Vakası — backend'de tarihe göre deterministik seçilir,
+            aynı gün tüm kullanıcılar aynı vakayı görür. */}
+        {dailyCase && (
+          <Pressable style={styles.dailyCard} onPress={handleStartDaily} disabled={startingDaily}>
+            <View style={styles.dailyIconBg}>
+              <Ionicons name="calendar" size={20} color={Colors.warning} />
+            </View>
+            <View style={{ flex: 1, marginLeft: 14 }}>
+              <Text style={styles.dailyLabel}>CASE OF THE DAY</Text>
+              <Text style={styles.dailyTitle} numberOfLines={1}>{dailyCase.title}</Text>
+              <Text style={styles.dailySub}>{dailyCase.specialty} · {dailyCase.difficulty}</Text>
+            </View>
+            {startingDaily
+              ? <ActivityIndicator color={Colors.warning} />
+              : <Ionicons name="chevron-forward" size={20} color={Colors.textSub} />}
           </Pressable>
         )}
 
@@ -218,6 +255,16 @@ const styles = StyleSheet.create({
   continueLabel: { fontSize: 10, fontWeight: '800', color: Colors.accentDark, letterSpacing: 0.8 },
   continueTitle: { fontSize: 15, fontWeight: '800', color: Colors.textMain, marginTop: 2 },
   continueSub: { fontSize: 12, color: Colors.textSub, marginTop: 2, fontWeight: '600' },
+
+  dailyCard: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.card,
+    borderRadius: 20, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: '#FDE68A',
+    shadowColor: "#000", shadowOpacity: 0.03, shadowRadius: 10, elevation: 2,
+  },
+  dailyIconBg: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#FEF3C7', justifyContent: 'center', alignItems: 'center' },
+  dailyLabel: { fontSize: 10, fontWeight: '800', color: '#92400E', letterSpacing: 0.8 },
+  dailyTitle: { fontSize: 15, fontWeight: '800', color: Colors.textMain, marginTop: 2 },
+  dailySub: { fontSize: 12, color: Colors.textSub, marginTop: 2, fontWeight: '600' },
 
   infoCard: { marginBottom: 25 },
   infoTitle: { fontSize: 18, fontWeight: "700", color: Colors.textMain },

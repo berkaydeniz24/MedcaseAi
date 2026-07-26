@@ -1,5 +1,7 @@
 # case_selector/selector_agent.py
 import json
+import random
+from datetime import date
 from typing import Optional, Dict
 
 from sqlalchemy.orm import Session
@@ -34,6 +36,26 @@ class CaseSelectorAgent:
 
     def list_all(self, db: Session):
         return db.query(models.Case).all()
+
+    def get_daily_case(self, db: Session, for_date: Optional[date] = None) -> Optional[Dict]:
+        """
+        Deterministically picks the same case for every user on the same
+        calendar date (UTC) — video-roadmap item 4, "Günün Vakası". Seeding
+        Python's RNG with the ISO date string means the pick is stable for
+        a given day and a given case set, without needing to persist
+        "today's case" anywhere: any request on the same date recomputes
+        the identical answer. Deliberately picks from ALL cases, not
+        specialty-scoped, matching the video's "one shared case per day".
+        """
+        case_ids = [row[0] for row in db.query(models.Case.id).order_by(models.Case.id).all()]
+        if not case_ids:
+            return None
+
+        target_date = for_date or date.today()
+        rng = random.Random(target_date.isoformat())
+        daily_case_id = rng.choice(case_ids)
+
+        return self.get_case_by_id(db, daily_case_id)
 
     def _format_case(self, row: models.Case) -> Dict:
         """
