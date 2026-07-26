@@ -215,10 +215,22 @@ Ham veri: `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/
 
 **Dürüst sonuç — yalnızca kısmi başarı:** Sızıntı flag'i %18'den %14'e geriledi (~%22 göreli azalma), ama sıfırlanmadı. Daha ilginci, hipotezin öngördüğünün tersine, soru kökü daha da uzadı (44.4 → 54.1 kelime) — model kısıtı "daha az ayırt edici bulgu" olarak değil, "daha fazla temkinli/akıl-yürütme dili ekle" olarak yorumlamış görünüyor, ayırt edici klinik bulguları çıkarmak yerine etraflarına yorum eklemiş. **Sonuç: prompt-seviyesi düzeltme tek başına yetersiz kaldı** — bu, salt prompt mühendisliğinin sınırlarını gösteren, tezde "limitations/iterative refinement" bölümünde kullanılabilecek dürüst bir bulgu. Yapısal bir çözüm (ör. soru kökü üretildikten sonra ayrı bir "leak-check" LLM geçişi veya otomatik kontrolün flag'lediği vakalarda zorunlu repair-retry) gelecek iş olarak not edildi, bu oturumda uygulanmadı.
 
+### ✅ Tamamlandı — Hafta 5 (Human Evaluation altyapısı: alt küme + kör form)
+
+`evaluation/human_eval/` eklendi. Yeni LLM çağrısı yapılmadı — Hafta 4'ün `full_50_n50.json` sonucundaki (mcq_v1.2) mevcut çıktılar yeniden kullanıldı.
+
+- **`build_blinded_set.py`** — 50 vakadan **24'lük stratified olmayan, sabit-seed (seed=7) rastgele bir alt küme** seçer (§3'te önerilen "tüm 50-100 değil, 20-30 vaka" aralığında). Her vaka için iki sistemin çıktısı **"Item 1" / "Item 2"** olarak körleniyor — hangi öğenin single/multi-agent olduğu raterlara gösterilmiyor. Etiketleme **tam dengeli** kurgulandı (12 vakada Item 1=multi-agent, 12 vakada Item 1=single-agent) — bağımsız yazı-tura yerine bilinçli dengeleme, "Item 1" pozisyonunun sistemle örtük korelasyon kurmasını mimari olarak imkansız hale getiriyor.
+  - Çıktılar: `blinded_eval_set.json` (raterlara gösterilecek veri, sistem etiketi yok — repoya commit edildi) ve `unblinding_key.json` (case_id → hangi Item hangi sistem; **raterlarla paylaşılmamalı**, `.gitignore`'a eklendi).
+- **`generate_form.py`** — `blinded_eval_set.json`'ı `rating_form_template.html`'e gömerek tamamen bağımsız, tek dosyalık **`rating_form.html`** üretir (harici istek/CDN yok, dosya olarak açılabilir veya bir linkle paylaşılabilir).
+- **`rating_form.html`** — rater akışı: isim/rol girişi → 24 vaka, her birinde narrative + Item 1/Item 2 (soru, şıklar, doğru şık işaretli, hint, explanation) → her öğe için 5 kriter (Clinical correctness, Relevance, Consistency, Educational usefulness, Clarity), 1-5 Likert → ilerleme her adımda `localStorage`'a otomatik kaydedilir (rater yarıda bırakıp devam edebilir) → tüm vakalar bitince CSV indirme. Tarayıcıda gerçek tıklama akışıyla uçtan uca test edildi (localhost:8090 önizleme sunucusu, `.claude/launch.json`'a `human-eval-preview` config'i eklendi); ilk sürümde `<meta charset="utf-8">` eksikti ve Türkçe karakterler bozuk render oluyordu (`http.server` charset başlığı vermiyor) — düzeltildi.
+- Dağıtım: `rating_form.html` 1-2 tıp öğrencisi + bir araştırma görevlisi/öğretim üyesine gönderilecek (dosya olarak ya da hafif bir statik hosting linkiyle); her rater kendi CSV'sini üretip kullanıcıya geri gönderecek.
+
+**Bekliyor (gerçek insan verisi toplanana kadar):** Rater'lardan CSV'ler toplandıktan sonra `unblinding_key.json` ile birleştirip sistem bazında ortalama skor tablosu çıkaran bir analiz scripti (Hafta 6'nın kapsamı) henüz yazılmadı — gerçek yanıt olmadan anlamlı test edilemez.
+
 ### ⏳ Bekliyor (sıradaki haftalar, kullanıcı onayına göre)
 
-- **Hafta 5 — Human Evaluation:** Kör değerlendirme için insan değerlendiricilere dağıtılacak alt küme ve form/arayüz.
-- **Hafta 6 — Analysis & Reporting:** Ortalama skorlar, karşılaştırma tabloları, grafikler, hata analizi, discussion/limitations.
+- **Hafta 5 (devamı):** Gerçek raterlardan CSV toplama — kullanıcının `rating_form.html`'i dağıtması gerekiyor.
+- **Hafta 6 — Analysis & Reporting:** Toplanan CSV'leri `unblinding_key.json` ile birleştirip sistem bazında ortalama skorlar, karşılaştırma tabloları, grafikler, hata analizi, discussion/limitations.
 - **LLM-as-a-Judge promptu:** Henüz yazılmadı.
 
 ---

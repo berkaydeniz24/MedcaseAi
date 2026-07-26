@@ -12,6 +12,11 @@ medcase-backend/.env
 # Evaluation ajan koşularının ham çıktıları (regenerate edilebilir, versiyonlanmaz)
 medcase-backend/evaluation/results/
 
+# Human eval kör-çözme anahtarı — hangi Item'ın hangi sisteme ait olduğunu
+# gösterir, raterlarla asla paylaşılmamalı; blinded_eval_set.json'dan
+# build_blinded_set.py ile (aynı seed'le) yeniden üretilebilir.
+medcase-backend/evaluation/human_eval/unblinding_key.json
+
 # Log dosyaları
 medcase-backend/logs/
 

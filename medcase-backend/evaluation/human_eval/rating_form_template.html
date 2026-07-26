@@ -1,0 +1,357 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedCase AI — Human Expert Evaluation</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #6b7280;
+    --card: #f7f7f8;
+    --border: #e2e2e6;
+    --accent: #0d9488;
+    --accent-fg: #ffffff;
+    --danger: #b91c1c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #15171a;
+      --fg: #edf0f2;
+      --muted: #9aa3ab;
+      --card: #1f2226;
+      --border: #2c3036;
+      --accent: #14b8a6;
+      --accent-fg: #06201d;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15171a; --fg: #edf0f2; --muted: #9aa3ab; --card: #1f2226;
+    --border: #2c3036; --accent: #14b8a6; --accent-fg: #06201d;
+  }
+  :root[data-theme="light"] {
+    --bg: #ffffff; --fg: #1a1a1a; --muted: #6b7280; --card: #f7f7f8;
+    --border: #e2e2e6; --accent: #0d9488; --accent-fg: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 760px; margin: 0 auto; padding: 24px 16px 80px;
+    line-height: 1.5;
+  }
+  h1 { font-size: 1.3rem; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px; margin-bottom: 16px;
+  }
+  label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+  input[type="text"], select, textarea {
+    width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--fg); font-size: 0.95rem; font-family: inherit;
+  }
+  textarea { resize: vertical; min-height: 50px; }
+  button {
+    font-family: inherit; font-size: 0.9rem; font-weight: 600; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--card); color: var(--fg);
+    padding: 9px 16px; cursor: pointer;
+  }
+  button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .progress-track {
+    height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 12px 0 20px;
+  }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.2s; }
+  .progress-label { font-size: 0.8rem; color: var(--muted); text-align: right; margin-top: -14px; margin-bottom: 14px; }
+  .narrative { white-space: pre-wrap; font-size: 0.92rem; max-height: 260px; overflow-y: auto; }
+  .item-title { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+  .options { list-style: none; padding: 0; margin: 10px 0; }
+  .options li { padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; font-size: 0.92rem; }
+  .options li.correct { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); font-weight: 600; }
+  .field-block { margin-top: 14px; }
+  .field-block .label-row { display: flex; justify-content: space-between; align-items: baseline; }
+  .field-block .desc { color: var(--muted); font-size: 0.8rem; }
+  .likert { display: flex; gap: 6px; margin-top: 6px; }
+  .likert button { flex: 1; padding: 8px 0; }
+  .likert button.selected { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .nav-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; position: sticky; bottom: 0; background: var(--bg); padding: 12px 0; }
+  .hidden { display: none !important; }
+  .muted { color: var(--muted); font-size: 0.85rem; }
+  pre.csv-out { white-space: pre-wrap; font-size: 0.72rem; max-height: 200px; overflow-y: auto; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+  .top-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+</style>
+
+<h1>MedCase AI — Human Expert Evaluation</h1>
+<div class="subtitle">Blinded scoring of AI-generated case questions/hints/explanations. Neither item's architecture is revealed — score each on its own merit.</div>
+
+<div id="setup" class="card">
+  <label for="raterName">İsim</label>
+  <input type="text" id="raterName" placeholder="Ad Soyad">
+  <div style="height:10px"></div>
+  <label for="raterRole">Rol</label>
+  <select id="raterRole">
+    <option value="Tıp Öğrencisi">Tıp Öğrencisi</option>
+    <option value="Araştırma Görevlisi">Araştırma Görevlisi</option>
+    <option value="Öğretim Üyesi">Öğretim Üyesi</option>
+    <option value="Diğer">Diğer</option>
+  </select>
+  <div style="height:14px"></div>
+  <button class="primary" id="startBtn">Değerlendirmeye Başla</button>
+</div>
+
+<div id="rater-app" class="hidden">
+  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="progress-label" id="progressLabel"></div>
+
+  <div class="card">
+    <div class="muted" id="caseSpecialty"></div>
+    <div style="font-weight:700; margin: 4px 0 10px;" id="caseTitle"></div>
+    <div class="narrative" id="caseNarrative"></div>
+  </div>
+
+  <div id="itemsContainer"></div>
+
+  <div class="nav-row">
+    <button id="prevBtn">← Önceki</button>
+    <span id="navSpacer" style="flex:1"></span>
+    <button id="nextBtn" class="primary">Sonraki →</button>
+  </div>
+
+  <div class="card hidden" id="exportCard">
+    <div style="font-weight:700; margin-bottom:8px;">Tüm vakalar değerlendirildi 🎉</div>
+    <div class="top-actions">
+      <button class="primary" id="downloadBtn">CSV indir</button>
+      <button id="showRawBtn">Ham CSV'yi göster (kopyala)</button>
+    </div>
+    <pre class="csv-out hidden" id="csvOut"></pre>
+  </div>
+</div>
+
+<script>
+const CRITERIA = [
+  { key: "clinical_correctness", label: "Clinical correctness", desc: "Tıbbi doğruluk" },
+  { key: "relevance", label: "Relevance", desc: "Vakayla uyumluluk" },
+  { key: "consistency", label: "Consistency", desc: "Soru/şık/açıklama arası tutarlılık" },
+  { key: "educational_usefulness", label: "Educational usefulness", desc: "Öğreticilik" },
+  { key: "clarity", label: "Clarity", desc: "Açıklık ve anlaşılabilirlik" },
+];
+
+const DATA = __DATA_JSON__;
+
+const STORAGE_KEY = "medcase_human_eval_v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { raterName: "", raterRole: "Tıp Öğrencisi", responses: {}, currentIndex: 0 };
+}
+
+let state = loadState();
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function ensureResponse(caseId, itemLabel) {
+  if (!state.responses[caseId]) state.responses[caseId] = {};
+  if (!state.responses[caseId][itemLabel]) {
+    state.responses[caseId][itemLabel] = { comment: "" };
+  }
+  return state.responses[caseId][itemLabel];
+}
+
+function isCaseComplete(caseId) {
+  const r = state.responses[caseId];
+  if (!r) return false;
+  return ["Item 1", "Item 2"].every(label =>
+    r[label] && CRITERIA.every(c => typeof r[label][c.key] === "number")
+  );
+}
+
+function allComplete() {
+  return DATA.every(c => isCaseComplete(c.case_id));
+}
+
+function renderItem(container, caseId, itemLabel, item) {
+  const block = document.createElement("div");
+  block.className = "card";
+
+  const title = document.createElement("div");
+  title.className = "item-title";
+  title.textContent = itemLabel;
+  block.appendChild(title);
+
+  const q = document.createElement("div");
+  q.style.fontWeight = "600";
+  q.style.marginBottom = "8px";
+  q.textContent = item.question;
+  block.appendChild(q);
+
+  const ul = document.createElement("ul");
+  ul.className = "options";
+  item.options.forEach((opt, i) => {
+    const li = document.createElement("li");
+    li.textContent = (i === item.correct_index ? "✓ " : "") + opt;
+    if (i === item.correct_index) li.className = "correct";
+    ul.appendChild(li);
+  });
+  block.appendChild(ul);
+
+  const hintLabel = document.createElement("div");
+  hintLabel.innerHTML = "<b>Hint:</b> " + escapeHtml(item.hint);
+  hintLabel.style.fontSize = "0.9rem";
+  hintLabel.style.marginTop = "8px";
+  block.appendChild(hintLabel);
+
+  const expLabel = document.createElement("div");
+  expLabel.innerHTML = "<b>Explanation:</b> " + escapeHtml(item.explanation);
+  expLabel.style.fontSize = "0.9rem";
+  expLabel.style.marginTop = "8px";
+  block.appendChild(expLabel);
+
+  const resp = ensureResponse(caseId, itemLabel);
+
+  CRITERIA.forEach(crit => {
+    const fb = document.createElement("div");
+    fb.className = "field-block";
+    const row = document.createElement("div");
+    row.className = "label-row";
+    row.innerHTML = `<label style="margin:0">${crit.label}</label><span class="desc">${crit.desc}</span>`;
+    fb.appendChild(row);
+
+    const likert = document.createElement("div");
+    likert.className = "likert";
+    for (let v = 1; v <= 5; v++) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = v;
+      if (resp[crit.key] === v) b.classList.add("selected");
+      b.addEventListener("click", () => {
+        resp[crit.key] = v;
+        saveState();
+        Array.from(likert.children).forEach(c => c.classList.remove("selected"));
+        b.classList.add("selected");
+        updateProgress();
+      });
+      likert.appendChild(b);
+    }
+    fb.appendChild(likert);
+    block.appendChild(fb);
+  });
+
+  const commentBlock = document.createElement("div");
+  commentBlock.className = "field-block";
+  commentBlock.innerHTML = `<label>Yorum (opsiyonel)</label>`;
+  const ta = document.createElement("textarea");
+  ta.value = resp.comment || "";
+  ta.addEventListener("input", () => { resp.comment = ta.value; saveState(); });
+  commentBlock.appendChild(ta);
+  block.appendChild(commentBlock);
+
+  container.appendChild(block);
+}
+
+function escapeHtml(s) {
+  const d = document.createElement("div");
+  d.textContent = s || "";
+  return d.innerHTML;
+}
+
+function renderCase() {
+  const c = DATA[state.currentIndex];
+  document.getElementById("caseSpecialty").textContent = c.specialty;
+  document.getElementById("caseTitle").textContent = c.title;
+  document.getElementById("caseNarrative").textContent = c.narrative;
+
+  const container = document.getElementById("itemsContainer");
+  container.innerHTML = "";
+  renderItem(container, c.case_id, "Item 1", c.items["Item 1"]);
+  renderItem(container, c.case_id, "Item 2", c.items["Item 2"]);
+
+  document.getElementById("prevBtn").disabled = state.currentIndex === 0;
+  const isLast = state.currentIndex === DATA.length - 1;
+  document.getElementById("nextBtn").textContent = isLast ? "Bitir" : "Sonraki →";
+
+  updateProgress();
+  document.getElementById("exportCard").classList.toggle("hidden", !allComplete());
+}
+
+function updateProgress() {
+  const done = DATA.filter(c => isCaseComplete(c.case_id)).length;
+  const pct = Math.round((done / DATA.length) * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent =
+    `Vaka ${state.currentIndex + 1}/${DATA.length} — ${done}/${DATA.length} tamamlandı`;
+  document.getElementById("exportCard").classList.toggle("hidden", !allComplete());
+}
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  const name = document.getElementById("raterName").value.trim();
+  if (!name) { document.getElementById("raterName").focus(); return; }
+  state.raterName = name;
+  state.raterRole = document.getElementById("raterRole").value;
+  saveState();
+  document.getElementById("setup").classList.add("hidden");
+  document.getElementById("rater-app").classList.remove("hidden");
+  renderCase();
+});
+
+// Resume mid-session if raterName already saved.
+if (state.raterName) {
+  document.getElementById("raterName").value = state.raterName;
+  document.getElementById("raterRole").value = state.raterRole || "Tıp Öğrencisi";
+}
+
+document.getElementById("prevBtn").addEventListener("click", () => {
+  if (state.currentIndex > 0) { state.currentIndex--; saveState(); renderCase(); window.scrollTo(0,0); }
+});
+document.getElementById("nextBtn").addEventListener("click", () => {
+  if (state.currentIndex < DATA.length - 1) { state.currentIndex++; saveState(); renderCase(); window.scrollTo(0,0); }
+  else { document.getElementById("exportCard").classList.toggle("hidden", !allComplete()); document.getElementById("exportCard").scrollIntoView({behavior:"smooth"}); }
+});
+
+function buildCsv() {
+  const cols = ["rater_name","rater_role","case_id","item_label",
+    ...CRITERIA.map(c => c.key), "overall_avg", "comment", "exported_at"];
+  const rows = [cols.join(",")];
+  const now = new Date().toISOString();
+  DATA.forEach(c => {
+    ["Item 1", "Item 2"].forEach(label => {
+      const r = state.responses[c.case_id] && state.responses[c.case_id][label];
+      if (!r) return;
+      const scores = CRITERIA.map(crit => r[crit.key] ?? "");
+      const avg = CRITERIA.every(crit => typeof r[crit.key] === "number")
+        ? (CRITERIA.reduce((s, crit) => s + r[crit.key], 0) / CRITERIA.length).toFixed(2)
+        : "";
+      const comment = (r.comment || "").replace(/"/g, '""');
+      rows.push([
+        `"${state.raterName}"`, `"${state.raterRole}"`, c.case_id, `"${label}"`,
+        ...scores, avg, `"${comment}"`, now,
+      ].join(","));
+    });
+  });
+  return rows.join("\n");
+}
+
+document.getElementById("downloadBtn").addEventListener("click", () => {
+  const csv = buildCsv();
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const safeName = (state.raterName || "rater").replace(/[^a-zA-Z0-9]+/g, "_");
+  a.href = url;
+  a.download = `medcase_human_eval_${safeName}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById("showRawBtn").addEventListener("click", () => {
+  const pre = document.getElementById("csvOut");
+  pre.textContent = buildCsv();
+  pre.classList.toggle("hidden");
+});
+</script>
