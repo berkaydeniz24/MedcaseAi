@@ -15,38 +15,37 @@ export default function RootLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Ana Sayfa",
+          title: "Home",
           tabBarIcon: ({ color }) => <Ionicons name="home" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="cases"
         options={{
-          title: "Vakalar",
+          title: "Cases",
           tabBarIcon: ({ color }) => <Ionicons name="medical" size={24} color={color} />,
         }}
       />
-      
-      {/* ✅ YENİ EKLENEN: GEÇMİŞ SEKMESİ */}
+
       <Tabs.Screen
         name="history"
         options={{
-          title: "Geçmiş",
+          title: "History",
           tabBarIcon: ({ color }) => <Ionicons name="time-outline" size={24} color={color} />,
         }}
       />
 
       <Tabs.Screen
-        name="stats" 
+        name="stats"
         options={{
-          title: "Analiz",
+          title: "Analytics",
           tabBarIcon: ({ color }) => <Ionicons name="analytics" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profil",
+          title: "Profile",
           tabBarIcon: ({ color }) => <Ionicons name="person" size={24} color={color} />,
         }}
       />

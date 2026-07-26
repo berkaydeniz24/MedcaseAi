@@ -11,9 +11,9 @@ const CATEGORIES = ["All", "Cardiology", "Neurology", "General Internal Medicine
 const getStatusDetails = (status) => {
   // Backend'den gelen status kodları: 'solved', 'in_progress', 'new'
   switch (status) {
-    case "solved": return { bg: "#DCFCE7", text: "#166534", label: "Tamamlandı" };
-    case "in_progress": return { bg: "#FEF9C3", text: "#854D0E", label: "Devam Ediyor" };
-    default: return { bg: "#F1F5F9", text: "#475569", label: "Çözülecek" };
+    case "solved": return { bg: "#DCFCE7", text: "#166534", label: "Completed" };
+    case "in_progress": return { bg: "#FEF9C3", text: "#854D0E", label: "In Progress" };
+    default: return { bg: "#F1F5F9", text: "#475569", label: "To Solve" };
   }
 };
 
@@ -75,7 +75,7 @@ export default function CasesScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Vaka Kütüphanesi</Text>
+        <Text style={styles.title}>Case Library</Text>
       </View>
       
       {/* Kategori Filtreleri (Aynı Kalıyor) */}

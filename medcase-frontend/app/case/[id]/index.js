@@ -10,9 +10,9 @@ import { getLastSession } from "../../../src/api/session_cache";
 
 // Durum seçenekleri
 const STATUS_OPTIONS = [
-  { id: 'Çözülecek', label: 'Çözülecek', color: '#64748B', bg: '#F1F5F9' },
-  { id: 'Devam Ediyor', label: 'Devam Ediyor', color: '#854D0E', bg: '#FEF9C3' },
-  { id: 'Çözüldü', label: 'Çözüldü', color: '#166534', bg: '#DCFCE7' }
+  { id: 'To Solve', label: 'To Solve', color: '#64748B', bg: '#F1F5F9' },
+  { id: 'In Progress', label: 'In Progress', color: '#854D0E', bg: '#FEF9C3' },
+  { id: 'Solved', label: 'Solved', color: '#166534', bg: '#DCFCE7' }
 ];
 
 export default function PatientRecordPage() {
@@ -24,7 +24,7 @@ export default function PatientRecordPage() {
 
   const [caseData, setCaseData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [currentStatus, setCurrentStatus] = useState('Çözülecek');
+  const [currentStatus, setCurrentStatus] = useState('To Solve');
 
   // MCQ states
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -47,7 +47,7 @@ export default function PatientRecordPage() {
     getCaseById(String(id))
       .then((res) => {
         setCaseData(res);
-        setCurrentStatus(res.status || 'Çözülecek');
+        setCurrentStatus(res.status || 'To Solve');
       })
       .catch((e) => console.error(e))
       .finally(() => setLoading(false));
@@ -75,12 +75,12 @@ export default function PatientRecordPage() {
       const res = await submitAnswer(sessionId, selectedIndex, "explain", "beginner", "en");
       setFeedback({
         isCorrect: !!res.isCorrect,
-        tutorAnswer: res?.tutor?.answer || "Geri bildirim alınamadı."
+        tutorAnswer: res?.tutor?.answer || "Feedback could not be retrieved."
       });
     } catch (e) {
       setFeedback({
         isCorrect: false,
-        tutorAnswer: "Bağlantı hatası oluştu."
+        tutorAnswer: "A connection error occurred."
       });
     } finally {
       setSubmitting(false);
@@ -88,7 +88,7 @@ export default function PatientRecordPage() {
   };
 
   if (loading) return <ActivityIndicator size="large" color={Colors.accent} style={{ flex: 1 }} />;
-  if (!caseData) return <View style={styles.container}><Text>Vaka bulunamadı.</Text></View>;
+  if (!caseData) return <View style={styles.container}><Text>Case not found.</Text></View>;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -102,13 +102,13 @@ export default function PatientRecordPage() {
               <Text style={styles.avatarText}>P-{id.slice(-2)}</Text>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.caseIdText}>Vaka Dosyası</Text>
-              <Text style={styles.specialtyText}>{caseData.specialty || "Genel Tıp"}</Text>
+              <Text style={styles.caseIdText}>Case File</Text>
+              <Text style={styles.specialtyText}>{caseData.specialty || "General Medicine"}</Text>
             </View>
           </View>
 
           <View style={styles.statusSection}>
-            <Text style={styles.statusTitle}>VAKA DURUMU:</Text>
+            <Text style={styles.statusTitle}>CASE STATUS:</Text>
             <View style={styles.statusPicker}>
               {STATUS_OPTIONS.map((option) => (
                 <Pressable
@@ -133,21 +133,21 @@ export default function PatientRecordPage() {
         </View>
 
         {/* Klinik Rapor */}
-        <Text style={styles.sectionTitle}>Klinik Tablo</Text>
+        <Text style={styles.sectionTitle}>Clinical Presentation</Text>
         <View style={styles.mainInfoCard}>
           <Text style={styles.caseTitleText}>{caseData.title}</Text>
           <View style={styles.divider} />
-          <Text style={styles.narrativeText}>{caseData.narrative || "Vaka detayı yüklenemedi."}</Text>
+          <Text style={styles.narrativeText}>{caseData.narrative || "Case details could not be loaded."}</Text>
         </View>
 
         {/* MCQ / Hızlı Antrenman */}
         {sessionId ? (
           <View style={styles.mcqCard}>
-            <Text style={styles.mcqTitle}>Hızlı Antrenman</Text>
+            <Text style={styles.mcqTitle}>Quick Practice</Text>
 
             {!mcq ? (
               <Text style={styles.mcqMuted}>
-                Oturum bilgisi yükleniyor veya bulunamadı...
+                Loading session data or not found...
               </Text>
             ) : (
               <>
@@ -185,7 +185,7 @@ export default function PatientRecordPage() {
                   ]}
                 >
                   <Text style={styles.submitBtnText}>
-                    {submitting ? "Değerlendiriliyor..." : "Cevabı Gönder"}
+                    {submitting ? "Evaluating..." : "Submit Answer"}
                   </Text>
                 </Pressable>
 
@@ -195,7 +195,7 @@ export default function PatientRecordPage() {
                     feedback.isCorrect ? styles.feedbackCorrect : styles.feedbackWrong
                   ]}>
                     <Text style={styles.feedbackTitle}>
-                      {feedback.isCorrect ? "Doğru ✅" : "Yanlış ❌"}
+                      {feedback.isCorrect ? "Correct ✅" : "Incorrect ❌"}
                     </Text>
                     <Text style={styles.feedbackText}>{feedback.tutorAnswer}</Text>
                   </View>
@@ -212,7 +212,7 @@ export default function PatientRecordPage() {
           style={styles.actionButton}
           onPress={() => router.push(`/case/${id}/chat`)}
         >
-          <Text style={styles.actionButtonText}>Klinik Tartışmayı Başlat</Text>
+          <Text style={styles.actionButtonText}>Start Clinical Discussion</Text>
         </Pressable>
       </View>
     </SafeAreaView>

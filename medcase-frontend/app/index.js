@@ -1,27 +1,38 @@
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Modal, ScrollView } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { Colors } from "../src/theme/colors";
-import { startDialogue } from "../src/api/endpoints";
+import { startDialogue, getUserStats } from "../src/api/endpoints";
 import { setLastSession } from "../src/api/session_cache";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
+// id values match the backend's specialty strings exactly (see docs/dataset.md)
 const CATEGORIES = [
   { id: "All", label: "General Practice", sub: "Random selection from all specialties" },
-  { id: "Kardiyoloji", label: "Cardiology", sub: "Heart & Vascular analysis" },
-  { id: "Nöroloji", label: "Neurology", sub: "Focus on nervous system" },
-  { id: "Genel Dahiliye / Diğer", label: "Internal Medicine", sub: "General clinical diagnostics" },
-  { id: "Dermatoloji", label: "Dermatology", sub: "Skin & Soft tissue cases" },
-  { id: "Ortopedi & Travmatoloji", label: "Orthopedics", sub: "Musculoskeletal system" },
+  { id: "Cardiology", label: "Cardiology", sub: "Heart & Vascular analysis" },
+  { id: "Neurology", label: "Neurology", sub: "Focus on nervous system" },
+  { id: "General Internal Medicine / Other", label: "Internal Medicine", sub: "General clinical diagnostics" },
+  { id: "Dermatology", label: "Dermatology", sub: "Skin & Soft tissue cases" },
+  { id: "Orthopedics & Traumatology", label: "Orthopedics", sub: "Musculoskeletal system" },
   { id: "Pulmonology", label: "Pulmonology", sub: "Respiratory & Lung focus" },
   { id: "Ophthalmology", label: "Ophthalmology", sub: "Visual & Eye pathologies" },
-  { id: "Gastroenteroloji", label: "Gastroenterology", sub: "Digestive system clinicals" },
+  { id: "Gastroenterology", label: "Gastroenterology", sub: "Digestive system clinicals" },
 ];
 
 export default function HomeScreen() {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedCat, setSelectedCat] = useState(CATEGORIES[0]);
+  const [stats, setStats] = useState({ total_correct: 0, total_wrong: 0 });
+
+  useFocusEffect(
+    useCallback(() => {
+      getUserStats().then(setStats).catch(() => {});
+    }, [])
+  );
+
+  const totalAnswers = stats.total_correct + stats.total_wrong;
+  const accuracy = totalAnswers > 0 ? Math.round((stats.total_correct / totalAnswers) * 100) : 0;
 
   const handleQuickTraining = async () => {
     try {
@@ -38,12 +49,28 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false} contentContainerStyle={styles.contentInner}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.welcome}>Welcome back,</Text>
           <Text style={styles.name}>Dr. John Doe</Text>
           <Text style={styles.university}>Biruni University</Text>
+        </View>
+
+        {/* Quick stats snapshot */}
+        <View style={styles.statsRow}>
+          <View style={styles.statChip}>
+            <Text style={styles.statValue}>{stats.total_correct}</Text>
+            <Text style={styles.statLabel}>Correct</Text>
+          </View>
+          <View style={styles.statChip}>
+            <Text style={styles.statValue}>%{accuracy}</Text>
+            <Text style={styles.statLabel}>Accuracy</Text>
+          </View>
+          <View style={styles.statChip}>
+            <Text style={styles.statValue}>{totalAnswers}</Text>
+            <Text style={styles.statLabel}>Attempts</Text>
+          </View>
         </View>
 
         {/* Bilgi Kartı */}
@@ -82,7 +109,7 @@ export default function HomeScreen() {
             <Ionicons name="chevron-up" size={20} color={Colors.textSub} />
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
 
       {/* Yarı Modal Seçim Ekranı */}
       <Modal
@@ -134,12 +161,18 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  content: { padding: 25, flex: 1, justifyContent: 'center' },
-  header: { marginBottom: 35 },
+  content: { flex: 1 },
+  contentInner: { padding: 25, paddingTop: 15, paddingBottom: 40 },
+  header: { marginBottom: 25 },
   welcome: { fontSize: 18, color: Colors.textSub, fontWeight: "500" },
   name: { fontSize: 32, fontWeight: "800", color: Colors.textMain, marginTop: 4 },
   university: { fontSize: 14, color: Colors.accent, fontWeight: "600", marginTop: 4 },
-  
+
+  statsRow: { flexDirection: 'row', gap: 12, marginBottom: 25 },
+  statChip: { flex: 1, backgroundColor: Colors.card, borderRadius: 20, paddingVertical: 16, alignItems: 'center', borderWidth: 1, borderColor: '#EDF2F7', shadowColor: "#000", shadowOpacity: 0.02, shadowRadius: 10, elevation: 2 },
+  statValue: { fontSize: 20, fontWeight: '800', color: Colors.textMain },
+  statLabel: { fontSize: 11, fontWeight: '700', color: Colors.textSub, marginTop: 4, textTransform: 'uppercase', letterSpacing: 0.5 },
+
   infoCard: { marginBottom: 25 },
   infoTitle: { fontSize: 18, fontWeight: "700", color: Colors.textMain },
   infoSub: { fontSize: 14, color: Colors.textSub, marginTop: 6, lineHeight: 22 },
@@ -175,7 +208,7 @@ const styles = StyleSheet.create({
   modalHandle: { width: 40, height: 4, backgroundColor: '#E2E8F0', borderRadius: 10, alignSelf: 'center', marginBottom: 20 },
   modalTitle: { fontSize: 20, fontWeight: '800', color: Colors.textMain, marginBottom: 20, textAlign: 'center' },
   modalItem: { flexDirection: 'row', alignItems: 'center', padding: 16, borderRadius: 20, marginBottom: 8, backgroundColor: '#F8FAFC' },
-  modalItemActive: { backgroundColor: '#EFF6FF', borderWidth: 1, borderColor: Colors.accent },
+  modalItemActive: { backgroundColor: Colors.accentSoft, borderWidth: 1, borderColor: Colors.accent },
   modalItemLabel: { fontSize: 16, fontWeight: '700', color: Colors.textMain },
   modalItemLabelActive: { color: Colors.accent },
   modalItemSub: { fontSize: 12, color: Colors.textSub, marginTop: 2 }

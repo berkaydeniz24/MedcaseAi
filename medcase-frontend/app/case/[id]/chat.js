@@ -39,7 +39,7 @@ const MODE_CONFIG = {
     label: "Explain",
     desc: "Understand the logic",
     emoji: "📖",
-    colors: { main: "#3B82F6", bg: "#EFF6FF", border: "#93C5FD", dark: "#1D4ED8", btnBg: "#DBEAFE" }
+    colors: { main: "#0D9488", bg: "#F0FDFA", border: "#5EEAD4", dark: "#115E59", btnBg: "#CCFBF1" }
   },
   teach: {
     id: "teach",
@@ -215,7 +215,7 @@ export default function CaseChatPage() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
             <Ionicons name="arrow-back" size={24} color="#333" onPress={() => router.back()} />
-            <Text style={styles.headerTitle}>Vaka {id ? id.slice(-5) : ""}</Text>
+            <Text style={styles.headerTitle}>Case {id ? id.slice(-5) : ""}</Text>
             <View style={{ width: 24 }} />
       </View>
 
@@ -274,7 +274,7 @@ export default function CaseChatPage() {
         {loadingHistory ? (
             <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
                 <ActivityIndicator size="large" color={Colors.primary} />
-                <Text style={{marginTop:10, color:Colors.textSub}}>Sohbet geçmişi yükleniyor...</Text>
+                <Text style={{marginTop:10, color:Colors.textSub}}>Loading chat history...</Text>
             </View>
         ) : (
             <FlatList

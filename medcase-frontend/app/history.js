@@ -56,7 +56,7 @@ export default function HistoryPage() {
       <View style={styles.cardContent}>
         <Text style={styles.caseTitle} numberOfLines={1}>{item.case_title}</Text>
         <Text style={styles.lastMsg} numberOfLines={2}>
-          {item.last_message.startsWith('[') ? "Vaka Analizi" : item.last_message}
+          {item.last_message.startsWith('[') ? "Case Analysis" : item.last_message}
         </Text>
         <Text style={styles.date}>{item.date}</Text>
       </View>
@@ -69,15 +69,15 @@ export default function HistoryPage() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Sohbet Geçmişi</Text>
+        <Text style={styles.headerTitle}>Chat History</Text>
       </View>
 
       {history.length === 0 ? (
         <View style={styles.emptyState}>
           <Ionicons name="file-tray-outline" size={64} color="#CBD5E1" />
-          <Text style={styles.emptyText}>Henüz kayıtlı bir sohbet yok.</Text>
+          <Text style={styles.emptyText}>No chat history yet.</Text>
           <Pressable style={styles.btnStart} onPress={() => router.push("/cases")}>
-            <Text style={styles.btnStartText}>Vaka Çözmeye Başla</Text>
+            <Text style={styles.btnStartText}>Start Solving Cases</Text>
           </Pressable>
         </View>
       ) : (
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   
   iconBox: {
     width: 48, height: 48, borderRadius: 12,
-    backgroundColor: "#EFF6FF", justifyContent: "center", alignItems: "center",
+    backgroundColor: Colors.accentSoft, justifyContent: "center", alignItems: "center",
     marginRight: 16
   },
   cardContent: { flex: 1 },
