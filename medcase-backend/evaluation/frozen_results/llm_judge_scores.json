@@ -1,0 +1,1359 @@
+{
+  "model": "gemini-3.1-flash-lite",
+  "prompt_version": "v1.0",
+  "results": [
+    {
+      "case_id": "PMC10080071_18010",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The clinical reasoning is sound. The normal NT-proBNP and normal echocardiogram effectively rule out left-sided heart failure, and the increased right ventricular pressure strongly points to right heart strain/failure."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly utilizes the key investigative findings (normal NT-proBNP, normal echo, elevated RV pressure) provided in the clinical narrative."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, and the explanation provides specific evidence from the case to support the correct option and rule out the distractors."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates between left and right heart failure diagnostics, helping the learner understand how to interpret NT-proBNP and echo findings in clinical practice."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The text is well-organized, easy to follow, and the medical terminology is used correctly throughout."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10080071_18010",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The clinical reasoning is sound; given the normal NT-proBNP and structural cardiac findings, the patient's right-sided pressure elevation and dyspnea are best explained by obesity hypoventilation/sleep apnea, which is correctly managed by CPAP."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question forces the student to synthesize the specific findings of the case, such as the discordant NT-proBNP and the identification of sleep apnea, rather than relying on generic heart failure management."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logically consistent with the stem, and the explanation provides a clear rationale for why CPAP is the priority over the other listed interventions."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates the clinical presentation from typical left heart failure and explains the mechanistic link between sleep apnea, pulmonary resistance, and right ventricular strain."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written clearly and are easy for a medical learner to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10314776_6145",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The marked correct answer is clinically accurate for the management of an infected (mycotic) aortic aneurysm, which necessitates both source control (endovascular repair) and prolonged systemic antibiotics."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly relates to the management of the specific pathogen (Salmonella paratyphi A) and the surgical intervention described in the case narrative."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The explanation logically supports option C, and there are no contradictions between the hint and the provided explanation."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates why the correct choice is necessary versus why the other options (which would be insufficient for a mycotic aneurysm) are incorrect."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are well-structured, clear, and easy for a medical learner to understand."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10314776_6145",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The management approach of endovascular repair combined with targeted antibiotic therapy for an infected aortic pseudoaneurysm is the standard of care, and the explanation accurately reflects the clinical reasoning applied in the narrative."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question is highly relevant as it addresses the core management challenge of the specific clinical case, involving a rare manifestation of Salmonella paratyphi A."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, the explanation clearly justifies why the marked correct option is superior to the others, and the hint aligns perfectly with the provided answer."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides excellent educational value by contrasting the necessity of structural intervention with the danger of relying on conservative management for a high-risk lesion like an infected pseudoaneurysm."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question, options, and explanation are written with high clarity and professional medical terminology."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10408637_60050",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies that persistent venous hypertension and congestion due to superior sagittal sinus occlusion are the primary drivers of the patient's symptoms, even after the DAVF spontaneously resolved."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the specific clinical paradox presented in the case (the resolution of the DAVF versus the persistence of clinical symptoms)."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logically constructed, and the explanation provides sound reasoning for why option B is correct and why the alternatives are incorrect."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation effectively teaches the pathophysiological distinction between the high-flow shunt (DAVF) and the underlying venous outflow obstruction (SSS thrombosis)."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written clearly and follow the timeline of the clinical narrative logically."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10408637_60050",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies that persistent superior sagittal sinus occlusion leads to chronic venous hypertension and elevated intracranial pressure, which is the primary driver for assessing papilledema in this clinical context."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question is tightly focused on the specific pathophysiology described in the narrative: the aftermath of a self-obliterated DAVF with persistent sinus occlusion."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are clearly related to the clinical findings, and the explanation provides logical, evidence-based reasoning for why the chosen option is correct and why the alternatives are not."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The item effectively teaches the clinical sequelae of chronic venous sinus thrombosis, specifically distinguishing between static parenchymal damage and ongoing intracranial pressure issues."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question stem and options are written clearly, and the rationale is well-structured and easy to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10419215_35979",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly links the CACNA1A mutation to P/Q-type calcium channel dysfunction and cortical spreading depression, which is the established pathophysiology for hemiplegic migraine/acute encephalopathy in this context."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly utilizes the specific genetic finding and clinical history of trauma-induced encephalopathy described in the case narrative."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, the explanation clearly justifies why the correct answer is the most plausible while refuting the others based on provided clinical data."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation effectively bridges the gap between the genetic mutation, the pathophysiology of cortical spreading depression, and the clinical findings (reversibility of MRI changes)."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is clearly written, well-organized, and the medical terminology is used appropriately."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10419215_35979",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The marked correct option (calcium channel blocker) is clinically accurate for the prophylaxis of hemiplegic migraine associated with CACNA1A mutations as described in the case narrative."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question is highly relevant to the provided case, specifically focusing on the management of the patient's diagnosed condition and the gene mutation identified."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are consistent with the question, and the explanation clearly justifies the choice of option B while correctly explaining why other options are inappropriate based on the provided narrative."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides a clear pedagogical rationale, contrasting the acute versus prophylactic management and explaining why the specific therapy was chosen for this patient's diagnosis."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written clearly and are easy to follow for a medical student."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10547563_61111",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The clinical diagnosis of Severe Congenital Neutropenia is well-supported by the narrative, which describes persistent, profound neutropenia beginning in the neonatal period that does not resolve after infection treatment."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question effectively asks the student to synthesize the clinical history (recurrent infections, early onset) and hematologic findings (persistent neutropenia, normal lymphocyte counts) from the case to reach a diagnostic conclusion."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logically constructed, and the explanation correctly supports option C while explaining why the other distractors are incorrect based on the provided narrative."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of teaching by contrasting the findings in this patient with other common pediatric hematological conditions and highlighting why specific findings rule out alternative diagnoses."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question stem and explanation are written clearly, professional, and easy for a medical student to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10547563_61111",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies the primary hematologic abnormality requiring G-CSF treatment, which is severe and persistent neutropenia, aligning with medical guidelines for treating chronic neutropenia."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly relates to the patient's specific lab findings and the subsequent clinical intervention described in the narrative."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, the explanation consistently supports option B, and there is no contradiction between the hint and the explanation."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation effectively teaches the reasoning by discussing why the neutropenia necessitated G-CSF while refuting the other options based on specific patient data provided."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written clearly and follow a logical flow that is easy for a medical student to understand."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10830907_64893",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The identification of Lysinibacillus sphaericus as a soil-borne organism is accurate, and the clinical management of the infection (antibiotics rather than catheter removal) adheres to ISPD guidelines."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question specifically incorporates the patient's hobby of gardening, which serves as the critical clue for the transmission of the identified environmental pathogen."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logically constructed, and the explanation provides sound justification for why the correct option is superior to the distractors."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of teaching the learner how to link a patient's specific lifestyle activities to the etiology of an atypical infection."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are clearly written, well-organized, and logically sequenced."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC10830907_64893",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The identification of Lysinibacillus sphaericus as a soil-dwelling environmental organism makes gardening a biologically plausible vector for peritonitis in a PD patient, especially when other common routes of entry (exit site, touch contamination) were not identified."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question forces the student to synthesize the patient's specific leisure activity (gardening) with the microbiology of the identified rare pathogen to determine the likely source of infection."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The explanation logically evaluates each option against the provided clinical facts, and there is no contradiction between the options and the narrative."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides a clear rationale for why the correct answer is the most likely and why the common alternatives (like exit site infection or touch contamination) are excluded based on the case findings."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is written clearly and the clinical reasoning follows an easy-to-understand progression."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC11091619_67673",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies the cause of the mother's asymptomatic status as somatic mosaicism, as explicitly stated in the case narrative."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question tests a direct inference from the provided case narrative regarding inheritance and clinical phenotypic variability."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logically consistent, and the explanation supports the marked correct answer while providing rationale for why the distractors are incorrect."
+        },
+        "educational_usefulness": {
+          "score": 4,
+          "justification": "The explanation provides clear reasoning for why the correct option is true and why the other options are incorrect based on genetic principles."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written in clear, precise medical language."
+        },
+        "concerns": []
+      },
+      "overall_avg": 4.8
+    },
+    {
+      "case_id": "PMC11091619_67673",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies that somatic mosaicism explains the lack of clinical phenotype in the mother despite the autosomal dominant nature of the RYR1 variant."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses a specific clinical genetics detail provided in the case narrative regarding the mother's presentation."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, and the explanation is entirely consistent with the marked correct answer and the provided case details."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of detailing why the correct answer is right and why the distractors are incorrect based on the provided clinical information."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is clearly written, easy to follow, and the logic is sound."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC11329954_62613",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies the forensic principle that a single external wound associated with two distinct, divergent deep tracks is characteristic of a bifurcated or forked-tip weapon."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question is highly relevant as it directly addresses the atypical autopsy findings described in the case narrative, specifically the discrepancy between the single external entrance and the two internal tracks."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, the explanation consistently supports option B as the correct answer, and the hint aligns perfectly with the logic provided in the explanation."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation effectively teaches the deductive reasoning required to distinguish between instrument geometry (forked tip) and other mechanisms like multiple stabs or blade rotation."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written clearly and use appropriate forensic terminology for a medical student audience."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC11329954_62613",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies the forensic phenomenon of a 're-angled' or 'partially withdrawn' stab wound, which is the standard interpretation for a single entrance wound with multiple deep internal tracks."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the specific autopsy findings provided in the narrative, focusing on the discrepancy between external and internal wounds."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The chosen correct option is fully supported by the explanation, and the reasoning for why the other options are incorrect is logical and consistent with the findings."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides a clear mechanism for how a single blade can create diverging tracks, teaching the student how to interpret complex sharp-force injury patterns."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is written clearly, and the forensic terminology is used appropriately in the context of the autopsy description."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC11754817_71967",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The description 'isles of white in a sea of red' is a classic, well-recognized dermatological finding in dengue fever, and the explanation correctly correlates this with the patient's positive PCR results."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question specifically targets the key diagnostic physical finding mentioned in the case narrative ('isles of white in a sea of red') and asks the student to synthesize this with the clinical context."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logically constructed, the correct option aligns with the explanation provided, and there is no contradiction within the content."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates why the rash is characteristic of dengue rather than the secondary infection or an allergic reaction, teaching the student to contextualize physical signs."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written in a professional, clear medical tone that is easy to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC11754817_71967",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation accurately identifies that the persistence of respiratory symptoms and the change in the nature of the rash necessitated looking beyond the initial dengue diagnosis for a co-infection."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the clinical reasoning process used in the case narrative to identify the secondary mycoplasma infection."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, the explanation clearly supports the correct option over the distractors, and the hint is aligned with the diagnostic process described."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides a thorough rationale, teaching why the specific clinical clues (cough, pruritus, rhinosinusitis) were pivotal for uncovering the co-infection."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is well-written, clearly organized, and easy for a medical learner to understand."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC11795214_71171",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies the pathophysiology of uncal herniation in the context of an intracranial mass (SDH) and the impact of sudden blood pressure reduction on cerebral autoregulation."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question is highly relevant to the specific case narrative, focusing on the precipitating event of pharmacological blood pressure lowering leading to clinical decompensation."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The explanation consistently supports option C, and the hint effectively guides the learner toward considering the interplay between systemic hemodynamics and intracranial pressure."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides a clear pedagogical rationale for why the correct option is correct and why the alternatives are incorrect, enhancing clinical reasoning."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written with high clarity and professional medical terminology suitable for a student."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC11795214_71171",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 3,
+          "justification": "While the clinical outcome (uncal herniation) is accurate, the pathophysiological link between hypertension and the specific development of an acute subdural hematoma (SDH) is weak. SDHs are typically traumatic; identifying hypertensive crisis as the direct cause of an SDH is clinically unconventional and not supported by the narrative."
+        },
+        "relevance": {
+          "score": 4,
+          "justification": "The question effectively utilizes the specific clinical details of the patient's presentation (hypertensive crisis, SDH, uncal herniation) to challenge the student to synthesize neurological findings."
+        },
+        "consistency": {
+          "score": 2,
+          "justification": "The explanation claims the SDH was a 'direct, rapid consequence of the uncontrolled hypertension,' which contradicts the standard medical understanding that hypertension causes intracranial hemorrhages (typically intraparenchymal) rather than subdural hematomas."
+        },
+        "educational_usefulness": {
+          "score": 3,
+          "justification": "The explanation helps distinguish between metabolic and structural causes of neurological decline, though it relies on a questionable premise regarding the etiology of the SDH."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and the accompanying explanation are written clearly and are easy to follow."
+        },
+        "concerns": [
+          "The explanation inaccurately suggests that uncontrolled hypertension is the direct cause of a subdural hematoma, which is fundamentally a traumatic etiology. The medical reasoning provided for why D is the correct option is pathophysiologically flawed."
+        ]
+      },
+      "overall_avg": 3.4
+    },
+    {
+      "case_id": "PMC2673472_58859",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The clinical management is correct; once a hemoperitoneum is confirmed in a patient with hemodynamic instability, surgical exploration is the standard for identifying and controlling a non-luminal source like a ruptured retroperitoneal varix."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question is highly relevant to the provided case, focusing on the specific diagnostic and management challenges of non-variceal intra-abdominal hemorrhage in a cirrhotic patient."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are consistent with the clinical question, and the explanation provides a logical justification for why surgical intervention was required over endoscopic or interventional radiology approaches."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates why traditional interventions for variceal bleeding (TIPS, endoscopy) are inappropriate for retroperitoneal vascular rupture, providing excellent reasoning for the surgical necessity."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is well-structured, easy to read, and logically follows the clinical progression of the case provided."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC2673472_58859",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 3,
+          "justification": "While paracentesis is a diagnostic test, it does not identify the 'specific source' (the ruptured retroperitoneal varix) as the question asks; it only confirms the presence of blood in the peritoneum."
+        },
+        "relevance": {
+          "score": 4,
+          "justification": "The question directly addresses the clinical reasoning used in the provided case to identify the hemoperitoneum."
+        },
+        "consistency": {
+          "score": 2,
+          "justification": "The question asks for a finding or procedure to identify the 'specific source' of bleeding, but the correct option (paracentesis) only identifies the presence of blood, not the source (the retroperitoneal varix)."
+        },
+        "educational_usefulness": {
+          "score": 3,
+          "justification": "The explanation correctly highlights that paracentesis was the trigger for surgery, but fails to acknowledge that it did not actually pinpoint the 'source' as the question requires."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The text is well-organized and easy to follow."
+        },
+        "concerns": [
+          "The question is logically flawed; paracentesis confirms the existence of hemoperitoneum but does not identify the anatomical source (the ruptured retroperitoneal varix), which is what the prompt asks for."
+        ]
+      },
+      "overall_avg": 3.4
+    },
+    {
+      "case_id": "PMC3350051_52885",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The clinical management described for a suspected obstructive laryngeal lesion is appropriate, and the explanation accurately reflects the necessity of microlaryngoscopy over imaging or non-invasive techniques for definitive diagnosis and treatment."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the patient's specific complication (lack of an air leak) and the subsequent diagnostic challenge presented in the case."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, the explanation clearly supports the correct option, and the hint provides relevant clinical context without contradicting the explanation."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation effectively teaches the reasoning behind choosing an invasive diagnostic/therapeutic procedure (microlaryngoscopy) in the context of persistent airway obstruction, highlighting why non-invasive options are insufficient."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question, options, and explanations are written in clear, concise medical terminology that is easy for a student to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC3350051_52885",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The clinical reasoning is sound; chronic hoarseness in the setting of a mass (laryngopyocoele) is highly suggestive of a long-standing structural laryngeal abnormality."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly utilizes the patient's longitudinal history provided in the narrative to differentiate between chronic pathology and acute infectious presentation."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, and the explanation clearly justifies why the selected answer is correct while explaining why the other options represent acute or reactive findings."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of teaching the reader to differentiate between chronic symptoms and acute physiological responses to infection."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written clearly and follow a logical structure that is easy to navigate."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC4958477_16338",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The diagnosis of a postoperative maxillary cyst (PMC) is correct given the classic history of a Caldwell-Luc procedure decades prior, and the explanation correctly identifies the mechanism of epithelial entrapment."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly utilizes the specific patient history (68-year-old female, prior Caldwell-Luc, infraorbital swelling) provided in the case narrative."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are appropriate for the differential diagnosis, the explanation aligns with the marked correct answer, and the hint effectively guides the learner toward the correct reasoning."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of teaching why the diagnosis is correct (latency period, surgical history) while also systematically ruling out the other options like metastatic disease."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is written clearly, the clinical logic is easy to follow, and the terminology is precise."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC4958477_16338",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The marked correct option accurately reflects the data provided in the narrative's literature review regarding the average latency (22 years) and the most common surgical antecedent (Caldwell-Luc operation)."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly utilizes the specific epidemiological data and case history provided in the narrative to test the reader's understanding of postoperative maxillary cysts."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The explanation is internally consistent with the marked answer, and the hint effectively directs the learner to the relevant sections of the text."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates the correct answer from the distractors by citing specific statistics from the literature review and applying them to the patient's clinical outcome."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and options are well-structured and written in clear, concise medical terminology."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC5292170_1230",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The diagnosis is clinically accurate based on the case narrative, which confirms the presence of primordial follicles, defining the ectopic tissue as a supernumerary ovary."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly tests the findings of the specific clinical case provided, focusing on the diagnostic reasoning behind identifying a rare supernumerary ovary."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are clear, the marked answer matches the clinical diagnosis, and the explanation provides logical support for the correct choice."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of teaching by highlighting specific histological markers (primordial follicles) and anatomical findings necessary to arrive at the diagnosis."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are well-structured, easy to read, and logically organized for a medical student."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC5292170_1230",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The identification of the mass as a supernumerary ovary is well-supported by the presence of primordial follicles and specific immunohistochemical markers (PgR, ER) within the ectopic tissue, which the explanation correctly identifies as diagnostic."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly utilizes the specific diagnostic dilemma presented in the case report, focusing on the histological evidence that distinguishes a supernumerary ovary from other pelvic masses."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The explanation and hint consistently support the marked correct option, and the rationale for excluding distractors is logically sound based on the provided clinical data."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of detailing why the presence of primordial follicles is the definitive histological 'fingerprint' for ovarian tissue, teaching the student how to navigate diagnostic uncertainty in the rectovaginal space."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is clearly written, with a logical flow from the patient history to the clinical findings and finally to the embryological diagnosis."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC5478186_18416",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The clinical diagnosis of Retinal Arterial Macroaneurysms (RAMs) and the management outcomes are accurately reflected from the provided case narrative."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly asks the reader to interpret the specific treatment outcomes observed in the provided cases."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The explanation consistently supports the marked correct option (B) by referencing the clinical course of the second patient mentioned in the text."
+        },
+        "educational_usefulness": {
+          "score": 4,
+          "justification": "The explanation clearly contrasts the two cases, helping the reader understand why the second patient's course supports monotherapy while the first required combination therapy."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question, options, and explanation are written clearly and are easy to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 4.8
+    },
+    {
+      "case_id": "PMC5478186_18416",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies that both patients received anti-VEGF therapy as the primary treatment for the secondary macular edema, which is a standard and evidence-based approach for symptomatic RAMs."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the core therapeutic intervention described for both clinical cases in the provided narrative."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, and the explanation is consistent with the clinical outcomes and interventions documented in the text."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates why the chosen treatment was foundational while explaining why alternative options like monotherapy or systemic management were not the primary focus for the acute macular edema."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is clearly written, easy to follow, and the logic flows well for a student."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC5844257_15703",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The clinical management described is sound, and the explanation correctly identifies that voriconazole-induced hepatotoxicity can occur even at therapeutic serum concentrations."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question is directly derived from the specific clinical management details provided in the narrative, including the use of the Naranjo algorithm and the interpretation of therapeutic drug monitoring results."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are clear, the explanation supports the marked correct option without contradiction, and the hint effectively directs the learner to the relevant diagnostic and therapeutic reasoning."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of dissecting why the correct answer is appropriate and explaining why the distractors are incorrect based on specific evidence in the case (e.g., formulary restrictions for option C, drug levels for option A)."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question, options, and explanation are written clearly and are easy to follow for a medical student."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC5844257_15703",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The management approach is clinically sound; when idiosyncratic hepatotoxicity is strongly suspected via the Naranjo algorithm, discontinuation of the causative agent is the standard of care, regardless of the drug being within the therapeutic range."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the core clinical decision point in the case narrative regarding the management of voriconazole-induced hepatotoxicity."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are clear, the explanation directly supports the marked correct option, and the rationale is consistent with the events described in the case."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of teaching the reasoning, specifically emphasizing the role of the Naranjo algorithm and the necessity of changing classes rather than just adjusting doses when toxicity is confirmed."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written in a clear, professional, and well-structured manner."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC6207856_2255",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The diagnosis of DLBCL is perfectly supported by the histopathological description of large atypical lymphoid cells and a high Ki67 proliferative index, and the clinical course of resolution post-chemotherapy confirms the malignancy."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question specifically requires interpreting the provided case's unique histopathological findings rather than relying on generic trivia."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are relevant, the explanation aligns with the marked correct answer, and the hint effectively guides the user toward the correct reasoning."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides a clear comparison between the malignant features of DLBCL and the classic histopathological features of the distractors, reinforcing diagnostic reasoning."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is clearly written, easy to follow, and the terminology is appropriate for a medical professional or student."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC6207856_2255",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The diagnosis of Diffuse Large B-Cell Lymphoma is correctly supported by the provided histopathological features, specifically the large monomorphic lymphoid cells and high Ki67 proliferative index."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question effectively incorporates the key clinical and histological findings from the case, requiring the student to integrate the patient's symptoms with biopsy results rather than just recalling trivia."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are relevant to the differential diagnosis of chronic otologic pathology, and the explanation clearly articulates why the histopathology aligns with the correct answer while excluding the other options."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides a strong reasoning process, teaching students to look past infectious presentations to consider underlying malignancies in chronic, refractory otologic cases."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are logically structured and use precise medical terminology consistent with the provided clinical narrative."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC6332946_127",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation accurately reflects the clinical findings: the presence of malignant melanoma as a component within the mediastinal germ cell tumor explains the distant metastasis, and the normal AFP levels effectively rule out progression of the yolk sac component."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly tests the interpretation of the retrospective pathological findings and the differential diagnosis of new lesions in a patient previously treated for a complex mediastinal tumor."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, and the explanation provides consistent reasoning for why the correct option is selected and why the alternatives are incorrect based on the case narrative."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation is highly educational, as it clarifies the clinical reasoning process, specifically explaining why normal AFP levels in the context of metastasis point toward a non-yolk sac origin."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is clearly written, logically organized, and easy to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC6332946_127",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies the pathology as a rare malignant transformation of a somatic cell lineage (melanoma) within a teratoma, which is supported by the case narrative's findings."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question is highly relevant as it tests the understanding of why a patient with a previously treated germ cell tumor (with normalized markers) developed a biologically distinct metastasis."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are well-aligned with the question, and the explanation provides a clear logical path supporting the correct answer while refuting the others."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of teaching the underlying mechanism of 'somatic-type malignancy' within germ cell tumors and uses the patient's normal AFP levels to help the learner rule out yolk sac recurrence."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The item is clearly written, well-organized, and follows a logical structure that is easy for a medical student to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC6556811_38866",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The diagnosis of spontaneous intramural intestinal hematoma is consistent with the surgical and histopathological findings provided in the case, where malignancy and trauma were specifically excluded."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question forces the student to synthesize the imaging and surgical findings of an idiopathic transmural hematoma to arrive at the correct clinical category."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are well-constructed and the explanation logically addresses why each distractor is incorrect based on the pathology report provided in the case."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates between the chosen diagnosis and other potential causes of colonic wall thickening and hemoperitoneum, effectively teaching the exclusion-based reasoning required."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The clinical scenario and the logic behind the diagnosis are described in clear, professional medical terminology."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC6556811_38866",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The marked correct option accurately reflects the histopathological findings described in the clinical narrative, which noted a transmural hematoma without underlying malignancy or vasculitis."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question forces the student to synthesize the specific surgical and histopathological findings provided in the case, rather than relying on general knowledge."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, and the explanation correctly justifies the marked answer while systematically refuting the distractors based on the case data."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates between the clinical suspicion of infection/malignancy and the definitive histopathological diagnosis, which is a key diagnostic reasoning skill."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question, options, and explanation are written in clear, professional medical language that is easy to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC6735351_40210",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The diagnosis of spontaneous bacterial empyema (SBEM) is indeed defined by a pleural fluid PMN count >250/mm3 in the absence of pneumonia, and the explanation correctly applies this criteria."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly tests the diagnostic reasoning required for the specific clinical entity presented in the case narrative."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, the explanation clearly supports the correct option, and the hint aligns with the provided explanation."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of clarifying why other findings (like the SAAG gradient or the nature of the fluid) are insufficient for diagnosis compared to the specific PMN threshold."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written with high clarity and professional medical terminology."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC6735351_40210",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The diagnostic criteria for spontaneous bacterial empyema (SBEM) are correctly identified as a pleural fluid PMN count of >= 250 cells/mm3, which matches the patient's data."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly utilizes the specific laboratory data (WBC/neutrophil count) provided in the case narrative to test the diagnostic reasoning for this specific patient."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, the explanation clearly supports the marked answer, and there is no contradiction between the hint and the provided explanation."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of teaching why the PMN count is the diagnostic criterion and explicitly explains why the other choices (like the albumin gradient) are incorrect or non-contributory."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question is well-structured, easy to read, and clearly distinguishes between the diagnostic findings and the patient's underlying condition."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC7384492_58292",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies Negative Pressure Pulmonary Edema (NPPE) secondary to post-extubation laryngospasm, which is fully supported by the case description of intense inspiratory effort against a closed glottis."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the specific clinical complication (NPPE) described in the case narrative, using the key features of the presentation to test diagnostic reasoning."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, and the explanation clearly supports the marked correct option while providing reasoning for why the alternatives are incorrect."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation does an excellent job of describing the hemodynamic mechanism behind NPPE, which is the most critical learning point for this clinical scenario."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The language is precise, professional, and easy to follow for a medical student."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC7384492_58292",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The diagnosis of Negative Pressure Pulmonary Edema (NPPE) is classic for the clinical scenario of post-extubation laryngospasm, and the pathophysiology described (increased venous return and capillary hydrostatic pressure gradient) is medically accurate."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the core clinical problem presented in the case narrative, specifically the development of acute pulmonary edema following post-extubation laryngospasm."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The correct option is consistent with the explanation and the hint, which leads the reader towards understanding the mechanism of airway obstruction and inspiratory effort."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates NPPE from other differential diagnoses like anaphylaxis or volume overload by analyzing specific patient details like fluid volume and lack of systemic signs."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written in a clear, logical, and professional manner that is easy to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC7479301_22108",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 3,
+          "justification": "While long-term anticoagulation is standard for thrombosis, the explanation for rejecting surgical thrombectomy (Option B) is weak and clinically questionable; aortic 'floating' thrombi in the setting of acute limb ischemia often necessitate surgical or endovascular intervention because anticoagulation alone may not clear the embolic source or restore distal flow."
+        },
+        "relevance": {
+          "score": 4,
+          "justification": "The question effectively utilizes the specific clinical scenario of a floating aortic thrombus in the context of COVID-19-associated coagulopathy described in the narrative."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logically related to the prompt, and the explanation provides a consistent rationale for why the chosen option is correct and why the alternatives are less favorable in the context of the provided narrative."
+        },
+        "educational_usefulness": {
+          "score": 4,
+          "justification": "The explanation clearly outlines why each option is considered (or rejected) in the context of the patient's specific clinical course and inflammatory profile, aiding in clinical reasoning."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question stem and explanation are clearly written and easy to navigate for a medical student."
+        },
+        "concerns": [
+          "The explanation's argument against surgical thrombectomy (Option B) is thin; while the patient received anticoagulation, the presence of a 'floating' aortic thrombus often demands more than just medical management to prevent further embolic showers."
+        ]
+      },
+      "overall_avg": 4.2
+    },
+    {
+      "case_id": "PMC7479301_22108",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 2,
+          "justification": "The marked correct answer (B) is vague and lacks a recognized clinical mechanism; elevated IL-6 and D-dimer are markers of hypercoagulability but do not constitute a 'pathophysiological mechanism' that explains the failure of UFH to prevent massive aortic thrombosis."
+        },
+        "relevance": {
+          "score": 4,
+          "justification": "The question effectively asks the learner to interpret the specific laboratory trends (D-dimer persistence vs. other inflammatory markers) presented in the case."
+        },
+        "consistency": {
+          "score": 3,
+          "justification": "The explanation attempts to support option B, but the reasoning provided is circular—stating that the thrombus persists because of a 'cytokine-driven environment' without providing a specific mechanism for why UFH failed or why this specific thrombus formed."
+        },
+        "educational_usefulness": {
+          "score": 2,
+          "justification": "The explanation relies on a non-standard diagnostic hypothesis; instead of teaching established clinical reasoning, it forces the learner to accept an ill-defined concept of 'paradoxical thrombosis' related to IL-6."
+        },
+        "clarity": {
+          "score": 4,
+          "justification": "The question and explanation are written clearly and follow the narrative structure, even if the clinical logic is flawed."
+        },
+        "concerns": [
+          "The 'pathophysiological mechanism' identified as the correct answer is scientifically imprecise and not a standard medical diagnosis for aortic thrombus.",
+          "The item implies a direct causal link between IL-6 levels and heparin resistance that is not well-supported by current clinical literature in this context."
+        ]
+      },
+      "overall_avg": 3
+    },
+    {
+      "case_id": "PMC8651394_51595",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The management choice of conservative therapy for a stable pancreatic pseudocyst, even one causing symptoms, aligns with clinical standards when the multidisciplinary team deems surgical or endoscopic risks prohibitive, which is supported by the patient's objective improvement."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly utilizes the specific diagnostic findings of the patient's mediastinal pseudocyst and the specific multidisciplinary management decision described in the case narrative."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The explanation consistently supports the marked correct option and aligns with the reasoning provided in the case narrative."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides a clear rationale for why conservative management was chosen over invasive options by highlighting the risk-benefit analysis and the objective follow-up data provided in the narrative."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written in a clear, professional, and well-structured manner that is easy to follow for a medical student."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC8651394_51595",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation correctly identifies the retroperitoneal extension of pancreatic pseudocysts through diaphragmatic hiatuses, which is the established pathophysiological mechanism for mediastinal involvement."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the specific clinical findings and imaging results of the presented case, focusing on the patient's rare complication of a mediastinal pseudocyst."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are well-aligned with the question, and the explanation consistently supports the chosen answer while providing logical reasons for rejecting the alternatives."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation provides a clear educational rationale for why the pseudocyst extension occurs anatomically and why other options like pancreaticopleural fistula or bacterial translocation do not fit the specific imaging findings."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written clearly and are easy to follow for a medical student."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC9068340_8193",
+      "item_label": "Item 1",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The explanation accurately identifies watershed infarctions as a hallmark of systemic hypoperfusion during surgery, contrasting this with the known clinical phenotype of Type B Niemann-Pick disease."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly addresses the differential diagnosis of neurological symptoms in the specific context of this post-transplant patient."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The options are logical, the explanation directly supports option B, and the hint aligns with the reasoning provided."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates between ischemic injury mechanisms and metabolic disease, providing high educational value for understanding post-surgical complications."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are written clearly and follow the clinical narrative logically."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    },
+    {
+      "case_id": "PMC9068340_8193",
+      "item_label": "Item 2",
+      "scores": {
+        "clinical_correctness": {
+          "score": 5,
+          "justification": "The clinical management is correct; ISHLT guidelines and many institutional protocols do not mandate treatment for asymptomatic ISHLT grade A1 acute cellular rejection in the early post-transplant period."
+        },
+        "relevance": {
+          "score": 5,
+          "justification": "The question directly tests the decision-making process described in the case narrative regarding the specific histology of the transbronchial biopsy in the context of the patient's neurological fragility."
+        },
+        "consistency": {
+          "score": 5,
+          "justification": "The explanation aligns perfectly with the case narrative's specific mention of the institution's protocol for grade A1 rejection and the clinical justification for avoiding high-dose steroids."
+        },
+        "educational_usefulness": {
+          "score": 5,
+          "justification": "The explanation clearly differentiates between low-grade rejection findings that require monitoring versus those that require therapeutic intervention, which is a valuable clinical teaching point."
+        },
+        "clarity": {
+          "score": 5,
+          "justification": "The question and explanation are well-written, logically structured, and easy to follow."
+        },
+        "concerns": []
+      },
+      "overall_avg": 5
+    }
+  ]
+}

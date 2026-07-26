@@ -1,0 +1,12 @@
+Metric,Single-Agent,Multi-Agent
+n,50,50
+failure_rate,0.0,0.0
+mean_latency_ms,2400.3,5384.7
+median_latency_ms,2404.8,5439.8
+mean_api_calls,1,3
+mean_input_tokens,1154.0,4875.5
+mean_output_tokens,471.6,1057.0
+mean_total_tokens,1625.7,5932.6
+flag: explanation_not_grounded_in_correct_option,3,2
+flag: possible_answer_leak_in_hint,13,12
+flag: possible_answer_leak_in_question,3,4

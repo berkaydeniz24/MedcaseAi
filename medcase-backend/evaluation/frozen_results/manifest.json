@@ -1,0 +1,83 @@
+{
+  "_comment": "Frozen, versioned snapshot of the evaluation numbers actually cited in docs/evaluation_plan.md and the thesis writeup. evaluation/results/ (raw per-case JSON, all charts, all sample runs) stays gitignored because it's fully regenerable by rerunning the scripts below against the current DB/prompts -- but regeneration depends on live, non-deterministic Gemini calls, so the specific numbers used in the write-up need a frozen copy that survives independent of any future rerun. This directory is that copy.",
+  "generated_by_commit": "982c37d..538a672",
+  "frozen_on": "2026-07-26",
+  "model": "gemini-3.1-flash-lite",
+  "entries": [
+    {
+      "file": "week3_pilot_10_summary.csv",
+      "description": "Week 3 pilot experiment, single-agent vs multi-agent, n=10 (per arm).",
+      "sample_set": "evaluation/case_samples/pilot_10.json",
+      "seed": 42,
+      "prompt_versions": {
+        "mcq": "v1.1",
+        "single_agent_baseline": "v1.0",
+        "tutor_mcq": "v1.0",
+        "dialogue": "v1.0"
+      },
+      "regenerate_with": "python3 -m evaluation.run_experiment --sample pilot_10"
+    },
+    {
+      "file": "week4_full_50_summary_mcq_v1.1.csv",
+      "description": "Week 4 full experiment, n=50 (per arm), BEFORE the mcq_v1.2 question-leak fix. This is the 'before' half of the mcq_v1.1 vs mcq_v1.2 before/after comparison in docs/evaluation_plan.md.",
+      "sample_set": "evaluation/case_samples/full_50.json",
+      "seed": 42,
+      "prompt_versions": {
+        "mcq": "v1.1",
+        "single_agent_baseline": "v1.0",
+        "tutor_mcq": "v1.0",
+        "dialogue": "v1.0"
+      },
+      "note": "Superseded as the 'current' result by week4_full_50_summary_mcq_v1.2_final.csv -- kept only for the before/after comparison."
+    },
+    {
+      "file": "week4_full_50_summary_mcq_v1.2_final.csv",
+      "description": "Week 4 full experiment, n=50 (per arm), FINAL: mcq_v1.2 (partial question-leak fix) + tutor_mcq_v1.1/single_agent_baseline_v1.1 (the 'Dataset-correct option'/'Option 0/1/2' debug-leak fix). This is the current canonical Week 4 result.",
+      "sample_set": "evaluation/case_samples/full_50.json",
+      "seed": 42,
+      "prompt_versions": {
+        "mcq": "v1.2",
+        "single_agent_baseline": "v1.1",
+        "tutor_mcq": "v1.1",
+        "dialogue": "v1.0"
+      },
+      "regenerate_with": "python3 -m evaluation.run_experiment --sample full_50"
+    },
+    {
+      "file": "week4_full_50_detail_final.csv",
+      "description": "Per-case, per-system flat detail behind week4_full_50_summary_mcq_v1.2_final.csv (question/options/hint/explanation/automated_checks for all 100 rows).",
+      "sample_set": "evaluation/case_samples/full_50.json",
+      "seed": 42
+    },
+    {
+      "file": "charts/full_50_n50_latency.png",
+      "description": "Latency comparison chart for week4_full_50_summary_mcq_v1.2_final.csv."
+    },
+    {
+      "file": "charts/full_50_n50_token_usage.png",
+      "description": "Token usage comparison chart for week4_full_50_summary_mcq_v1.2_final.csv."
+    },
+    {
+      "file": "charts/full_50_n50_api_calls.png",
+      "description": "API call count comparison chart for week4_full_50_summary_mcq_v1.2_final.csv."
+    },
+    {
+      "file": "llm_judge_scores.csv",
+      "description": "LLM-as-a-Judge scores for all 48 items (24 cases x 2 systems) in the blinded human-eval set, same 5-criterion rubric as the human raters. Backs the 'ceiling effect' finding in docs/evaluation_plan.md. Post-fix (mcq_v1.2 + tutor_mcq_v1.1/single_agent_baseline_v1.1).",
+      "sample_set": "evaluation/human_eval/blinded_eval_set.json",
+      "seed": 7,
+      "judge_prompt_version": "llm_judge_v1.0",
+      "regenerate_with": "python3 -m evaluation.llm_judge.run_judge"
+    },
+    {
+      "file": "llm_judge_scores.json",
+      "description": "Same data as llm_judge_scores.csv, full structured form with per-criterion justifications and the free-text 'concerns' field.",
+      "sample_set": "evaluation/human_eval/blinded_eval_set.json",
+      "seed": 7
+    }
+  ],
+  "not_frozen_yet": [
+    "Real human rater CSVs / Google Sheet responses -- don't exist yet, collection is the user's own next step.",
+    "Week 6 combined human+LLM-judge analysis report -- blocked on the above."
+  ]
+}

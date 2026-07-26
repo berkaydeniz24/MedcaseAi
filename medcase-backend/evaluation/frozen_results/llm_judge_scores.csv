@@ -1,0 +1,49 @@
+rater_name,rater_role,case_id,item_label,clinical_correctness,relevance,consistency,educational_usefulness,clarity,overall_avg,comment,exported_at
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10080071_18010,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10080071_18010,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10314776_6145,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10314776_6145,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10408637_60050,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10408637_60050,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10419215_35979,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10419215_35979,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10547563_61111,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10547563_61111,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10830907_64893,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC10830907_64893,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC11091619_67673,Item 1,5,5,5,4,5,4.8,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC11091619_67673,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC11329954_62613,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC11329954_62613,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC11754817_71967,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC11754817_71967,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC11795214_71171,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC11795214_71171,Item 2,3,4,2,3,5,3.4,"The explanation inaccurately suggests that uncontrolled hypertension is the direct cause of a subdural hematoma, which is fundamentally a traumatic etiology. The medical reasoning provided for why D is the correct option is pathophysiologically flawed.",2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC2673472_58859,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC2673472_58859,Item 2,3,4,2,3,5,3.4,"The question is logically flawed; paracentesis confirms the existence of hemoperitoneum but does not identify the anatomical source (the ruptured retroperitoneal varix), which is what the prompt asks for.",2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC3350051_52885,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC3350051_52885,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC4958477_16338,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC4958477_16338,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC5292170_1230,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC5292170_1230,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC5478186_18416,Item 1,5,5,5,4,5,4.8,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC5478186_18416,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC5844257_15703,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC5844257_15703,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC6207856_2255,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC6207856_2255,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC6332946_127,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC6332946_127,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC6556811_38866,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC6556811_38866,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC6735351_40210,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC6735351_40210,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC7384492_58292,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC7384492_58292,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC7479301_22108,Item 1,3,4,5,4,5,4.2,"The explanation's argument against surgical thrombectomy (Option B) is thin; while the patient received anticoagulation, the presence of a 'floating' aortic thrombus often demands more than just medical management to prevent further embolic showers.",2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC7479301_22108,Item 2,2,4,3,2,4,3,The 'pathophysiological mechanism' identified as the correct answer is scientifically imprecise and not a standard medical diagnosis for aortic thrombus.; The item implies a direct causal link between IL-6 levels and heparin resistance that is not well-supported by current clinical literature in this context.,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC8651394_51595,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC8651394_51595,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC9068340_8193,Item 1,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00
+LLM-Judge (gemini-3.1-flash-lite),LLM-Judge,PMC9068340_8193,Item 2,5,5,5,5,5,5,,2026-07-26T12:40:20.080938+00:00

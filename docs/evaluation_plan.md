@@ -134,6 +134,8 @@ Multi-agent'ın **her** kriterde daha iyi çıkması şart değil — örn. daha
 
 ## 4. Durum — Ne Şu An Hazır, Ne Bekliyor
 
+> **Dondurulmuş sonuçlar:** `evaluation/results/` (ham per-case JSON, tüm grafikler, tüm örnek koşular) bilinçli olarak `.gitignore`'da — script'leri yeniden çalıştırarak tamamen yeniden üretilebilir. Ama bu bölümde alıntılanan **spesifik sayılar** (aşağıdaki tablolar) canlı, deterministik-olmayan Gemini çağrılarına bağlı olduğu için, yeniden çalıştırmak birebir aynı sayıları vermeyebilir. `evaluation/frozen_results/` bu yüzden var: bu dokümanda gerçekten alıntılanan özet tabloların/grafiklerin **repoya commit edilmiş, sabit** bir kopyası — provenance detayları için `evaluation/frozen_results/manifest.json`'a bakın.
+
 ### ✅ Tamamlandı (bu oturumda — Hafta 1 kapsamı)
 
 | Teslim | Dosya |
@@ -165,7 +167,7 @@ Doğrulanmış (gerçek API çağrılarıyla, varsayım değil, 3 vaka üzerinde
 | flag: possible_answer_leak_in_hint | 3 | 4 |
 | flag: possible_answer_leak_in_question | 0 | 2 |
 
-Bu, hâlâ yalnızca 10 vakalık bir pilot — istatistiksel bir sonuç değil, ama H4'ü (multi-agent daha fazla çağrı/token kullanır) tutarlı biçimde destekliyor ve pipeline'ın artık hatasız çalıştığını doğruluyor. Ham veri: `evaluation/results/raw/pilot_10_n10.json`.
+Bu, hâlâ yalnızca 10 vakalık bir pilot — istatistiksel bir sonuç değil, ama H4'ü (multi-agent daha fazla çağrı/token kullanır) tutarlı biçimde destekliyor ve pipeline'ın artık hatasız çalıştığını doğruluyor. Ham veri (regenerate edilebilir, versiyonlanmaz): `evaluation/results/raw/pilot_10_n10.json`. **Dondurulmuş özet tablo (repoya commit edilmiş):** `evaluation/frozen_results/week3_pilot_10_summary.csv` (bkz. `evaluation/frozen_results/manifest.json`).
 
 **Değerlendirme rubriği netleştirmesi (Hafta 3'ün diğer maddesi) henüz yapılmadı** — bu hâlâ Hafta 5-6'nın (LLM-as-a-Judge, İnsan Uzman) kapsamında.
 
@@ -185,7 +187,7 @@ Bu, hâlâ yalnızca 10 vakalık bir pilot — istatistiksel bir sonuç değil, 
 | flag: possible_answer_leak_in_hint | 18 (36%) | 18 (36%) |
 | flag: possible_answer_leak_in_question | **1 (2%)** | **9 (18%)** |
 
-Ham veri: `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/processed/full_50_n50_detail.csv`, grafikler: `evaluation/results/charts/full_50_n50_*.png`.
+Ham veri (regenerate edilebilir, versiyonlanmaz): `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/processed/full_50_n50_detail.csv`, grafikler: `evaluation/results/charts/full_50_n50_*.png`. **Dondurulmuş özet tablo (bu tam olarak yukarıdaki tablonun kaynağı, repoya commit edilmiş):** `evaluation/frozen_results/week4_full_50_summary_mcq_v1.1.csv`.
 
 **Yorum (n=50 ile hâlâ tanımlayıcı istatistik, anlamlılık testi yok):**
 - H4 (multi-agent daha fazla çağrı/token/gecikme kullanır) 10 vakalık pilotla tutarlı biçimde, artık 50 vaka üzerinde de doğrulandı: ~3× API çağrısı, ~3.8× token, ~2.1× gecikme.
@@ -204,7 +206,9 @@ Ham veri: `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/
 
 ### ✅ Tamamlandı — mcq_v1.2 düzeltmesi + before/after doğrulama
 
-`prompts/mcq_v1.2.txt` eklendi (`mcq/mcq_agent.py`'nin `PROMPT_VERSION`'ı güncellendi): hint kuralına benzer açık bir kısıt eklendi — soru kökü, cevabı akıl yürütmeden belli edecek kadar çok ayırt edici bulguyu tek cümlede toplamamalı; tüm bulgular rationale'a saklanmalı. Aynı `full_50` seti (n=50, her iki sistem) yeniden çalıştırıldı; v1.1 sonucu `evaluation/results/{raw,processed,charts}/mcq_v1.1_baseline/` altında saklandı, v1.2 sonucu güncel dosyalarda.
+`prompts/mcq_v1.2.txt` eklendi (`mcq/mcq_agent.py`'nin `PROMPT_VERSION`'ı güncellendi): hint kuralına benzer açık bir kısıt eklendi — soru kökü, cevabı akıl yürütmeden belli edecek kadar çok ayırt edici bulguyu tek cümlede toplamamalı; tüm bulgular rationale'a saklanmalı. Aynı `full_50` seti (n=50, her iki sistem) yeniden çalıştırıldı; v1.1 sonucu `evaluation/results/{raw,processed,charts}/mcq_v1.1_baseline/` altında saklandı (dondurulmuş kopya: `evaluation/frozen_results/week4_full_50_summary_mcq_v1.1.csv`), v1.2 sonucu o an güncel dosyalardaydı.
+
+**Dürüstçe not edilmesi gereken bir provenance boşluğu:** Bu tablodaki "v1.2 Multi-Agent" kolonunun kaynağı olan koşu, aynı sabit dosya adına (`full_50_n50_summary.csv`) yazıldığı için, **daha sonra (tutor/single-agent v1.1 düzeltmesi sonrası) yapılan tam yeniden-çalıştırma tarafından üzerine yazıldı** — o spesifik ara sonucun kendi dondurulmuş kopyası alınmadı, artık diskte yok. Model sıcaklığı (temperature) sabitlenmediği için aynı promptla yeniden çalıştırmak da birebir aynı sayıları vermez. **Bu, tam olarak dış incelemenin işaret ettiği "regenerate edilebilir ama dondurulmamış ara sonuçlar" riskinin somut bir örneği** — bu tespitten sonra kalan tüm sonuçlar (`evaluation/frozen_results/`) için dondurma alışkanlığı kalıcı hale getirildi. Aşağıdaki tablonun kendisi (metin olarak) hâlâ doğru ve bu commit'te versiyonlanmış durumda; sadece onu üreten spesifik ham/detay dosya artık geri getirilemez.
 
 | Metric | v1.1 Multi-Agent | v1.2 Multi-Agent |
 |---|---|---|
@@ -234,7 +238,7 @@ Ham veri: `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/
 
 `evaluation/llm_judge/` eklendi: `judge_agent.py` (`MCQAgent`/`RubricAgent` ile aynı response_schema + repair-retry deseni, `prompts/llm_judge_v1.0.txt`) ve `run_judge.py`. Judge, Human Evaluation ile **birebir aynı 24 vakalık körlenmiş `blinded_eval_set.json` setini** ve **aynı 5 kriterli 1-5 rubriği** kullanıyor — yeni LLM içerik üretimi yok, sadece mevcut çıktıları puanlıyor, ve hangi sistemin ürettiğini hiçbir zaman görmüyor (prompt'a sistem etiketi hiç geçmiyor, yapısal olarak kör). Bu, LLM-judge ve insan skorlarının ileride doğrudan karşılaştırılabilmesi için bilinçli bir tasarım — aynı 48 öğe (24 vaka × 2 Item), aynı ölçek.
 
-48/48 öğe tek denemede başarılı puanlandı. Sonuçlar: `judge_scores.json` (tam skor + gerekçe + concerns), `judge_scores.csv` (insan rater'ların indirdiği CSV ile **birebir aynı kolon şeması** — Hafta 6'da doğrudan birleştirilebilir).
+48/48 öğe tek denemede başarılı puanlandı. Sonuçlar: `judge_scores.json` (tam skor + gerekçe + concerns), `judge_scores.csv` (insan rater'ların indirdiği CSV ile **birebir aynı kolon şeması** — Hafta 6'da doğrudan birleştirilebilir). **Dondurulmuş kopya (repoya commit edilmiş, aşağıdaki tavan-etkisi tablosunun tam kaynağı):** `evaluation/frozen_results/llm_judge_scores.{json,csv}`.
 
 **Dürüst bulgu — güçlü bir tavan etkisi (ceiling effect):** 240 kriter-puanından **222'si tam 5** (4 puan: 8, 3 puan: 6, 2 puan: 4); `relevance` kriteri 48 öğenin 44'ünde tam 5. Sistem bazında (yalnızca bu script'in kendi analizi için erişebildiği `unblinding_key.json` ile):
 
