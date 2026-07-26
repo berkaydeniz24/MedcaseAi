@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends
@@ -12,6 +13,11 @@ from case_selector.selector_agent import selector_agent
 router = APIRouter()
 
 # --- Response Modelleri ---
+class DailyActivity(BaseModel):
+    date: str
+    day_label: str
+    count: int
+
 class ChatHistoryItem(BaseModel):
     session_id: str
     case_id: str
@@ -28,6 +34,7 @@ class ChatHistoryItem(BaseModel):
 class UserStatsResponse(BaseModel):
     total_correct: int
     total_wrong: int
+    weekly_activity: List[DailyActivity] = []
 
 class CaseProgressItem(BaseModel):
     case_id: str
@@ -38,11 +45,41 @@ class CaseProgressItem(BaseModel):
 @router.get("/stats", response_model=UserStatsResponse)
 def get_user_stats(db: Session = Depends(get_db)):
     stats = db.query(models.UserStats).first()
-    if not stats:
-        return {"total_correct": 0, "total_wrong": 0}
+
+    # Son 7 gün, bugün dahil, en eskiden en yeniye — gerçek ChatSession.created_at
+    # üzerinden. Önceden frontend'de sabit/uydurma bir dizi vardı ("Simulated"
+    # etiketiyle) — artık gerçek vaka başlatma aktivitesini gösteriyor.
+    today = datetime.now(timezone.utc).date()
+    day_start = today - timedelta(days=6)
+    # SQLite stores ChatSession.created_at as a naive UTC string
+    # (CURRENT_TIMESTAMP default) — filtering with a naive datetime here
+    # keeps the comparison a plain string comparison SQLite can do directly,
+    # rather than risking a tz-aware value that serializes differently.
+    range_start = datetime.combine(day_start, datetime.min.time())
+    sessions_in_range = db.query(models.ChatSession).filter(
+        models.ChatSession.created_at >= range_start
+    ).all()
+
+    counts_by_date = {}
+    for sess in sessions_in_range:
+        if not sess.created_at:
+            continue
+        d = sess.created_at.date()
+        counts_by_date[d] = counts_by_date.get(d, 0) + 1
+
+    weekly_activity = []
+    for i in range(7):
+        d = day_start + timedelta(days=i)
+        weekly_activity.append({
+            "date": d.isoformat(),
+            "day_label": d.strftime("%a")[:1],
+            "count": counts_by_date.get(d, 0),
+        })
+
     return {
-        "total_correct": stats.total_correct,
-        "total_wrong": stats.total_wrong
+        "total_correct": stats.total_correct if stats else 0,
+        "total_wrong": stats.total_wrong if stats else 0,
+        "weekly_activity": weekly_activity,
     }
 
 # --- 2. VAKA İLERLEME ---

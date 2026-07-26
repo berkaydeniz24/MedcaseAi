@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Modal, ScrollView } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
 import { Colors } from "../src/theme/colors";
-import { startDialogue, getUserStats } from "../src/api/endpoints";
+import { startDialogue, getUserStats, getChatHistory } from "../src/api/endpoints";
 import { setLastSession } from "../src/api/session_cache";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useCallback } from "react";
@@ -24,12 +24,27 @@ export default function HomeScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedCat, setSelectedCat] = useState(CATEGORIES[0]);
   const [stats, setStats] = useState({ total_correct: 0, total_wrong: 0 });
+  const [continueCase, setContinueCase] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
       getUserStats().then(setStats).catch(() => {});
+      getChatHistory()
+        .then((history) => {
+          const inProgress = (history || []).find((h) => h.status === "in_progress");
+          setContinueCase(inProgress || null);
+        })
+        .catch(() => {});
     }, [])
   );
+
+  const handleContinueCase = () => {
+    if (!continueCase) return;
+    router.push({
+      pathname: `/case/${continueCase.case_id}/chat`,
+      params: { session_id: continueCase.session_id },
+    });
+  };
 
   const totalAnswers = stats.total_correct + stats.total_wrong;
   const accuracy = totalAnswers > 0 ? Math.round((stats.total_correct / totalAnswers) * 100) : 0;
@@ -60,18 +75,39 @@ export default function HomeScreen() {
         {/* Quick stats snapshot */}
         <View style={styles.statsRow}>
           <View style={styles.statChip}>
+            <Ionicons name="checkmark-circle-outline" size={18} color={Colors.success} />
             <Text style={styles.statValue}>{stats.total_correct}</Text>
             <Text style={styles.statLabel}>Correct</Text>
           </View>
           <View style={styles.statChip}>
+            <Ionicons name="pie-chart-outline" size={18} color={Colors.accent} />
             <Text style={styles.statValue}>%{accuracy}</Text>
             <Text style={styles.statLabel}>Accuracy</Text>
           </View>
           <View style={styles.statChip}>
+            <Ionicons name="layers-outline" size={18} color={Colors.warning} />
             <Text style={styles.statValue}>{totalAnswers}</Text>
             <Text style={styles.statLabel}>Attempts</Text>
           </View>
         </View>
+
+        {/* Devam Eden Vaka (varsa) — /user/history'nin en son "in_progress" kaydı */}
+        {continueCase && (
+          <Pressable style={styles.continueCard} onPress={handleContinueCase}>
+            <View style={styles.continueIconBg}>
+              <Ionicons name="play" size={20} color={Colors.accent} />
+            </View>
+            <View style={{ flex: 1, marginLeft: 14 }}>
+              <Text style={styles.continueLabel}>CONTINUE CASE</Text>
+              <Text style={styles.continueTitle} numberOfLines={1}>{continueCase.case_title}</Text>
+              <Text style={styles.continueSub}>
+                {continueCase.specialty}
+                {continueCase.hints_used > 0 ? ` · ${continueCase.hints_used} hint${continueCase.hints_used > 1 ? "s" : ""} used` : ""}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={Colors.textSub} />
+          </Pressable>
+        )}
 
         {/* Bilgi Kartı */}
         <View style={styles.infoCard}>
@@ -170,8 +206,18 @@ const styles = StyleSheet.create({
 
   statsRow: { flexDirection: 'row', gap: 12, marginBottom: 25 },
   statChip: { flex: 1, backgroundColor: Colors.card, borderRadius: 20, paddingVertical: 16, alignItems: 'center', borderWidth: 1, borderColor: '#EDF2F7', shadowColor: "#000", shadowOpacity: 0.02, shadowRadius: 10, elevation: 2 },
-  statValue: { fontSize: 20, fontWeight: '800', color: Colors.textMain },
+  statValue: { fontSize: 20, fontWeight: '800', color: Colors.textMain, marginTop: 6 },
   statLabel: { fontSize: 11, fontWeight: '700', color: Colors.textSub, marginTop: 4, textTransform: 'uppercase', letterSpacing: 0.5 },
+
+  continueCard: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.card,
+    borderRadius: 20, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: Colors.accentSoftBorder,
+    shadowColor: "#000", shadowOpacity: 0.03, shadowRadius: 10, elevation: 2,
+  },
+  continueIconBg: { width: 40, height: 40, borderRadius: 12, backgroundColor: Colors.accentSoft, justifyContent: 'center', alignItems: 'center' },
+  continueLabel: { fontSize: 10, fontWeight: '800', color: Colors.accentDark, letterSpacing: 0.8 },
+  continueTitle: { fontSize: 15, fontWeight: '800', color: Colors.textMain, marginTop: 2 },
+  continueSub: { fontSize: 12, color: Colors.textSub, marginTop: 2, fontWeight: '600' },
 
   infoCard: { marginBottom: 25 },
   infoTitle: { fontSize: 18, fontWeight: "700", color: Colors.textMain },
