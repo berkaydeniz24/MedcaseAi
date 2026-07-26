@@ -31,9 +31,11 @@ models.Base.metadata.create_all(bind=engine)
 
 # --- Vaka verisini (ilk kurulumda) SQL'e yükle ---
 from services.seed_cases import seed_cases_if_empty
+from services.backfill_source_metadata import backfill_if_needed
 _seed_db = SessionLocal()
 try:
     seed_cases_if_empty(_seed_db)
+    backfill_if_needed(_seed_db)
 finally:
     _seed_db.close()
 

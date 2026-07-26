@@ -18,6 +18,11 @@ medcase-backend/logs/
 # Büyük Veri Dosyaları (Git'e yükleme)
 medcase-backend/data/full_cases.json
 
+# Çalışan SQLite veritabanı — gerçek/test session ve chat geçmişi içerir,
+# yalnızca data/cases_subset.json seed verisi versiyonlanmalı (services/seed_cases.py
+# app başlangıcında bu dosyadan otomatik SQL'e yükler, medcase.db'ye gerek yok).
+medcase-backend/medcase.db
+
 # Resimler (Git'i şişirmesin)
 medcase-backend/public/images/*
 !medcase-backend/public/images/.gitkeep

@@ -99,6 +99,19 @@ def backfill():
         logger.warning("No matching case row for %d case_ids: %s", len(missing), missing[:10])
 
 
+def backfill_if_needed(db) -> None:
+    """Called from main.py at startup, same pattern as seed_cases_if_empty —
+    medcase.db is no longer committed (see .gitignore), so a fresh clone must
+    self-populate this on first run. Cheap to check: no network calls, just
+    reads the already-computed docs/dataset_source_metadata.json."""
+    ensure_columns()
+    from services import models
+    already_done = db.query(models.Case).filter(models.Case.license_name.isnot(None)).first()
+    if already_done:
+        return
+    backfill()
+
+
 if __name__ == "__main__":
     ensure_columns()
     backfill()
