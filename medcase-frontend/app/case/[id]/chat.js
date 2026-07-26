@@ -11,9 +11,10 @@ import {
   StyleSheet,
   Modal,
   ScrollView,
-  SafeAreaView, 
-  Dimensions,   
-  Keyboard      
+  SafeAreaView,
+  Dimensions,
+  Keyboard,
+  Alert
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Markdown from 'react-native-markdown-display'; 
@@ -193,6 +194,35 @@ export default function CaseChatPage() {
     setFollowups([]);
   };
 
+  // Video roadmap item 6 ("Simülasyondan çıkış onayı"). Every message is
+  // already persisted to the backend as it's sent (dbs.add_message per
+  // turn) — there's nothing to actually lose here, so this is a
+  // reassurance/intentionality prompt, not a data-loss warning, and only
+  // shown once the student has actually engaged with the case.
+  const handleExitPress = () => {
+    if (messages.length <= 1) {
+      router.back();
+      return;
+    }
+
+    const title = "Exit this case?";
+    const message = "Your progress is saved automatically — you can continue this case later from History.";
+
+    // Alert.alert's multi-button form is native-only; react-native-web
+    // doesn't implement it (same gap fixed in app/profile.js's Reset Data).
+    if (Platform.OS === "web") {
+      if (window.confirm(`${title}\n\n${message}`)) {
+        router.back();
+      }
+      return;
+    }
+
+    Alert.alert(title, message, [
+      { text: "Continue Case", style: "cancel" },
+      { text: "Exit", style: "destructive", onPress: () => router.back() },
+    ]);
+  };
+
   const onChangeMode = (newMode) => {
     setMode(newMode);
     setFollowups([]);
@@ -214,7 +244,7 @@ export default function CaseChatPage() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-            <Ionicons name="arrow-back" size={24} color="#333" onPress={() => router.back()} />
+            <Ionicons name="arrow-back" size={24} color="#333" onPress={handleExitPress} />
             <Text style={styles.headerTitle}>Case {id ? id.slice(-5) : ""}</Text>
             <View style={{ width: 24 }} />
       </View>
