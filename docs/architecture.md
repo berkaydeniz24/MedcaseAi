@@ -27,13 +27,12 @@ flowchart LR
             TA[Tutor / Feedback Agent\n(LLM)]
         end
 
-        DB[(SQLite: ChatSession / ChatMessage /\nUserStats / CaseProgress / Case)]
-        SS[[In-memory SessionStore\n(TTL cache, çoğunlukla fallback)]]
+        DB[(SQLite: ChatSession / ChatMessage / CaseAnswer /\nUserStats / CaseProgress / Case)]
         SEED[[services/seed_cases.py\n(tek seferlik JSON→SQL aktarımı)]]
         DATA[(data/cases_subset.json\n200 vaka — yalnızca seed kaynağı)]
     end
 
-    LLM[["Google Gemini API\n(gemini-1.5-flash, GEMINI_MODEL env)"]]
+    LLM[["Google Gemini API\n(gemini-3.1-flash-lite, GEMINI_MODEL env)"]]
 
     UI <-- REST/JSON --> R1
     UI <-- REST/JSON --> R2
@@ -53,7 +52,6 @@ flowchart LR
     TA -. prompt/response .-> LLM
 
     R1 --> DB
-    R1 --> SS
     R3 --> DB
 ```
 

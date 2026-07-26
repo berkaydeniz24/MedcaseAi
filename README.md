@@ -130,8 +130,8 @@ Tez danışmanı geri bildirimine dayalı, adım adım ilerleyen bir yol haritas
 
 1. ✅ Sistem mimarisi (ajan envanteri, prompt yapıları, I/O şemaları, iletişim protokolü) — [docs/architecture.md](docs/architecture.md)
 2. ✅ Veri kümesi incelemesi (yapı, lisans denetimi, kullanım) — [docs/dataset.md](docs/dataset.md)
-3. 🔄 Multi-agent vs single-agent deneysel karşılaştırma planı — [docs/evaluation_plan.md](docs/evaluation_plan.md) (Hafta 1-2 tamamlandı: ortak şema, single-agent baseline, otomatik metrikler; Hafta 3-6 devam ediyor)
-4. ⏳ Çok boyutlu değerlendirme (performans, doğruluk, cevap kalitesi, UX, mimari)
+3. 🔄 Multi-agent vs single-agent deneysel karşılaştırma planı — [docs/evaluation_plan.md](docs/evaluation_plan.md) (Hafta 1-5 + LLM-as-a-Judge tamamlandı: ortak şema, single-agent baseline, otomatik metrikler, 50 vakalık tam deney, kör insan değerlendirme altyapısı; gerçek rater verisi toplama ve Hafta 6 analiz raporu devam ediyor)
+4. 🔄 Çok boyutlu değerlendirme (performans, doğruluk, cevap kalitesi, UX, mimari) — otomatik + LLM-judge katmanları hazır, insan uzman katmanı bekliyor
 5. ⏳ Haftalık hedefler ve düzenli ilerleme takibi
 
 ## Ekran Görüntüleri
