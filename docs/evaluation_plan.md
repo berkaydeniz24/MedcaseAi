@@ -169,9 +169,34 @@ Bu, hâlâ yalnızca 10 vakalık bir pilot — istatistiksel bir sonuç değil, 
 
 **Değerlendirme rubriği netleştirmesi (Hafta 3'ün diğer maddesi) henüz yapılmadı** — bu hâlâ Hafta 5-6'nın (LLM-as-a-Judge, İnsan Uzman) kapsamında.
 
+### ✅ Tamamlandı — Hafta 4 (Full Experiment, 50 vaka)
+
+`full_50` setinin tamamı (n=50) tek koşuda çalıştırıldı, sıfır hata:
+
+| Metric | Single-Agent | Multi-Agent |
+|---|---|---|
+| n | 50 | 50 |
+| failure_rate | 0.0 | 0.0 |
+| mean_latency_ms | 2277.8 | 4801.6 |
+| mean_api_calls | 1 | 3 |
+| mean_total_tokens | 1483.7 | 5606.6 |
+| flag: explanation_not_grounded_in_correct_option | 4 (8%) | **0 (0%)** |
+| flag: low_option_distinctiveness | 0 | 1 |
+| flag: possible_answer_leak_in_hint | 18 (36%) | 18 (36%) |
+| flag: possible_answer_leak_in_question | **1 (2%)** | **9 (18%)** |
+
+Ham veri: `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/processed/full_50_n50_detail.csv`, grafikler: `evaluation/results/charts/full_50_n50_*.png`.
+
+**Yorum (n=50 ile hâlâ tanımlayıcı istatistik, anlamlılık testi yok):**
+- H4 (multi-agent daha fazla çağrı/token/gecikme kullanır) 10 vakalık pilotla tutarlı biçimde, artık 50 vaka üzerinde de doğrulandı: ~3× API çağrısı, ~3.8× token, ~2.1× gecikme.
+- H1-H3 yönünde karışık bir sonuç — sadece tek taraflı bir "multi-agent kazandı" hikayesi değil, tezde tartışılmaya değer:
+  - **Multi-agent lehine:** açıklamanın doğru şıkla örtüşmemesi (`explanation_not_grounded_in_correct_option`) single-agent'ta %8, multi-agent'ta **%0** — ayrı bir MCQ Agent'ın yapılandırılmış `response_schema` çıktısı, tek ajanın serbest metin üretimine göre daha tutarlı görünüyor.
+  - **Single-agent lehine:** soru metninde cevabın sızması (`possible_answer_leak_in_question`) single-agent'ta %2, multi-agent'ta **%18** — multi-agent mimarisinde bu gerçek bir kalite riski, kök nedeni henüz araştırılmadı (aday hipotez: MCQ Agent'a ayrı geçirilen zengin vaka bağlamı, soruyu gereğinden fazla spesifik hale getiriyor olabilir).
+  - Hint sızıntısı oranı (`possible_answer_leak_in_hint`) iki sistemde de aynı (%36) — bu flag mimariler arasında ayrım yapmıyor.
+
 ### ⏳ Bekliyor (sıradaki haftalar, kullanıcı onayına göre)
 
-- **Hafta 4 — Full Experiment:** 50 (veya 100) vaka üzerinde tam koşu.
+- **Soru-sızıntısı kök neden analizi:** Multi-agent'ta `possible_answer_leak_in_question` oranının 9× yüksek çıkmasının nedeni araştırılmalı (örn. flag'lenen 9 vakanın soru metinleri elle incelenerek).
 - **Hafta 5 — Human Evaluation:** Kör değerlendirme için insan değerlendiricilere dağıtılacak alt küme ve form/arayüz.
 - **Hafta 6 — Analysis & Reporting:** Ortalama skorlar, karşılaştırma tabloları, grafikler, hata analizi, discussion/limitations.
 - **LLM-as-a-Judge promptu:** Henüz yazılmadı.

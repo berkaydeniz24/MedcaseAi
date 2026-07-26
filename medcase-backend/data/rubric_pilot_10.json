@@ -1,0 +1,448 @@
+[
+  {
+    "case_id": "PMC10311231_45125",
+    "chief_complaint": "1.5 cm lobulated blue-reddish exophytic oral lesion on the maxillary gingiva",
+    "red_flags": [
+      "Rapid or persistent growth of an oral mass",
+      "Intermittent pain associated with a gingival lesion",
+      "History of traumatic tooth extraction at the site",
+      "Exophytic mass that could represent malignant transformation or pyogenic granuloma"
+    ],
+    "ddx_top": [
+      "Peripheral giant cell granuloma",
+      "Pyogenic granuloma",
+      "Peripheral ossifying fibroma",
+      "Central giant cell granuloma",
+      "Squamous cell carcinoma"
+    ],
+    "tests_initial": [
+      "Panoramic radiograph",
+      "Periapical X-ray",
+      "Excisional biopsy",
+      "Histopathological examination"
+    ],
+    "management_initial": [
+      "Surgical excision of the lesion",
+      "Histopathological confirmation of diagnosis",
+      "Short-term clinical follow-up for monitoring recurrence"
+    ],
+    "pitfalls": [
+      "Confusing peripheral with central giant cell granuloma due to lack of radiographic bone involvement",
+      "Assuming all gingival growths are pyogenic granulomas",
+      "Failing to conduct imaging to rule out intraosseous involvement",
+      "Incomplete excision leading to potential recurrence"
+    ],
+    "seed_questions": [
+      "What anatomical features of this gingival lesion are important to document during the physical exam?",
+      "How would you differentiate a peripheral lesion from a central intraosseous process in this patient?",
+      "Given the history of traumatic extraction, what differential diagnoses should be considered for a reactive gingival lesion?",
+      "What is the gold standard for reaching a definitive diagnosis for this patient?"
+    ],
+    "difficulty": "Intermediate",
+    "difficulty_justification": "The case requires the student to distinguish between various reactive oral lesions that appear clinically similar and understand the critical role of imaging to differentiate peripheral from central pathology."
+  },
+  {
+    "case_id": "PMC11052560_64735",
+    "chief_complaint": "Superonasal visual field loss detected on routine screening in a patient with a history of bilateral ICL implantation.",
+    "red_flags": [
+      "Superonasal visual field loss",
+      "Borderline decreased retinal nerve fiber layer thickness",
+      "Pigment deposition on corneal endothelium and ICL",
+      "Iris transillumination defects",
+      "Grade 4+ trabecular meshwork pigmentation",
+      "Iris vaulting at ICL contact points"
+    ],
+    "ddx_top": [
+      "Pigment dispersion syndrome secondary to ICL implantation",
+      "Primary Open-Angle Glaucoma",
+      "Pigmentary Glaucoma",
+      "Glaucoma associated with high myopia"
+    ],
+    "tests_initial": [
+      "Goldmann applanation tonometry",
+      "Humphrey 24-2 visual field testing",
+      "Optical coherence tomography (RNFL)",
+      "Gonioscopy",
+      "Slit-lamp examination with dilated fundoscopy"
+    ],
+    "management_initial": [
+      "Close monitoring of intraocular pressure",
+      "Serial visual field testing",
+      "Serial RNFL OCT monitoring",
+      "Patient education on symptoms of IOP elevation"
+    ],
+    "pitfalls": [
+      "Confusing pigment dispersion syndrome related to ICL vaulting with primary pigmentary glaucoma",
+      "Overlooking ICL-iris interaction as a cause of pigment release",
+      "Attributing field loss solely to high myopia/tilted discs without considering secondary mechanisms",
+      "Misinterpreting low reliability in visual field tests as purely patient error rather than clinical signs"
+    ],
+    "seed_questions": [
+      "How would you differentiate between glaucomatous VF loss and potential artifacts in a highly myopic patient?",
+      "What ocular structural findings on slit-lamp exam would explain the heavy trabecular meshwork pigmentation?",
+      "How does the patient's history of high myopia and ICL implantation influence your interpretation of their current glaucoma risk?"
+    ],
+    "difficulty": "Intermediate",
+    "difficulty_justification": "The case requires the student to connect structural findings of ICL-iris interaction to the pathophysiology of pigment dispersion, while distinguishing these from primary glaucomatous processes in a highly myopic patient."
+  },
+  {
+    "case_id": "PMC11090674_66284",
+    "chief_complaint": "Recurrent syncope in a patient with long-standing drug-resistant focal epilepsy.",
+    "red_flags": [
+      "Sudden loss of consciousness (syncope) occurring in the setting of known epilepsy",
+      "Prolonged sinus arrest (18 seconds) documented during seizures",
+      "Post-ictal confusion and agitation following collapse",
+      "High-frequency seizures leading to physical injury"
+    ],
+    "ddx_top": [
+      "Ictal asystole",
+      "Cardiac arrhythmia (bradyarrhythmia)",
+      "Orthostatic hypotension",
+      "Vasovagal syncope",
+      "Nonepileptic psychogenic events"
+    ],
+    "tests_initial": [
+      "12-lead ECG",
+      "24-hour Holter monitor",
+      "Prolonged ambulatory EEG (AEEG)",
+      "Cardiac stress test",
+      "MRI brain"
+    ],
+    "management_initial": [
+      "Optimization of anti-seizure medication regimen",
+      "Prolonged cardiac monitoring synchronized with EEG",
+      "Permanent pacemaker implantation",
+      "Neurology and Cardiology co-management"
+    ],
+    "pitfalls": [
+      "Attributing syncopal events solely to the patient's known epilepsy without ruling out cardiac causes",
+      "Dismissing initial normal Holter monitor results without considering ictal-specific arrhythmias",
+      "Assuming syncope is psychogenic due to lack of ictal heart rate change on routine monitoring"
+    ],
+    "seed_questions": [
+      "How would you differentiate between a seizure-related collapse and a primary cardiac syncope in this patient?",
+      "Why might a standard 24-hour Holter monitor fail to capture the pathology in this specific patient?",
+      "What is the significance of the temporal lobe localization in the context of autonomic cardiac regulation?"
+    ],
+    "difficulty": "Intermediate",
+    "difficulty_justification": "This case requires the student to integrate knowledge across neurology and cardiology, specifically recognizing how focal temporal lobe seizures can trigger life-threatening autonomic dysfunction that is not present on routine cardiac screening."
+  },
+  {
+    "case_id": "PMC11149649_62969",
+    "chief_complaint": "Progressive weakness and muscle atrophy in both legs",
+    "red_flags": [
+      "Progressive proximal and distal muscle weakness",
+      "Evidence of muscle atrophy in a pediatric patient",
+      "Symmetrical lower extremity involvement"
+    ],
+    "ddx_top": [
+      "Charcot-Marie-Tooth disease type 4B1",
+      "Spinal muscular atrophy",
+      "Duchenne muscular dystrophy",
+      "Chronic inflammatory demyelinating polyradiculoneuropathy",
+      "Limb-girdle muscular dystrophy"
+    ],
+    "tests_initial": [
+      "Neurological examination for deep tendon reflexes and sensation",
+      "Electromyography and nerve conduction studies",
+      "Serum creatine kinase level",
+      "Whole-exome sequencing or targeted genetic panel",
+      "Nerve biopsy"
+    ],
+    "management_initial": [
+      "Physical therapy and rehabilitation for gait maintenance",
+      "Orthopedic consultation for bracing or contracture management",
+      "Genetic counseling for the family",
+      "Occupational therapy"
+    ],
+    "pitfalls": [
+      "Assuming weakness in a child is solely myopathic without considering hereditary neuropathies",
+      "Failure to recognize the specific patterns of distal and proximal involvement as indicative of peripheral nerve pathology",
+      "Overlooking genetic testing as a diagnostic tool in favor of invasive procedures like muscle biopsy",
+      "Misdiagnosing CMT4B1 as a primary muscular dystrophy due to the overlap in atrophy and weakness"
+    ],
+    "seed_questions": [
+      "How would you distinguish between a myopathic and a neuropathic cause for this child's muscle atrophy?",
+      "What specific elements of the neurological exam would help localize the lesion in a patient with both proximal and distal weakness?",
+      "Given the progressive nature and the child's age, what is the differential diagnosis for hereditary neuromuscular disorders?",
+      "Why is genetic testing often preferred over muscle biopsy in modern workups for progressive pediatric weakness?"
+    ],
+    "difficulty": "Advanced",
+    "difficulty_justification": "This case requires distinguishing between various rare hereditary neuromuscular disorders and understanding the specific molecular pathology of MTMR2 mutations, which is beyond the scope of a typical undergraduate clinical rotation."
+  },
+  {
+    "case_id": "PMC2673472_58859",
+    "chief_complaint": "Abdominal pain and progressive hemodynamic instability in a patient with cirrhosis.",
+    "red_flags": [
+      "Severe hypotension unresponsive to fluid resuscitation",
+      "Acute drop in hemoglobin (from 6.4 to 3.8 g/dL)",
+      "Hemorrhagic paracentesis fluid",
+      "Signs of decompensated cirrhosis (Child-Pugh C, MELD 24)",
+      "Altered mental status requiring intubation",
+      "Coagulopathy (INR 7.29)"
+    ],
+    "ddx_top": [
+      "Spontaneous hemoperitoneum",
+      "Ruptured ectopic varices",
+      "Spontaneous bacterial peritonitis",
+      "Gastrointestinal hemorrhage (upper vs lower)",
+      "Hepatic failure with underlying coagulopathy"
+    ],
+    "tests_initial": [
+      "Complete blood count with differential",
+      "Coagulation profile (PT/INR/PTT)",
+      "Diagnostic paracentesis",
+      "Bedside ultrasound (FAST exam)",
+      "Type and crossmatch for blood products",
+      "Liver function tests and electrolytes"
+    ],
+    "management_initial": [
+      "Aggressive fluid resuscitation",
+      "Transfusion of packed red blood cells and fresh frozen plasma",
+      "Broad-spectrum antibiotics for suspected SBP",
+      "Vasopressor support for refractory hypotension",
+      "Immediate surgical or interventional radiology consultation",
+      "Hemodynamic monitoring in the ICU"
+    ],
+    "pitfalls": [
+      "Assuming hemodynamic instability is due solely to GI bleeding without considering intra-abdominal hemorrhage",
+      "Delaying surgical consultation in patients with cirrhotic decompensation and unexplained hemoperitoneum",
+      "Over-relying on endoscopy to rule out all sources of variceal bleeding",
+      "Underestimating the volume of blood loss in a retroperitoneal rupture",
+      "Failing to correct profound coagulopathy in the setting of active hemorrhage"
+    ],
+    "seed_questions": [
+      "What are the most likely causes of abdominal pain and hemodynamic shock in a patient with known cirrhosis?",
+      "Given the initial hemoglobin of 6.4 g/dL and subsequent drop, what immediate diagnostic procedure should be prioritized to differentiate between intra-abdominal and intraluminal bleeding?",
+      "How does the discovery of hemorrhagic fluid on paracentesis change your differential diagnosis?",
+      "What are the implications of the patient's MELD score and Child-Pugh class for her physiological reserve and risk of mortality?"
+    ],
+    "difficulty": "Advanced",
+    "difficulty_justification": "This case involves a rare complication of cirrhosis (ruptured retroperitoneal varix) that mimics more common presentations like SBP or GI hemorrhage, requiring the student to integrate complex pathophysiology and recognize a 'can't miss' surgical diagnosis."
+  },
+  {
+    "case_id": "PMC2810581_34430",
+    "chief_complaint": "Recurrent epigastric and left upper quadrant abdominal pain with distention in an 18-year-old male.",
+    "red_flags": [
+      "Large abdominal mass causing displacement of the pancreas",
+      "Recurrent abdominal symptoms over 11 years",
+      "Visible distention and mass effect on adjacent structures",
+      "Nausea and vomiting associated with pain",
+      "Presence of thick septations and calcifications in a cystic mass"
+    ],
+    "ddx_top": [
+      "Cystic lymphangioma",
+      "Pancreatic pseudocyst",
+      "Lymphangiomyoma",
+      "Duplication cyst",
+      "Cystic teratoma"
+    ],
+    "tests_initial": [
+      "Transabdominal ultrasound",
+      "Contrast-enhanced CT of the abdomen",
+      "MRI/MRCP for anatomical mapping",
+      "Complete blood count to evaluate for secondary infection or anemia",
+      "Serum amylase and lipase to rule out pancreatitis"
+    ],
+    "management_initial": [
+      "Surgical excision of the cystic mass",
+      "Drainage and marsupialization or excision of the bursa omentalis",
+      "Histopathological analysis of the resected tissue",
+      "Serial imaging for long-term monitoring of recurrence",
+      "Pain management and nutritional support"
+    ],
+    "pitfalls": [
+      "Misinterpreting a benign lymphangioma for a malignant pancreatic neoplasm",
+      "Failing to recognize that internal septations may be obscured on CT imaging",
+      "Incomplete resection leading to the high recurrence rate characteristic of lymphangiomas",
+      "Assuming an acute abdominal pain is inflammatory (pancreatitis) without investigating mass effect",
+      "Ignoring historical surgical data when interpreting current imaging"
+    ],
+    "seed_questions": [
+      "What are the diagnostic features that differentiate this cystic mass from a pancreatic pseudocyst?",
+      "Given the recurrent nature of this patient's abdominal mass over 11 years, what etiologies should be prioritized?",
+      "How does the imaging appearance of a lymphangioma change on T1 versus T2 weighted MRI sequences?",
+      "What anatomical considerations are important when planning the resection of a large lesion in the bursa omentalis?"
+    ],
+    "difficulty": "Intermediate",
+    "difficulty_justification": "The case requires distinguishing between various retroperitoneal cystic lesions, which is challenging as they often share similar imaging characteristics. Furthermore, the recurrent nature of the pathology necessitates an understanding of rare developmental anomalies like lymphangiomas."
+  },
+  {
+    "case_id": "PMC4677189_56222",
+    "chief_complaint": "Persistent labial swelling with recent bleeding, foul-smelling discharge, and pruritus",
+    "red_flags": [
+      "Recurrent/persistent ulcerative labial lesion",
+      "Rapid development of regional lymphadenopathy",
+      "Foul-smelling discharge and bleeding from a vulvar mass",
+      "Histopathological evidence of nuclear atypia and malignancy"
+    ],
+    "ddx_top": [
+      "Syringocystadenocarcinoma papilliferum (SCACP)",
+      "Extramammary Paget's disease",
+      "Vulvar squamous cell carcinoma",
+      "Primary vulvar adenocarcinoma",
+      "Metastatic adenocarcinoma of the vulva"
+    ],
+    "tests_initial": [
+      "Incisional biopsy of the labial lesion",
+      "Fine needle aspiration of enlarged inguinal lymph nodes",
+      "Pelvic MRI for staging and assessment of nodal extent",
+      "Immunohistochemistry staining for ductal differentiation"
+    ],
+    "management_initial": [
+      "Multidisciplinary tumor board consultation",
+      "Neoadjuvant chemotherapy (Cisplatin and 5-FU)",
+      "External beam radiation therapy",
+      "Surgical evaluation for wide excision"
+    ],
+    "pitfalls": [
+      "Misidentifying rare adnexal tumors as more common squamous cell carcinomas",
+      "Underestimating the potential for regional lymph node metastasis",
+      "Failing to perform adequate histological evaluation of seemingly benign adnexal-type cysts",
+      "Delaying aggressive systemic treatment in advanced/metastatic adnexal malignancy"
+    ],
+    "seed_questions": [
+      "Given the patient's history of a chronic labial swelling and recent appearance of lymphadenopathy, what is your initial diagnostic differential?",
+      "Why is histopathological examination of the inguinal nodes critical in this patient?",
+      "What specific features in the histopathology distinguish this lesion from common vulvar squamous cell carcinoma?"
+    ],
+    "difficulty": "Advanced",
+    "difficulty_justification": "This case involves a rare, specialized diagnosis (Syringocystadenocarcinoma papilliferum) that is frequently misdiagnosed as more common vulvar malignancies, requiring knowledge of rare adnexal tumor morphology and management."
+  },
+  {
+    "case_id": "PMC8106415_31840",
+    "chief_complaint": "Gender dysphoria accompanied by severe depressive symptoms and suicidal ideation",
+    "red_flags": [
+      "Suicidal ideation",
+      "History of suicide attempts",
+      "Severe depressive symptoms",
+      "Social isolation and fear of outcasting",
+      "High-stress environment regarding sexual orientation"
+    ],
+    "ddx_top": [
+      "Gender Dysphoria",
+      "Major Depressive Disorder",
+      "Adjustment Disorder with depressed mood",
+      "Conflict between sexual orientation and gender identity"
+    ],
+    "tests_initial": [
+      "Comprehensive psychiatric evaluation (Mental Status Examination)",
+      "Standardized depression screening (e.g., PHQ-9)",
+      "Suicide risk assessment",
+      "Assessment of social support system and family dynamics"
+    ],
+    "management_initial": [
+      "Establishment of a safe, non-judgmental therapeutic alliance",
+      "Crisis intervention and safety planning for suicidal ideation",
+      "Psychoeducation for the patient and family regarding gender identity and sexual orientation",
+      "Validation of patient experiences to mitigate minority stress",
+      "Long-term psychotherapy for gender exploration and coping mechanisms"
+    ],
+    "pitfalls": [
+      "Attempting to force conversion or change of sexual orientation",
+      "Ignoring the high risk of self-harm while focusing solely on gender diagnosis",
+      "Colluding with family members who prioritize cultural norms over patient well-being",
+      "Assuming an urgent need for medical transition without proper psychological support",
+      "Failing to recognize the intersectionality of socioeconomic status and cultural pressure"
+    ],
+    "seed_questions": [
+      "What are the most immediate concerns for a patient presenting with both gender dysphoria and a history of suicidal attempts?",
+      "How should a clinician approach the conflict between a patient’s identity and their family's expectations?",
+      "What ethical considerations arise when managing a minor or young adult seeking care for gender identity in a restrictive cultural environment?"
+    ],
+    "difficulty": "Intermediate",
+    "difficulty_justification": "The case requires navigating complex intersections of psychiatric diagnosis, cultural ethics, and social advocacy, rather than simple clinical symptom identification."
+  },
+  {
+    "case_id": "PMC9068340_8193",
+    "chief_complaint": "Progressive dyspnea and end-stage interstitial lung disease in a patient with Niemann-Pick disease type B.",
+    "red_flags": [
+      "Rapidly worsening dyspnea with desaturation on exertion",
+      "Hypoxemia with significantly reduced DLCO",
+      "Post-operative focal neurological deficits",
+      "Seizure activity following transplantation",
+      "Hemorrhagic transformation of cerebral lesions",
+      "Acute cellular rejection Grade A1 post-transplant"
+    ],
+    "ddx_top": [
+      "Niemann-Pick disease type B (pulmonary involvement)",
+      "Watershed cerebral infarction",
+      "Posterior Reversible Leukoencephalopathy Syndrome (PRES)",
+      "Acute cellular rejection (lung)",
+      "Pulmonary malignancy (incidental adenocarcinoma)",
+      "Hypoxic-ischemic encephalopathy"
+    ],
+    "tests_initial": [
+      "Chest CT with high-resolution evaluation (crazy-paving pattern)",
+      "Pulmonary function tests (DLCO, FVC, FEV1)",
+      "6-minute walk test with pulse oximetry",
+      "Sphingomyelinase activity assay",
+      "Brain MRI with diffusion-weighted imaging",
+      "Transbronchial biopsy"
+    ],
+    "management_initial": [
+      "Supplemental oxygen therapy",
+      "Bilateral lung transplantation",
+      "Immunosuppression adjustment (Tacrolimus to Cyclosporine)",
+      "Antiepileptic therapy (Levetiracetam)",
+      "Conservative monitoring for grade A1 rejection",
+      "Multidisciplinary neurological and ophthalmological consultation"
+    ],
+    "pitfalls": [
+      "Assuming lung lesions are solely related to chronic infection like tuberculosis rather than underlying systemic storage disease",
+      "Attributing post-transplant neurological symptoms strictly to medication side effects while ignoring potential perioperative ischemic events",
+      "Treating asymptomatic grade A1 rejection aggressively in a frail patient",
+      "Misinterpreting watershed infarcts as PRES due to overlapping immunosuppressive neurotoxicity profiles",
+      "Neglecting the possibility of co-existing primary pulmonary malignancy in long-term smoking history patients",
+      "Failing to screen for potential neurological progression in Niemann-Pick Type B patients post-transplant"
+    ],
+    "seed_questions": [
+      "What features of the patient's pulmonary imaging are characteristic of a lipid-storage disease like Niemann-Pick?",
+      "How does the impairment in DLCO compare to FVC in this patient's interstitial lung disease?",
+      "What are the possible causes for the sudden neurological deterioration on day 24 post-transplant in this specific patient?",
+      "Why might a clinician choose to withhold corticosteroid treatment for a biopsy-proven Grade A1 lung rejection?"
+    ],
+    "difficulty": "Advanced",
+    "difficulty_justification": "The case requires integration of rare metabolic disorders (Niemann-Pick B) with complex post-transplant management, requiring the student to distinguish between medication-induced neurotoxicity, surgical complications, and primary disease manifestations."
+  },
+  {
+    "case_id": "PMC9482249_34452",
+    "chief_complaint": "Abdominal mass and vague abdominal pain",
+    "red_flags": [
+      "Presence of a giant intra-abdominal mass",
+      "Evidence of bowel obstruction",
+      "Potential for spontaneous rupture or hemorrhage",
+      "Advanced age of patient at presentation"
+    ],
+    "ddx_top": [
+      "Retroperitoneal lymphangioma",
+      "Liposarcoma",
+      "Retroperitoneal cystic tumor",
+      "Abdominal aortic aneurysm"
+    ],
+    "tests_initial": [
+      "Abdominal CT scan with contrast",
+      "Abdominal ultrasound",
+      "Complete blood count",
+      "Serum chemistry panel"
+    ],
+    "management_initial": [
+      "Surgical consultation for excision",
+      "Complete monobloc resection",
+      "Histopathological examination of specimen"
+    ],
+    "pitfalls": [
+      "Assuming an abdominal mass in an elderly patient is always malignant",
+      "Misidentifying cystic masses as abscesses",
+      "Delaying diagnosis due to the rarity of the condition in adults",
+      "Underestimating the complexity of retroperitoneal dissection"
+    ],
+    "seed_questions": [
+      "What are the primary diagnostic considerations for a large abdominal mass in an elderly patient?",
+      "How does the clinical presentation of a retroperitoneal mass differ from common gastrointestinal pathologies?",
+      "What imaging modality is most appropriate to characterize the internal structure of this abdominal mass?"
+    ],
+    "difficulty": "Intermediate",
+    "difficulty_justification": "The case involves a rare, benign condition that mimics more common malignancies, requiring students to look beyond typical oncological differentials in elderly patients."
+  }
+]
