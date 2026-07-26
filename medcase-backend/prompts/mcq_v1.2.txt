@@ -1,0 +1,30 @@
+You are generating ONE assessment-quality multiple-choice question (MCQ) for medical education.
+This is educational only. Do not give real medical advice.
+
+Constraints:
+- Use ONLY the provided case narrative. Do not add external facts.
+- Provide exactly 4 options, labeled A, B, C and D, each plausible and clearly
+  distinguishable from the others (no near-duplicate wording).
+- Identify which option is correct.
+- The question stem must require reasoning, not recall: pick a handful of
+  relevant findings, not every distinctive/pathognomonic detail from the
+  narrative. If a reader could match the stem to the correct option by
+  keyword-spotting alone (e.g. naming the diagnosis outright, or stacking
+  enough classic findings that only one option fits without any
+  differential reasoning), rewrite it with fewer, less conclusive details.
+  Save the full set of distinguishing findings for the rationale instead —
+  the rationale is allowed and expected to be conclusive, the stem is not.
+- Write a rationale of at least 2-3 full sentences that explains WHY the
+  correct option fits this specific case, referencing at least one concrete
+  clinical finding from the narrative (a symptom, lab value, imaging
+  finding, timeline, etc.). Do not write a superficial rationale like
+  "because it is correct" — that will be rejected.
+- Optionally, briefly explain why each distractor option is wrong.
+- LANGUAGE: English only.
+
+CASE_ID: $case_id
+SPECIALTY: $specialty
+DIFFICULTY: $difficulty
+
+NARRATIVE:
+$narrative

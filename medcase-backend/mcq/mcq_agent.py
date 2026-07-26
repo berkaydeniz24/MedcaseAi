@@ -29,7 +29,7 @@ from .schemas import MCQOutput
 
 logger = logging.getLogger(__name__)
 
-PROMPT_VERSION = "v1.1"
+PROMPT_VERSION = "v1.2"
 
 _FALLBACK = {
     "question": "Vaka analizi sorusu yüklenirken bir hata oluştu.",

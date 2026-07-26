@@ -194,9 +194,29 @@ Ham veri: `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/
   - **Single-agent lehine:** soru metninde cevabın sızması (`possible_answer_leak_in_question`) single-agent'ta %2, multi-agent'ta **%18** — multi-agent mimarisinde bu gerçek bir kalite riski, kök nedeni henüz araştırılmadı (aday hipotez: MCQ Agent'a ayrı geçirilen zengin vaka bağlamı, soruyu gereğinden fazla spesifik hale getiriyor olabilir).
   - Hint sızıntısı oranı (`possible_answer_leak_in_hint`) iki sistemde de aynı (%36) — bu flag mimariler arasında ayrım yapmıyor.
 
+### ✅ Tamamlandı — Soru-sızıntısı kök neden analizi
+
+`possible_answer_leak_in_question` ile flag'lenen 9 multi-agent vakası + karşılaştırma için tek flag'lenen single-agent vakası elle incelendi (`evaluation/results/raw/full_50_n50.json`).
+
+**Bulgu:** MCQ Agent'ın (multi-agent yolu) ürettiği soru kökleri, single-agent'a göre ortalama **%56 daha uzun** (44.4 kelime vs 28.4 kelime). Flag'lenen vakalarda MCQ Agent, narrative'deki neredeyse tüm patognomonik bulguları tek soru cümlesinde art arda sıralıyor — ör. dengue vakasında soru kökü doğrudan "isles of white in a sea of red" tanımlayıcı döküntü tarifini, trombositopeni + lökopeni + Maldivler seyahat öyküsünü aynı cümlede topluyor; akromegali vakasında "growth hormone-secreting pituitary adenoma" ifadesi hem soruda hem doğru şıkta neredeyse birebir geçiyor. Aynı vaka (`PMC5292170_1230`) iki sistemde de flag'lendi — yani bazı vakalar narrative'in doğası gereği zaten sızıntıya açık, bu münferit değil.
+
+**Kök neden (kanıt destekli hipotez):** `prompts/mcq_v1.1.txt`, rationale'ın "en az bir somut bulguya referans vermesi" gerektiğini açıkça istiyor ama soru kökü için bir uzunluk/kapsam sınırı koymuyor — MCQ Agent tüm "bütçesini" tek bir alana (soru+şıklar+rationale) ayırdığı için köke gereğinden fazla ayırt edici bulgu sığdırıyor. Single-agent modelinde aynı model aynı anda hint+explanation da üretmek zorunda olduğundan (5 alan tek yanıtta), soru kökünde muhtemelen kendiliğinden daha az detay bırakıyor. Ne `mcq_v1.1.txt` ne de `single_agent_baseline_v1.0.txt` soru kökünün cevabı sızdırmaması gerektiğini açıkça yazmıyor — sadece hint için var böyle bir kural.
+
+### ✅ Tamamlandı — mcq_v1.2 düzeltmesi + before/after doğrulama
+
+`prompts/mcq_v1.2.txt` eklendi (`mcq/mcq_agent.py`'nin `PROMPT_VERSION`'ı güncellendi): hint kuralına benzer açık bir kısıt eklendi — soru kökü, cevabı akıl yürütmeden belli edecek kadar çok ayırt edici bulguyu tek cümlede toplamamalı; tüm bulgular rationale'a saklanmalı. Aynı `full_50` seti (n=50, her iki sistem) yeniden çalıştırıldı; v1.1 sonucu `evaluation/results/{raw,processed,charts}/mcq_v1.1_baseline/` altında saklandı, v1.2 sonucu güncel dosyalarda.
+
+| Metric | v1.1 Multi-Agent | v1.2 Multi-Agent |
+|---|---|---|
+| flag: possible_answer_leak_in_question | 9 (18%) | **7 (14%)** |
+| flag: possible_answer_leak_in_hint | 18 (36%) | 14 (28%) |
+| flag: explanation_not_grounded_in_correct_option | 0 | 0 |
+| mean question word count | 44.4 | **54.1** |
+
+**Dürüst sonuç — yalnızca kısmi başarı:** Sızıntı flag'i %18'den %14'e geriledi (~%22 göreli azalma), ama sıfırlanmadı. Daha ilginci, hipotezin öngördüğünün tersine, soru kökü daha da uzadı (44.4 → 54.1 kelime) — model kısıtı "daha az ayırt edici bulgu" olarak değil, "daha fazla temkinli/akıl-yürütme dili ekle" olarak yorumlamış görünüyor, ayırt edici klinik bulguları çıkarmak yerine etraflarına yorum eklemiş. **Sonuç: prompt-seviyesi düzeltme tek başına yetersiz kaldı** — bu, salt prompt mühendisliğinin sınırlarını gösteren, tezde "limitations/iterative refinement" bölümünde kullanılabilecek dürüst bir bulgu. Yapısal bir çözüm (ör. soru kökü üretildikten sonra ayrı bir "leak-check" LLM geçişi veya otomatik kontrolün flag'lediği vakalarda zorunlu repair-retry) gelecek iş olarak not edildi, bu oturumda uygulanmadı.
+
 ### ⏳ Bekliyor (sıradaki haftalar, kullanıcı onayına göre)
 
-- **Soru-sızıntısı kök neden analizi:** Multi-agent'ta `possible_answer_leak_in_question` oranının 9× yüksek çıkmasının nedeni araştırılmalı (örn. flag'lenen 9 vakanın soru metinleri elle incelenerek).
 - **Hafta 5 — Human Evaluation:** Kör değerlendirme için insan değerlendiricilere dağıtılacak alt küme ve form/arayüz.
 - **Hafta 6 — Analysis & Reporting:** Ortalama skorlar, karşılaştırma tabloları, grafikler, hata analizi, discussion/limitations.
 - **LLM-as-a-Judge promptu:** Henüz yazılmadı.
