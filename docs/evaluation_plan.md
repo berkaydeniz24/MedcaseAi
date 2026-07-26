@@ -224,6 +224,9 @@ Ham veri: `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/
 - **`generate_form.py`** — `blinded_eval_set.json`'ı `rating_form_template.html`'e gömerek tamamen bağımsız, tek dosyalık **`rating_form.html`** üretir (harici istek/CDN yok, dosya olarak açılabilir veya bir linkle paylaşılabilir).
 - **`rating_form.html`** — rater akışı: isim/rol girişi → 24 vaka, her birinde narrative + Item 1/Item 2 (soru, şıklar, doğru şık işaretli, hint, explanation) → her öğe için 5 kriter (Clinical correctness, Relevance, Consistency, Educational usefulness, Clarity), 1-5 Likert → ilerleme her adımda `localStorage`'a otomatik kaydedilir (rater yarıda bırakıp devam edebilir) → tüm vakalar bitince CSV indirme. Tarayıcıda gerçek tıklama akışıyla uçtan uca test edildi (localhost:8090 önizleme sunucusu, `.claude/launch.json`'a `human-eval-preview` config'i eklendi); ilk sürümde `<meta charset="utf-8">` eksikti ve Türkçe karakterler bozuk render oluyordu (`http.server` charset başlığı vermiyor) — düzeltildi.
 - Dağıtım: `rating_form.html` 1-2 tıp öğrencisi + bir araştırma görevlisi/öğretim üyesine gönderilecek (dosya olarak ya da hafif bir statik hosting linkiyle); her rater kendi CSV'sini üretip kullanıcıya geri gönderecek.
+- **Alternatif dağıtım — Google Forms (kullanıcı tercihi):** `generate_google_form.py`, aynı `blinded_eval_set.json`'ı `generate_google_form_template.gs`'e gömerek çalıştırılabilir bir Google Apps Script (`generate_google_form.gs`) üretir. Bu projede Google API kimlik bilgisi yapılandırılmadığı için form doğrudan buradan oluşturulamıyor — kullanıcı script'i kendi Google hesabında script.google.com'a yapıştırıp `createForm()`'u bir kez çalıştırıyor; script kendi başına bir Form + yanıtları toplayan bir Sheet oluşturuyor (rater CSV'si elle toplamaya gerek kalmıyor, hepsi tek bir Sheet'te birikiyor). Aynı körleme (Item 1/Item 2, sistem etiketi yok) ve aynı 5 kriterli rubrik (grid soru olarak) korunuyor. Uzun vaka narrative'leri (bir vakada 8600+ karakter) Google Forms'un help-text limitini aşabildiği için otomatik olarak birden fazla section'a bölünüyor.
+
+**Not:** `rating_form.html`, `generate_google_form.gs` ve `judge_scores.*` — Hafta 5 ve LLM-judge çalışması, aşağıda anlatılan `tutor_mcq`/`single_agent_baseline` v1.1 düzeltmesinden **sonra** yeniden üretildi (bkz. "Option 0/1/2/3 sızıntısı" bölümü) — güncel veri düzeltme-sonrası `explanation` metinlerini yansıtıyor.
 
 **Bekliyor (gerçek insan verisi toplanana kadar):** Rater'lardan CSV'ler toplandıktan sonra `unblinding_key.json` ile birleştirip sistem bazında ortalama skor tablosu çıkaran bir analiz scripti (Hafta 6'nın kapsamı) henüz yazılmadı — gerçek yanıt olmadan anlamlı test edilemez.
 
@@ -233,16 +236,16 @@ Ham veri: `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/
 
 48/48 öğe tek denemede başarılı puanlandı. Sonuçlar: `judge_scores.json` (tam skor + gerekçe + concerns), `judge_scores.csv` (insan rater'ların indirdiği CSV ile **birebir aynı kolon şeması** — Hafta 6'da doğrudan birleştirilebilir).
 
-**Dürüst bulgu — güçlü bir tavan etkisi (ceiling effect):** 240 kriter-puanından **227'si tam 5**; `relevance` kriteri 48/48 öğede istisnasız 5. Sistem bazında (yalnızca bu script'in kendi analizi için erişebildiği `unblinding_key.json` ile):
+**Dürüst bulgu — güçlü bir tavan etkisi (ceiling effect):** 240 kriter-puanından **222'si tam 5** (4 puan: 8, 3 puan: 6, 2 puan: 4); `relevance` kriteri 48 öğenin 44'ünde tam 5. Sistem bazında (yalnızca bu script'in kendi analizi için erişebildiği `unblinding_key.json` ile):
 
 | System | n | mean overall_avg |
 |---|---|---|
-| single_agent | 24 | 4.90 |
-| multi_agent | 24 | 4.96 |
+| single_agent | 24 | 4.85 |
+| multi_agent | 24 | 4.88 |
 
-Aradaki fark (0.06) **anlamlı bir sinyal değil** — judge neredeyse her şeye tam puan veriyor, iki sistemi ayırt etmiyor. Bu, LLM-as-a-Judge literatüründe bilinen bir sorun (leniency/self-preference bias, dar dinamik aralık) ve **tam olarak bu yüzden Hafta 5'in kör insan değerlendirmesi zorunlu** — LLM-judge tek başına "multi-agent biraz daha iyi" gibi yanıltıcı bir kesinlik izlenimi verebilirdi, insan verisi bunu doğrulamadan rapora yazılmayacak.
+Aradaki fark (0.03) **anlamlı bir sinyal değil** — judge neredeyse her şeye tam puan veriyor, iki sistemi ayırt etmiyor. Bu, LLM-as-a-Judge literatüründe bilinen bir sorun (leniency/self-preference bias, dar dinamik aralık) ve **tam olarak bu yüzden Hafta 5'in kör insan değerlendirmesi zorunlu** — LLM-judge tek başına "multi-agent biraz daha iyi" gibi yanıltıcı bir kesinlik izlenimi verebilirdi, insan verisi bunu doğrulamadan rapora yazılmayacak.
 
-**Gerçek, somut bir bulgu — judge'ın `concerns` alanı üzerinden:** 48 öğeden 4'ünde judge, explanation metninin işaretli doğru şıkkı harfle (A/B/C/D) değil **"Option 0/1/2/3" gibi 0-tabanlı iç indeksle** referans aldığını yakaladı (ör. `PMC11329954_62613`, `PMC6207856_2255`, `PMC6332946_127`, `PMC8651394_51595`). Bu, kullanıcıya gösterilen şık harfleriyle örtüşmeyen gerçek bir tutarlılık/UX hatası — muhtemelen Tutor/MCQ Agent'ın iç `correct_index` gibi 0-tabanlı bir değeri açıklama metnine sızdırması. Kök nedeni araştırılmadı, bu oturumun kapsamı dışında bırakıldı — ayrı bir iş olarak not edildi.
+**Gerçek, somut bir bulgu — judge'ın `concerns` alanı üzerinden:** (bu, ilk çalıştırmadan — bkz. hemen aşağıdaki "kök nedeni + düzeltme" bölümü) 48 öğeden 4'ünde judge, explanation metninin işaretli doğru şıkkı harfle (A/B/C/D) değil **"Option 0/1/2/3" gibi 0-tabanlı iç indeksle** referans aldığını yakaladı (ör. `PMC11329954_62613`, `PMC6207856_2255`, `PMC6332946_127`, `PMC8651394_51595`). Bu, kullanıcıya gösterilen şık harfleriyle örtüşmeyen gerçek bir tutarlılık/UX hatası olarak doğrulandı ve düzeltildi — düzeltme + kök neden detayı için aşağıya bakın. **Düzeltme sonrası yeniden çalıştırılan judge'ın `concerns` alanında artık bu formatlama hatası hiç geçmiyor** ("Option 0/1/2" veya "Dataset-correct option" için `blinded_eval_set.json`'da sıfır eşleşme) — kalan 4 concern tamamen farklı, gerçek klinik-içerik itirazları (ör. `PMC7479301_22108`'de "IL-6 ve heparin direnci arasında literatürce iyi desteklenmeyen bir nedensellik ima ediliyor") — yani judge formatlama hatası düzeldikten sonra da hâlâ anlamlı, farklı sorunlar yakalayabiliyor, tek-numunelik bir sinyal değildi.
 
 ### ✅ Tamamlandı — "Option 0/1/2/3" / "Dataset-correct option" sızıntısı kök nedeni + düzeltme
 
@@ -255,11 +258,10 @@ Aradaki fark (0.06) **anlamlı bir sinyal değil** — judge neredeyse her şeye
 
 Gerçek `TutorAgent.run()` çağrısıyla doğrulandı (fake bir MI vakası, `explain` ve `teach` modları): artık ne mekanik etiket satırı ne de numaralı "Option 0/1/2" var, doğru şık her zaman doğal cümle içinde harfle ("Option B", "B) ...") geçiyor.
 
-**Not — mevcut Hafta 4/5/LLM-judge verileri hâlâ düzeltme-öncesi:** `full_50_n50.json`, `blinded_eval_set.json`, `rating_form.html` ve `judge_scores.*` bu düzeltmeden ÖNCE üretildi — hâlâ eski (buggy) `explanation` metinlerini içeriyorlar. Bu veriler regenerate edilmedi (kullanıcı onayına bırakıldı, aşağıya not edildi) çünkü rater'lara henüz dağıtılıp dağıtılmadığı belirsiz.
+**Düzeltme-sonrası yeniden üretildi (kullanıcı onayıyla):** `full_50` seti v1.1 promptlarıyla yeniden çalıştırıldı (0 hata), ardından `blinded_eval_set.json`/`rating_form.html`/`generate_google_form.gs`/`judge_scores.*` aynı seed'lerle (aynı 24 vaka, aynı 12/12 Item dengesi) tazelendi. Doğrulandı: `blinded_eval_set.json`'da artık ne "Dataset-correct option" ne de `"Option [0-9]"` deseni geçiyor (`grep` ile sıfır eşleşme). LLM-judge'ı bu temiz veriyle yeniden çalıştırmak sistem ortalamalarını hafifçe değiştirdi (single_agent 4.90→4.85, multi_agent 4.96→4.88) — hâlâ aynı tavan-etkisi yorumunda (fark anlamlı değil), sadece prompt-değişikliği + LLM'in kendi run-to-run varyansının beklenen küçük etkisi. Yukarıdaki §4'teki `mcq_v1.1` vs `mcq_v1.2` before/after tablosu bu regen'den **etkilenmedi** — o karşılaştırma kendi eşleştirilmiş çalışmasından (ayrı bir konu, soru kökü uzunluğu) geliyor, burada yeniden üretilmedi.
 
 ### ⏳ Bekliyor (sıradaki haftalar, kullanıcı onayına göre)
 
-- **Hafta 4/5/LLM-judge verilerini yeniden üretmek mi, olduğu gibi bırakmak mı?** Düzeltme sadece `explanation` alanını etkiliyor (soru/şıklar/hint değişmez) — kullanıcı karar vermeli, `rating_form.html` henüz dağıtılmadıysa yeniden üretmek daha temiz bir veri seti verir.
 - **Hafta 5 (devamı):** Gerçek raterlardan CSV toplama — kullanıcının `rating_form.html`'i (veya Google Forms sürümünü) dağıtması gerekiyor.
 - **Hafta 6 — Analysis & Reporting:** Toplanan insan CSV'lerini `judge_scores.csv` ve `unblinding_key.json` ile birleştirip sistem bazında ortalama skorlar, insan-LLM judge uyumu (agreement), karşılaştırma tabloları, grafikler, hata analizi, discussion/limitations.
 
