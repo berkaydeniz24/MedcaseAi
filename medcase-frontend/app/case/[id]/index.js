@@ -159,10 +159,12 @@ export default function PatientRecordPage() {
                     return (
                       <Pressable
                         key={idx}
-                        onPress={() => setSelectedIndex(idx)}
+                        onPress={() => !feedback && setSelectedIndex(idx)}
+                        disabled={!!feedback}
                         style={[
                           styles.optionRow,
-                          active && styles.optionRowActive
+                          active && styles.optionRowActive,
+                          feedback && { opacity: 0.6 }
                         ]}
                       >
                         <Text style={[styles.optionLetter, active && styles.optionLetterActive]}>
@@ -176,18 +178,20 @@ export default function PatientRecordPage() {
                   })}
                 </View>
 
-                <Pressable
-                  onPress={handleSubmitAnswer}
-                  disabled={selectedIndex === null || submitting}
-                  style={[
-                    styles.submitBtn,
-                    (selectedIndex === null || submitting) && { opacity: 0.6 }
-                  ]}
-                >
-                  <Text style={styles.submitBtnText}>
-                    {submitting ? "Evaluating..." : "Submit Answer"}
-                  </Text>
-                </Pressable>
+                {!feedback && (
+                  <Pressable
+                    onPress={handleSubmitAnswer}
+                    disabled={selectedIndex === null || submitting}
+                    style={[
+                      styles.submitBtn,
+                      (selectedIndex === null || submitting) && { opacity: 0.6 }
+                    ]}
+                  >
+                    <Text style={styles.submitBtnText}>
+                      {submitting ? "Evaluating..." : "Submit Answer"}
+                    </Text>
+                  </Pressable>
+                )}
 
                 {feedback && (
                   <View style={[

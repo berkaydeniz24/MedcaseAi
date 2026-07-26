@@ -39,6 +39,18 @@ _FALLBACK = {
 }
 
 
+def is_fallback_mcq(mcq: Dict[str, Any]) -> bool:
+    """
+    True if `mcq` is the placeholder returned on total generation failure.
+    Callers that show MCQs to real students (routers/dialogue_router.py)
+    MUST check this and refuse rather than silently letting a student
+    "answer" a fake question — see docs/architecture.md §7 (P0 finding).
+    Also used by evaluation/multi_agent_runner.py, which previously
+    duplicated this exact literal comparison independently.
+    """
+    return mcq.get("options") == _FALLBACK["options"]
+
+
 class MCQAgent:
     def __init__(self):
         try:

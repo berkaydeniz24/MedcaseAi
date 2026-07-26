@@ -22,7 +22,7 @@ from contextlib import contextmanager
 from typing import Dict, Optional
 
 from dialogue.dialogue_agent import DialogueAgent
-from mcq.mcq_agent import mcq_agent
+from mcq.mcq_agent import is_fallback_mcq, mcq_agent
 from tutor.schemas import CaseContext, StepContext, TutorInput, UserContext
 from tutor.tutor_agent import TutorAgent
 
@@ -31,12 +31,6 @@ from .schemas import CallMetrics, GeneratedContent, SystemRunResult
 # Same role a real student's first free-text message would play; held constant
 # across all cases so hint quality differences come from the case, not the prompt.
 GENERIC_HINT_PROMPT = "What should I consider first when evaluating this patient?"
-
-# mcq/mcq_agent.py falls back to this exact literal list on error and
-# swallows the exception internally, so a truthy question/4-options check alone
-# would mis-classify a failed generation as a success. Match the known fallback
-# signature instead.
-_MCQ_FALLBACK_OPTIONS = ["Seçenek A", "Seçenek B", "Seçenek C", "Seçenek D"]
 
 
 class _CallRecorder:
@@ -119,7 +113,7 @@ class MultiAgentRunner:
                 mcq = mcq_agent.generate_mcq(case)
             except Exception as e:
                 rec.error = rec.error or str(e)
-        mcq_ok = bool(mcq.get("question")) and mcq.get("options") != _MCQ_FALLBACK_OPTIONS and len(mcq.get("options", [])) == 4
+        mcq_ok = bool(mcq.get("question")) and not is_fallback_mcq(mcq) and len(mcq.get("options", [])) == 4
         calls.append(_to_metrics("mcq", mcq_agent.model, rec, mcq_ok))
         if mcq_ok:
             question = mcq.get("question")

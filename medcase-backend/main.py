@@ -24,10 +24,14 @@ from sqlalchemy.orm import Session
 import uvicorn
 
 # --- DATABASE SETUP (EKLENDİ) ---
-# Tabloları oluştur (varsa dokunmaz)
+# Tabloları oluştur (varsa dokunmaz) — yeni tablolar (ör. case_answers) burada
+# oluşur, ama var olan tablolara yeni SÜTUN eklemez (bkz. aşağıdaki migration).
 from services import models
 from services.database import engine, get_db, SessionLocal
 models.Base.metadata.create_all(bind=engine)
+
+from services.migrate_session_lifecycle import ensure_session_lifecycle_columns
+ensure_session_lifecycle_columns()
 
 # --- Vaka verisini (ilk kurulumda) SQL'e yükle ---
 from services.seed_cases import seed_cases_if_empty
