@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from services.database import get_db
 from services import models
@@ -41,6 +41,35 @@ class CaseProgressItem(BaseModel):
     case_id: str
     status: str
     session_id: Optional[str] = None
+
+class UserProfileResponse(BaseModel):
+    full_name: str
+    email: str
+    university: str
+    department: str
+    student_id: str
+
+class UserProfileUpdate(BaseModel):
+    # Only full_name/email are user-editable — university/department/
+    # student_id stay server-set, read-only in the UI (app/profile.js).
+    full_name: str
+    email: str
+
+    @field_validator("full_name")
+    @classmethod
+    def name_not_blank(cls, v):
+        v = v.strip()
+        if not v:
+            raise ValueError("full_name cannot be empty")
+        return v
+
+    @field_validator("email")
+    @classmethod
+    def email_looks_valid(cls, v):
+        v = v.strip()
+        if "@" not in v or "." not in v.split("@")[-1] or v.startswith("@") or v.endswith("@"):
+            raise ValueError("email does not look valid")
+        return v
 
 # --- 1. İSTATİSTİKLER ---
 @router.get("/stats", response_model=UserStatsResponse)
@@ -183,3 +212,53 @@ def get_user_chat_history(db: Session = Depends(get_db)):
         })
 
     return history_list
+
+def _get_or_create_profile(db: Session) -> models.UserProfile:
+    profile = db.query(models.UserProfile).filter_by(user_id=DEMO_USER_ID).first()
+    if not profile:
+        profile = models.UserProfile(user_id=DEMO_USER_ID)
+        db.add(profile)
+        db.commit()
+        db.refresh(profile)
+    return profile
+
+# --- 4. PROFİL ---
+@router.get("/profile", response_model=UserProfileResponse)
+def get_user_profile(db: Session = Depends(get_db)):
+    return _get_or_create_profile(db)
+
+@router.put("/profile", response_model=UserProfileResponse)
+def update_user_profile(payload: UserProfileUpdate, db: Session = Depends(get_db)):
+    profile = _get_or_create_profile(db)
+    profile.full_name = payload.full_name
+    profile.email = payload.email
+    db.commit()
+    db.refresh(profile)
+    return profile
+
+# --- 5. VERİLERİ SIFIRLA ---
+@router.post("/reset")
+def reset_user_data(db: Session = Depends(get_db)):
+    """
+    demo-user'ın tüm pratik geçmişini (oturumlar, mesajlar, cevaplar, vaka
+    ilerlemesi, istatistikler) temiz kuruluma döndürür. Profil bilgileri
+    (isim/email) ve Case tablosu (vaka içeriği) etkilenmez.
+
+    NOT: ChatSession/ChatMessage tablolarında henüz user_id yok (gerçek auth
+    yok — bkz. docs/architecture.md), yani bu pratikte TÜM oturumları siler,
+    sadece demo-user'ınkini değil. Şu an demo-user tek kullanıcı olduğu için
+    bu eşdeğer, ama gerçek auth eklendiğinde burası user_id'ye göre
+    filtrelenecek şekilde güncellenmeli.
+    """
+    db.query(models.ChatMessage).delete()
+    db.query(models.CaseAnswer).filter_by(user_id=DEMO_USER_ID).delete()
+    db.query(models.ChatSession).delete()
+    db.query(models.CaseProgress).filter_by(user_id=DEMO_USER_ID).delete()
+
+    stats = db.query(models.UserStats).filter_by(user_id=DEMO_USER_ID).first()
+    if stats:
+        stats.total_correct = 0
+        stats.total_wrong = 0
+
+    db.commit()
+    return {"status": "ok"}

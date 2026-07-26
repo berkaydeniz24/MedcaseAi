@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "./client";
+import { apiGet, apiPost, apiPut } from "./client";
 
 // Cases
 export const listCases = () => apiGet("/cases");
@@ -31,6 +31,12 @@ export const submitAnswer = (
 export const getUserStats = () => apiGet("/user/stats");
 export const getCaseProgress = () => apiGet("/user/progress");
 export const getChatHistory = () => apiGet("/user/history");
+
+// Profile
+export const getUserProfile = () => apiGet("/user/profile");
+export const updateUserProfile = (fullName, email) =>
+  apiPut("/user/profile", { full_name: fullName, email });
+export const resetUserData = () => apiPost("/user/reset", {});
 
 // Belirli bir oturumun mesajlarını çeker
 export const getSessionMessages = (session_id) => apiGet(`/dialogue/history/${session_id}`);

@@ -26,3 +26,17 @@ export async function apiPost(path, body) {
   }
   return res.json();
 }
+
+export async function apiPut(path, body) {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`PUT ${path} failed (${res.status}): ${text}`);
+  }
+  return res.json();
+}

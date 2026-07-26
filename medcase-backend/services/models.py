@@ -34,6 +34,25 @@ class CaseProgress(Base):
         UniqueConstraint("user_id", "case_id", name="uq_case_progress_user_case"),
     )
 
+class UserProfile(Base):
+    """
+    One row per user (same "demo-user" convention as UserStats/CaseProgress
+    — no real auth yet). Previously the Profile screen only had hardcoded
+    frontend mock data (John Doe / john.doe@email.com) with no backend
+    counterpart at all, and Save Changes had no handler. Only full_name and
+    email are meant to be user-editable (see routers/user_router.py); the
+    academic fields are set here but exposed read-only in the UI, same as
+    before.
+    """
+    __tablename__ = "user_profiles"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, default="demo-user", unique=True, index=True)
+    full_name = Column(String, default="John Doe")
+    email = Column(String, default="john.doe@email.com")
+    university = Column(String, default="Biruni University")
+    department = Column(String, default="Medicine")
+    student_id = Column(String, default="123456789")
+
 class ChatSession(Base):
     __tablename__ = "chat_sessions"
     session_id = Column(String, primary_key=True, index=True)
