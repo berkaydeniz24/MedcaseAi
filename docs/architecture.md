@@ -121,12 +121,14 @@ class CaseOutput(BaseModel):
 
 **Girdi:** `case: Dict` → kullanılan alanlar: `id`, `narrative`, `specialty`, `difficulty`.
 
-**Prompt yapısı** (`prompts/mcq_v1.0.txt`, `services/prompt_loader.py` ile yüklenip `string.Template` üzerinden doldurulur; tek parça system+user birleşik prompt):
+**Prompt yapısı** (`prompts/mcq_v1.1.txt`, `services/prompt_loader.py` ile yüklenip `string.Template` üzerinden doldurulur; tek parça system+user birleşik prompt):
 ```
 SYSTEM (sabit talimat bloğu):
   "You are generating ONE assessment-quality multiple-choice question..."
   - Kısıt: yalnızca verilen narrative kullanılacak, dış bilgi eklenmeyecek
-  - Çıktı MUTLAKA geçerli JSON: {question, options[4], correctIndex, rationale}
+  - Tam 4 şık (A-D), belirgin şekilde ayrışık
+  - Rationale ≥2-3 cümle, vakadan en az bir somut klinik bulguya atıf yapmalı
+  - Yüzeysel rationale ("because it is correct" vb.) yasak
   - Dil: yalnızca İngilizce
 
 USER (değişken veri bloğu):
@@ -136,19 +138,41 @@ USER (değişken veri bloğu):
   NARRATIVE:
   {narrative}
 ```
-İki blok tek bir `contents` string'i olarak birleştirilip Gemini'ye gönderilir. **Yapısal JSON zorlaması (`response_schema`) kullanılmıyor** — model çıktısı serbest metin olarak alınıp ```` ```json ```` işaretleri temizlenerek `json.loads()` ile parse ediliyor. Bu, MCQ Generator ile Dialogue Agent (2.3) arasındaki önemli bir metodolojik farktır (bkz. Bölüm 7.3).
 
-**Çıktı (post-processing sonrası, `dict`):**
-```json
-{
-  "question": "string",
-  "options": ["string", "string", "string", "string"],
-  "correctIndex": 0,
-  "rationale": "string"
-}
+**Şema zorlaması (2026-07-26'dan itibaren — `mcq/schemas.py::MCQOutput`):** Dialogue Agent (2.3) ile aynı mekanizma: Gemini SDK'nın `response_schema` özelliği ile **yapısal olarak** zorlanıyor, serbest metin + manuel `json.loads()` yok. İç içe modeller:
+```python
+class MCQOption(BaseModel):
+    id: Literal["A", "B", "C", "D"]
+    text: str = Field(min_length=1)
+
+class DistractorExplanation(BaseModel):
+    option_id: Literal["A", "B", "C", "D"]
+    explanation: str = Field(min_length=1)
+
+class MCQOutput(BaseModel):
+    question: str = Field(min_length=10)
+    options: List[MCQOption] = Field(min_length=4, max_length=4)
+    correct_option_id: Literal["A", "B", "C", "D"]
+    rationale: str = Field(min_length=20)
+    distractor_explanations: Optional[List[DistractorExplanation]] = None
+    # + model_validator: 4 benzersiz id (A/B/C/D tamamı), şık metinleri
+    #   benzersiz/boş-değil, correct_option_id gerçek bir şıkka referans
+    #   veriyor, rationale bilinen yüzeysel ifadelerden biri değil
 ```
+**Önemli API kısıtı:** Gemini'nin `response_schema`'sı açık/serbest `Dict[str, str]` alanlarını desteklemiyor (`additionalProperties` hatası veriyor) — bu yüzden `distractor_explanations` bir dict değil, sabit şekilli `List[DistractorExplanation]` olarak tasarlandı. Bu, geliştirme sırasında gerçek bir API çağrısıyla ampirik olarak tespit edildi.
 
-**Hata yönetimi:** `try/except` — parse hatası veya eksik alan durumunda sabit bir fallback MCQ ("Seçenek A/B/C/D") döndürülür; istisna yükseltilmez, kullanıcı akışı kesilmez.
+Gemini SDK, şema doğrulaması (özel `model_validator` dahil) başarısız olursa `response.parsed`'ı sessizce `None` bırakıyor (exception fırlatmıyor) — `response.text` ise ham (şema-şekli-geçerli ama semantik olarak reddedilmiş) çıktıyı hâlâ içeriyor. Bu davranış, aşağıdaki repair akışını mümkün kılıyor.
+
+**Çıktı — iki katman:**
+1. **İç temsil:** `MCQOutput` (yukarıdaki şema) — `mcq/mcq_agent.py` içinde üretilir/doğrulanır.
+2. **Dış sözleşme (değişmedi):** `generate_mcq()` hâlâ eski düz `dict` şeklini döndürür — `{question, options: List[str], correctIndex: int, rationale: str}` — böylece `routers/dialogue_router.py` ve `evaluation/multi_agent_runner.py` gibi tüketiciler hiç değişmedi. Şık sırası burada, `MCQOutput.options`'tan metinler çıkarılıp Python tarafında karıştırıldıktan sonra kuruluyor (LLM'in position-bias'ını nötralize eden post-processing adımı, önceki davranışla aynı).
+
+**Hata yönetimi (2026-07-26'dan itibaren, tek repair denemeli):**
+1. İlk üretim denemesi (`response_schema=MCQOutput`).
+2. `response.parsed is None` ise (şema/validator başarısız) → modele **kendi hatalı çıktısı + hata mesajı** gösterilip **tek bir repair denemesi** yapılır (`_build_repair_prompt`).
+3. Repair de başarısız olursa, yapılandırılmış bir hata loglanır (`{"error_code": "MCQ_SCHEMA_VALIDATION_FAILED", "case_id", "attempts": 2}`) ve sabit fallback MCQ'ya ("Seçenek A/B/C/D") düşülür — istisna yükseltilmez, kullanıcı akışı kesilmez.
+
+Bu değişiklik, roadmap madde 3 kapsamında çalıştırılan 10-vakalık pilot deneyde (bkz. [evaluation_plan.md](evaluation_plan.md) §Hafta 3) gerçek bir hatayı düzeltti: bir vakada (`PMC2810581_34430`) Gemini'nin `rationale` alanını hiç döndürmediği, eski gevşek doğrulamanın (yalnızca anahtar varlığı kontrolü) bunu yakalayamadığı görüldü; yeni şema + repair akışıyla aynı vaka artık başarıyla, yüksek kaliteli çıktı üretiyor.
 
 ---
 
@@ -366,7 +390,7 @@ Bunlar mimariyi **anlamak** için önemli, ama madde 1'in kapsamı "mimariyi tas
 
 1. **`rubric` ve `seed_questions` hiç dolu değil.** `cases_subset.json`'daki 200 vakanın tamamında `rubric` alanları boş string/liste, `seed_questions` boş liste. Şema bunları destekliyor, promptlar bunlara atıfta bulunma potansiyeline sahip, ama şu an besleyecek veri yok.
 2. **Dialogue Agent dil çelişkisi.** Router'dan `language="tr"` gönderilebiliyor ve prompt'a `LANGUAGE: tr` yazılıyor, ama `DIALOGUE_SYSTEM_PROMPT`'un en başında "ALWAYS respond in English, regardless of..." kuralı var. Şu anki davranış: yanıt her zaman İngilizce, `language` parametresi fiilen etkisiz.
-3. **Şema zorlama tutarsızlığı.** Dialogue Agent, Gemini SDK'nın `response_schema` özelliğiyle **sert** yapısal JSON alıyor; MCQ Agent serbest metin alıp manuel JSON parse ediyor ama artık ayrıştırdığı veriyi `mcq/schemas.py`'deki `MCQOutput` (Pydantic) ile **doğruluyor** — tam 4 benzersiz/boş-olmayan şık, `correctIndex` 0-3 aralığında, boş olmayan soru/rationale (bkz. 2026-07-26 güncellemesi, Bölüm 2.2). Tutor Agent ise hâlâ serbest metin alıp hiç parse etmiyor (`followups` LLM'den gelmiyor, hardcoded). Yani durum artık ikili değil üçlü: SDK-seviyesi şema (Dialogue) / son-işleme Pydantic doğrulama (MCQ) / hiç doğrulama yok (Tutor). Üçünün de aynı seviyeye getirilmesi hâlâ açık bir iyileştirme alanı.
+3. ~~**Şema zorlama tutarsızlığı (MCQ Agent kısmı).**~~ **(Çözüldü — 2026-07-26)** MCQ Agent artık Dialogue Agent gibi Gemini SDK'nın `response_schema` özelliğiyle **sert** yapısal çıktı alıyor (`mcq/schemas.py::MCQOutput`, iç içe `MCQOption`/`DistractorExplanation` modelleri dahil) — serbest metin alıp sonradan parse etmiyor. Eksik `rationale`, tekrarlı/boş şık, geçersiz `correct_option_id` gibi hatalar artık **yapısal olarak** engelleniyor; şema doğrulaması başarısız olursa modele kendi hatalı çıktısı + doğrulama hatası gösterilerek **tek bir repair denemesi** yapılıyor, o da başarısız olursa `MCQ_SCHEMA_VALIDATION_FAILED` olarak yapılandırılmış şekilde loglanıp güvenli bir fallback'e düşülüyor. (Not: Gemini'nin `response_schema`'sı açık/serbest `Dict[str,str]` alanları desteklemiyor — `distractor_explanations` bu yüzden sabit şekilli bir `List[DistractorExplanation]` olarak tasarlandı, ilk denemede `additionalProperties` hatasıyla tespit edildi.) **Tutor Agent hâlâ serbest metin alıp hiç parse etmiyor** (`followups` LLM'den gelmiyor, hardcoded) — bu kısım hâlâ açık.
 4. ~~**`tutor/prompts.py` ölü kod.**~~ **(Çözüldü — 2026-07-26)** İçindeki `tutor_system_prompt`/`tutor_user_prompt` fonksiyonları hiçbir yerden import edilmiyordu; gerçek çalışan prompt mantığı `tutor_agent.py` içinde tekrar (ve biraz farklı) yazılıydı. Dosya silindi; gerçek (çalışan) tutor promptları `prompts/tutor_mcq_v1.0.txt` ve `prompts/tutor_narrative_v1.0.txt` olarak dışsallaştırıldı (bkz. Bölüm 2.4, `services/prompt_loader.py`).
 5. ~~**`case_service.py` / `selector_agent.py` çakışması.**~~ **(Çözüldü — 2026-07-26)** Daha önce her ikisi de `cases_subset.json`'ı bağımsız olarak yükleyip neredeyse aynı işi yapıyordu (`case_service` yalnızca `tutor_router.py`'de, `selector_agent` her yerde). Vaka verisinin SQL'e taşınması sırasında `case_service.py` silindi; `tutor_router.py` artık diğer router'larla aynı SQL-backed `selector_agent`'ı kullanıyor. Tek veri kaynağı, tek yükleme yolu kaldı.
 6. ~~**`SessionStore` çoğunlukla artık kod.**~~ **(Çözüldü — 2026-07-26)** DB entegrasyonu sonrası RAM tabanlı `session_store`, sadece DB sorgusu boş dönerse fallback olarak kullanılıyordu; iki kaynaklı-doğruluk (dual source of truth) riski taşıyordu. `services/session_store.py` tamamen silindi, `dialogue_router.py`'deki RAM yazma/okuma kodu kaldırıldı. Oturum/cevap/geçmiş verisi artık **tek kaynak**: SQLite (`ChatSession`, `ChatMessage`).

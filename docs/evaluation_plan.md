@@ -147,9 +147,30 @@ Multi-agent'ın **her** kriterde daha iyi çıkması şart değil — örn. daha
 
 Doğrulanmış (gerçek API çağrılarıyla, varsayım değil, 3 vaka üzerinde): her iki sistem de geçerli `GeneratedContent` üretiyor; multi-agent 3 API çağrısı/~5100 token, single-agent 1 çağrı/~1470 token kullanıyor (H4 yönünde erken sinyal); otomatik kontroller en az bir vakada gerçek, savunulabilir bir MCQ kalite sorunu (cevabın soru metninden çıkarılabilir olması) yakaladı — rastgele tetiklenme değil.
 
+### ✅ Tamamlandı — Hafta 3 (Pilot Experiment)
+
+10 vakalık pilot setinin **tamamı** iki kez çalıştırıldı:
+
+**İlk koşu (fix öncesi) — gerçek bir prompt/format hatası bulundu:** `multi_agent` kolunda 1/10 vaka (`PMC2810581_34430`) tamamen başarısız oldu. Kök neden loglardan izlendi: MCQ Agent'ın Gemini'den aldığı ham JSON'da `rationale` alanı hiç yoktu; eski gevşek doğrulama (`if "question" not in data or ...`) bunu değil ama yeni sıkı Pydantic doğrulaması (`mcq/schemas.py::MCQOutput`) bunu doğru şekilde reddetti — ki bu tam olarak istenen davranış, önceki gevşek koddan daha iyi. Asıl düzeltme MCQ Agent'ı **Gemini `response_schema` zorlamasına** geçirmek oldu (bkz. [architecture.md](architecture.md) §2.2) — eksik alan gibi hatalar artık yapısal olarak imkansız, bir de başarısızlık durumunda modele kendi hatası gösterilip tek bir repair denemesi yapılıyor.
+
+**İkinci koşu (fix sonrası) — temiz sonuç:**
+
+| Metric | Single-Agent | Multi-Agent |
+|---|---|---|
+| n | 10 | 10 |
+| failure_rate | **0.0** | **0.0** (fix öncesi 0.1 idi) |
+| mean_latency_ms | 2229.9 | 4584.8 |
+| mean_api_calls | 1 | 3 |
+| mean_total_tokens | 1494.3 | 5330.4 |
+| flag: possible_answer_leak_in_hint | 3 | 4 |
+| flag: possible_answer_leak_in_question | 0 | 2 |
+
+Bu, hâlâ yalnızca 10 vakalık bir pilot — istatistiksel bir sonuç değil, ama H4'ü (multi-agent daha fazla çağrı/token kullanır) tutarlı biçimde destekliyor ve pipeline'ın artık hatasız çalıştığını doğruluyor. Ham veri: `evaluation/results/raw/pilot_10_n10.json`.
+
+**Değerlendirme rubriği netleştirmesi (Hafta 3'ün diğer maddesi) henüz yapılmadı** — bu hâlâ Hafta 5-6'nın (LLM-as-a-Judge, İnsan Uzman) kapsamında.
+
 ### ⏳ Bekliyor (sıradaki haftalar, kullanıcı onayına göre)
 
-- **Hafta 3 — Pilot Experiment:** 10 vakalık pilot setinin **tamamı** üzerinde çalıştırma (şu ana kadar yalnızca ilk 2-3 vaka test edildi, maliyeti düşük tutmak için), prompt/format hatalarının düzeltilmesi, değerlendirme rubriğinin netleştirilmesi.
 - **Hafta 4 — Full Experiment:** 50 (veya 100) vaka üzerinde tam koşu.
 - **Hafta 5 — Human Evaluation:** Kör değerlendirme için insan değerlendiricilere dağıtılacak alt küme ve form/arayüz.
 - **Hafta 6 — Analysis & Reporting:** Ortalama skorlar, karşılaştırma tabloları, grafikler, hata analizi, discussion/limitations.

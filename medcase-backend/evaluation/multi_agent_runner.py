@@ -40,16 +40,22 @@ _MCQ_FALLBACK_OPTIONS = ["Seçenek A", "Seçenek B", "Seçenek C", "Seçenek D"]
 
 
 class _CallRecorder:
+    """Accumulates across every generate_content call made inside one `with`
+    block — MCQAgent can now make up to 2 raw calls per generate_mcq()
+    (initial + one repair attempt), and both must count toward that step's
+    cost, not just whichever call happened to run last."""
     def __init__(self):
         self.latency_ms = 0.0
-        self.usage = None
+        self.input_tokens = 0
+        self.output_tokens = 0
+        self.call_count = 0
         self.error = None
 
 
 @contextmanager
 def _record(client):
-    """Non-invasively times a production agent's real generate_content call and
-    captures its usage_metadata, without changing the agent's own code or
+    """Non-invasively times a production agent's real generate_content call(s)
+    and captures usage_metadata, without changing the agent's own code or
     return value. Patches client.models.generate_content for the duration of
     the `with` block only, then restores it."""
     rec = _CallRecorder()
@@ -64,13 +70,17 @@ def _record(client):
         start = time.perf_counter()
         try:
             resp = original(*args, **kwargs)
-            rec.usage = getattr(resp, "usage_metadata", None)
+            usage = getattr(resp, "usage_metadata", None)
+            if usage:
+                rec.input_tokens += usage.prompt_token_count or 0
+                rec.output_tokens += usage.candidates_token_count or 0
+            rec.call_count += 1
             return resp
         except Exception as e:
             rec.error = str(e)
             raise
         finally:
-            rec.latency_ms = (time.perf_counter() - start) * 1000
+            rec.latency_ms += (time.perf_counter() - start) * 1000
 
     client.models.generate_content = wrapped
     try:
@@ -80,11 +90,10 @@ def _record(client):
 
 
 def _to_metrics(step: str, model: str, rec: _CallRecorder, ok: bool) -> CallMetrics:
-    usage = rec.usage
     return CallMetrics(
         step=step, model=model, latency_ms=rec.latency_ms,
-        input_tokens=usage.prompt_token_count if usage else None,
-        output_tokens=usage.candidates_token_count if usage else None,
+        input_tokens=rec.input_tokens or None,
+        output_tokens=rec.output_tokens or None,
         success=ok and rec.error is None,
         error=rec.error,
     )
