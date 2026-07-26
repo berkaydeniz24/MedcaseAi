@@ -17,6 +17,11 @@ medcase-backend/evaluation/results/
 # build_blinded_set.py ile (aynı seed'le) yeniden üretilebilir.
 medcase-backend/evaluation/human_eval/unblinding_key.json
 
+# LLM-as-a-Judge ham çıktıları — evaluation/results/ ile aynı mantık,
+# blinded_eval_set.json + run_judge.py'den yeniden üretilebilir.
+medcase-backend/evaluation/llm_judge/judge_scores.json
+medcase-backend/evaluation/llm_judge/judge_scores.csv
+
 # Log dosyaları
 medcase-backend/logs/
 

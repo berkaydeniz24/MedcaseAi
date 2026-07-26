@@ -227,11 +227,28 @@ Ham veri: `evaluation/results/raw/full_50_n50.json`, detay: `evaluation/results/
 
 **Bekliyor (gerçek insan verisi toplanana kadar):** Rater'lardan CSV'ler toplandıktan sonra `unblinding_key.json` ile birleştirip sistem bazında ortalama skor tablosu çıkaran bir analiz scripti (Hafta 6'nın kapsamı) henüz yazılmadı — gerçek yanıt olmadan anlamlı test edilemez.
 
+### ✅ Tamamlandı — LLM-as-a-Judge
+
+`evaluation/llm_judge/` eklendi: `judge_agent.py` (`MCQAgent`/`RubricAgent` ile aynı response_schema + repair-retry deseni, `prompts/llm_judge_v1.0.txt`) ve `run_judge.py`. Judge, Human Evaluation ile **birebir aynı 24 vakalık körlenmiş `blinded_eval_set.json` setini** ve **aynı 5 kriterli 1-5 rubriği** kullanıyor — yeni LLM içerik üretimi yok, sadece mevcut çıktıları puanlıyor, ve hangi sistemin ürettiğini hiçbir zaman görmüyor (prompt'a sistem etiketi hiç geçmiyor, yapısal olarak kör). Bu, LLM-judge ve insan skorlarının ileride doğrudan karşılaştırılabilmesi için bilinçli bir tasarım — aynı 48 öğe (24 vaka × 2 Item), aynı ölçek.
+
+48/48 öğe tek denemede başarılı puanlandı. Sonuçlar: `judge_scores.json` (tam skor + gerekçe + concerns), `judge_scores.csv` (insan rater'ların indirdiği CSV ile **birebir aynı kolon şeması** — Hafta 6'da doğrudan birleştirilebilir).
+
+**Dürüst bulgu — güçlü bir tavan etkisi (ceiling effect):** 240 kriter-puanından **227'si tam 5**; `relevance` kriteri 48/48 öğede istisnasız 5. Sistem bazında (yalnızca bu script'in kendi analizi için erişebildiği `unblinding_key.json` ile):
+
+| System | n | mean overall_avg |
+|---|---|---|
+| single_agent | 24 | 4.90 |
+| multi_agent | 24 | 4.96 |
+
+Aradaki fark (0.06) **anlamlı bir sinyal değil** — judge neredeyse her şeye tam puan veriyor, iki sistemi ayırt etmiyor. Bu, LLM-as-a-Judge literatüründe bilinen bir sorun (leniency/self-preference bias, dar dinamik aralık) ve **tam olarak bu yüzden Hafta 5'in kör insan değerlendirmesi zorunlu** — LLM-judge tek başına "multi-agent biraz daha iyi" gibi yanıltıcı bir kesinlik izlenimi verebilirdi, insan verisi bunu doğrulamadan rapora yazılmayacak.
+
+**Gerçek, somut bir bulgu — judge'ın `concerns` alanı üzerinden:** 48 öğeden 4'ünde judge, explanation metninin işaretli doğru şıkkı harfle (A/B/C/D) değil **"Option 0/1/2/3" gibi 0-tabanlı iç indeksle** referans aldığını yakaladı (ör. `PMC11329954_62613`, `PMC6207856_2255`, `PMC6332946_127`, `PMC8651394_51595`). Bu, kullanıcıya gösterilen şık harfleriyle örtüşmeyen gerçek bir tutarlılık/UX hatası — muhtemelen Tutor/MCQ Agent'ın iç `correct_index` gibi 0-tabanlı bir değeri açıklama metnine sızdırması. Kök nedeni araştırılmadı, bu oturumun kapsamı dışında bırakıldı — ayrı bir iş olarak not edildi.
+
 ### ⏳ Bekliyor (sıradaki haftalar, kullanıcı onayına göre)
 
 - **Hafta 5 (devamı):** Gerçek raterlardan CSV toplama — kullanıcının `rating_form.html`'i dağıtması gerekiyor.
-- **Hafta 6 — Analysis & Reporting:** Toplanan CSV'leri `unblinding_key.json` ile birleştirip sistem bazında ortalama skorlar, karşılaştırma tabloları, grafikler, hata analizi, discussion/limitations.
-- **LLM-as-a-Judge promptu:** Henüz yazılmadı.
+- **"Option 0/1/2/3" sızıntısı kök neden analizi:** LLM-judge'ın `concerns` alanında yakaladığı, açıklamaların bazen 0-tabanlı iç indeksle konuşması sorunu araştırılmalı (bkz. yukarıdaki not, ayrıca daha önce fark edilen "Dataset-correct option: B)" ifadesiyle aynı aile olabilir).
+- **Hafta 6 — Analysis & Reporting:** Toplanan insan CSV'lerini `judge_scores.csv` ve `unblinding_key.json` ile birleştirip sistem bazında ortalama skorlar, insan-LLM judge uyumu (agreement), karşılaştırma tabloları, grafikler, hata analizi, discussion/limitations.
 
 ---
 
