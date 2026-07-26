@@ -25,7 +25,7 @@ from .schemas import CallMetrics, GeneratedContent, SystemRunResult
 
 logger = logging.getLogger(__name__)
 
-PROMPT_VERSION = "v1.0"
+PROMPT_VERSION = "v1.1"
 
 
 class SingleAgentBaseline:

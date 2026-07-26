@@ -244,10 +244,23 @@ Aradaki fark (0.06) **anlamlı bir sinyal değil** — judge neredeyse her şeye
 
 **Gerçek, somut bir bulgu — judge'ın `concerns` alanı üzerinden:** 48 öğeden 4'ünde judge, explanation metninin işaretli doğru şıkkı harfle (A/B/C/D) değil **"Option 0/1/2/3" gibi 0-tabanlı iç indeksle** referans aldığını yakaladı (ör. `PMC11329954_62613`, `PMC6207856_2255`, `PMC6332946_127`, `PMC8651394_51595`). Bu, kullanıcıya gösterilen şık harfleriyle örtüşmeyen gerçek bir tutarlılık/UX hatası — muhtemelen Tutor/MCQ Agent'ın iç `correct_index` gibi 0-tabanlı bir değeri açıklama metnine sızdırması. Kök nedeni araştırılmadı, bu oturumun kapsamı dışında bırakıldı — ayrı bir iş olarak not edildi.
 
+### ✅ Tamamlandı — "Option 0/1/2/3" / "Dataset-correct option" sızıntısı kök nedeni + düzeltme
+
+İki farklı bulgu ("Dataset-correct option: B)" — bir multi-agent Tutor açıklamasında elle fark edildi — ve judge'ın 4 vakada yakaladığı "Option 0/1/2/3" numaralandırması) aynı kategoriden ama **iki ayrı kök nedene** sahip çıktı:
+
+1. **`prompts/tutor_mcq_v1.0.txt`** (yalnızca eval değil, **canlı üründe `routers/dialogue_router.py`/`tutor_router.py` üzerinden gerçek öğrencilere de gidiyor**) `explain`/`teach` modlarında doğrudan şu talimatı içeriyordu: `Final line MUST be: "Dataset-correct option: $correct_line"`. Model bunu birebir yazıyordu — bu bir halüsinasyon değil, kasıtlı ama unutulmuş bir debug talimatıydı.
+2. **`prompts/single_agent_baseline_v1.0.txt`**, JSON şeması için `correct_index`'in "0-based index (0-3)" olduğunu söylüyordu; model bu çerçevelemeyi serbest metne (`explanation`) taşıyıp "Option 0", "Option 2" gibi ifadeler kullanıyordu.
+
+**Düzeltme:** `tutor_mcq_v1.1.txt` — mekanik "Dataset-correct option" satırı kaldırıldı, yerine "doğru şıkkı kendi cümlenle, harfiyle belirt" talimatı eklendi; ayrıca "asla numara/index ile referans verme" kuralı eklendi. `single_agent_baseline_v1.1.txt` — aynı "harfle referans ver, index kullanma" kuralı eklendi. `tutor/tutor_agent.py` ve `evaluation/single_agent.py`'nin `PROMPT_VERSION`'ları `v1.1`'e yükseltildi (`tutor_narrative_v1.1.txt` de içerik değişmeden version-bump edildi, aynı `PROMPT_VERSION` sabiti iki template'i birden yüklüyor).
+
+Gerçek `TutorAgent.run()` çağrısıyla doğrulandı (fake bir MI vakası, `explain` ve `teach` modları): artık ne mekanik etiket satırı ne de numaralı "Option 0/1/2" var, doğru şık her zaman doğal cümle içinde harfle ("Option B", "B) ...") geçiyor.
+
+**Not — mevcut Hafta 4/5/LLM-judge verileri hâlâ düzeltme-öncesi:** `full_50_n50.json`, `blinded_eval_set.json`, `rating_form.html` ve `judge_scores.*` bu düzeltmeden ÖNCE üretildi — hâlâ eski (buggy) `explanation` metinlerini içeriyorlar. Bu veriler regenerate edilmedi (kullanıcı onayına bırakıldı, aşağıya not edildi) çünkü rater'lara henüz dağıtılıp dağıtılmadığı belirsiz.
+
 ### ⏳ Bekliyor (sıradaki haftalar, kullanıcı onayına göre)
 
-- **Hafta 5 (devamı):** Gerçek raterlardan CSV toplama — kullanıcının `rating_form.html`'i dağıtması gerekiyor.
-- **"Option 0/1/2/3" sızıntısı kök neden analizi:** LLM-judge'ın `concerns` alanında yakaladığı, açıklamaların bazen 0-tabanlı iç indeksle konuşması sorunu araştırılmalı (bkz. yukarıdaki not, ayrıca daha önce fark edilen "Dataset-correct option: B)" ifadesiyle aynı aile olabilir).
+- **Hafta 4/5/LLM-judge verilerini yeniden üretmek mi, olduğu gibi bırakmak mı?** Düzeltme sadece `explanation` alanını etkiliyor (soru/şıklar/hint değişmez) — kullanıcı karar vermeli, `rating_form.html` henüz dağıtılmadıysa yeniden üretmek daha temiz bir veri seti verir.
+- **Hafta 5 (devamı):** Gerçek raterlardan CSV toplama — kullanıcının `rating_form.html`'i (veya Google Forms sürümünü) dağıtması gerekiyor.
 - **Hafta 6 — Analysis & Reporting:** Toplanan insan CSV'lerini `judge_scores.csv` ve `unblinding_key.json` ile birleştirip sistem bazında ortalama skorlar, insan-LLM judge uyumu (agreement), karşılaştırma tabloları, grafikler, hata analizi, discussion/limitations.
 
 ---
